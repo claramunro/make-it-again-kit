@@ -49,10 +49,10 @@ const SessionDetail = () => {
     <div className="flex min-h-screen bg-background">
       {!isMobile && <Sidebar />}
       
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col">
         {!isMobile && <Header />}
         
-        <main className="flex-1 overflow-auto pb-20 md:pb-20">
+        <main className="flex-1 pb-20 md:pb-20">
           {/* Session Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
             <div className="mx-auto max-w-4xl">
