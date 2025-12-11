@@ -4,6 +4,7 @@ import { FileText, Folder, Star, Settings, HelpCircle, Code2 } from 'lucide-reac
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import hedyLogo from '@/assets/hedy-logo.svg';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -35,9 +36,8 @@ export function Sidebar() {
       <aside className="sticky top-0 flex h-screen w-56 flex-col border-r border-sidebar-border bg-sidebar">
         {/* Logo */}
         <div className="flex h-14 items-center px-4">
-          <Link to="/" className="flex items-center gap-1.5">
-            <span className="text-xl font-semibold text-foreground">Hedy</span>
-            <span className="text-primary">✦</span>
+          <Link to="/" className="flex items-center">
+            <img src={hedyLogo} alt="Hedy" className="h-6" />
           </Link>
         </div>
 
