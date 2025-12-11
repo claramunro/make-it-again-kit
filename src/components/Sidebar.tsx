@@ -72,24 +72,26 @@ export function Sidebar() {
       <aside 
         className={cn(
           "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
-          collapsed ? "w-24" : "w-56"
+          collapsed ? "w-20" : "w-56"
         )}
       >
         {/* Logo & Collapse Toggle */}
-        <div className="flex h-14 items-center justify-between px-3">
+        <div className="flex h-14 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
             {collapsed ? (
-              <img src={hedyGlassesLogo} alt="Hedy" className="h-10 w-12" />
+              <img src={hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
             ) : (
               <img src={hedyLogo} alt="Hedy" className="h-6" />
             )}
           </Link>
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground"
-          >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </button>
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         {/* Main Navigation */}
