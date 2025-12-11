@@ -54,7 +54,7 @@ const SessionDetail = () => {
         
         <main className="flex-1 pb-20 md:pb-20">
           {/* Session Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
+          <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
             <div className="mx-auto max-w-4xl">
               {/* Back button and Title */}
               <div className="mb-3 flex items-start gap-4">
