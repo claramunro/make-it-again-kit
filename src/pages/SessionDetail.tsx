@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Sidebar } from '@/components/Sidebar';
+import { Sidebar, useSidebarCollapsed } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -31,6 +31,7 @@ const sessionTypes = [
 const SessionDetail = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { collapsed } = useSidebarCollapsed();
   const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
@@ -377,7 +378,7 @@ const SessionDetail = () => {
         </main>
         
         {/* Audio Player - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-border bg-card px-4 py-3 md:left-56">
+        <div className={cn("fixed bottom-0 left-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", isMobile ? "" : collapsed ? "md:left-20" : "md:left-56")}>
           <div className="mx-auto flex max-w-4xl items-center gap-4">
             <button
               onClick={() => setIsPlaying(!isPlaying)}

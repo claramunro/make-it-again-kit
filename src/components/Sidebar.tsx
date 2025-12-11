@@ -23,18 +23,31 @@ const bottomNavItems = [
   { icon: <HelpCircle className="h-5 w-5" />, label: 'Help' },
 ];
 
-export function Sidebar() {
-  const location = useLocation();
-  const [settingsOpen, setSettingsOpen] = useState(false);
+export function useSidebarCollapsed() {
   const [collapsed, setCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebar-collapsed');
     return saved ? JSON.parse(saved) : false;
   });
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
   }, [collapsed]);
+
+  return { collapsed, setCollapsed };
+}
+
+export function Sidebar() {
+  const location = useLocation();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { collapsed, setCollapsed } = useSidebarCollapsed();
+  const isMobile = useIsMobile();
+
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/' || location.pathname.startsWith('/session');
+    }
+    return location.pathname.startsWith(path);
+  };
 
   // Don't render sidebar on mobile
   if (isMobile) return null;
@@ -76,7 +89,7 @@ export function Sidebar() {
                     collapsed 
                       ? 'flex-col items-center justify-center px-2 py-3 gap-1'
                       : 'flex-row items-center gap-3 px-3 py-2',
-                    location.pathname === item.path
+                    isActive(item.path)
                       ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                       : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                   )}
