@@ -14,7 +14,7 @@ const Index = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-card">
       {/* Desktop Sidebar */}
       {!isMobile && <Sidebar />}
       
@@ -25,7 +25,7 @@ const Index = () => {
         {/* Desktop Header - Fixed */}
         <Header />
         
-        <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">
+        <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-4xl">
             {/* Desktop Sessions Header */}
             {!isMobile && <SessionsHeader totalSessions={totalSessions} />}
