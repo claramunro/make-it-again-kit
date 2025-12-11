@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Sidebar } from '@/components/Sidebar';
+import { Header } from '@/components/Header';
+import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { topics } from '@/data/topics';
 import { cn } from '@/lib/utils';
 
@@ -91,6 +94,7 @@ const mockSessions = [
 const TopicDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('overview');
   const [iconType, setIconType] = useState<'icons' | 'emoji'>('icons');
   const [selectedColor, setSelectedColor] = useState(0);
@@ -110,45 +114,55 @@ const TopicDetail = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">{topic.icon}</span>
-              <h1 className="text-lg font-semibold">{topic.name}</h1>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {topic.sessionCount} Sessions • Last Updated: Dec 1, 2025 4:05 PM
-            </p>
-          </div>
-          
-          <Button variant="ghost" size="icon" className="text-primary">
-            <Users className="h-5 w-5" />
-          </Button>
-        </div>
+    <div className="flex min-h-screen bg-background">
+      {!isMobile && <Sidebar />}
+      
+      <div className="flex flex-1 flex-col">
+        <Header />
         
-        {/* Tabs */}
-        <div className="mx-auto max-w-4xl px-4">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-4 bg-transparent">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-muted data-[state=active]:shadow-none rounded-lg">Overview</TabsTrigger>
-              <TabsTrigger value="sessions" className="data-[state=active]:bg-muted data-[state=active]:shadow-none rounded-lg">Sessions</TabsTrigger>
-              <TabsTrigger value="chat" className="data-[state=active]:bg-muted data-[state=active]:shadow-none rounded-lg">Chat</TabsTrigger>
-              <TabsTrigger value="settings" className="data-[state=active]:bg-muted data-[state=active]:shadow-none rounded-lg">Settings</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </header>
+        <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">
+          <div className="mx-auto max-w-4xl">
+            {/* Topic Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Button variant="ghost" size="icon" onClick={() => navigate('/topics')}>
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <span className="text-2xl">{topic.icon}</span>
+                <h1 className="text-xl font-semibold">{topic.name}</h1>
+                {topic.sharedBy && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                    <Users className="h-3 w-3" />
+                    Shared by {topic.sharedBy}
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground ml-14">
+                {topic.sessionCount} Sessions • Last Updated: Dec 1, 2025 4:05 PM
+              </p>
+            </div>
+            
+            {/* Tabs */}
+            <div className="mb-6">
+              <div className="inline-flex rounded-lg bg-muted p-1">
+                {['overview', 'sessions', 'chat', 'settings'].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      'rounded-md px-4 py-1.5 text-sm font-medium transition-all',
+                      activeTab === tab
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-      {/* Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-4xl p-4 md:p-6">
+            {/* Content */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Shared by indicator */}
@@ -550,8 +564,11 @@ const TopicDetail = () => {
               </div>
             </div>
           )}
-        </div>
-      </main>
+          </div>
+        </main>
+      </div>
+      
+      <MobileBottomNav />
     </div>
   );
 };
