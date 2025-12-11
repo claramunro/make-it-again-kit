@@ -3,6 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { FileText, Folder, Star, Settings, HelpCircle, Code2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -24,6 +25,10 @@ const bottomNavItems = [
 export function Sidebar() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  // Don't render sidebar on mobile
+  if (isMobile) return null;
 
   return (
     <>
