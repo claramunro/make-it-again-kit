@@ -17,7 +17,7 @@ export function Header() {
     <>
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-card px-6">
         {/* Search */}
-        <div className="flex flex-1 justify-center">
+        <div className="flex flex-1">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
