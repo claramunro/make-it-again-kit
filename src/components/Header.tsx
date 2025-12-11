@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, X, Mic, Folder, Star } from 'lucide-react';
+import { Search, X, Mic, Folder, Star, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StartSessionDialog } from './StartSessionDialog';
@@ -26,7 +26,7 @@ const mockHighlights = [
 
 export function Header() {
   const isMobile = useIsMobile();
-  const { collapsed } = useSidebarCollapsed();
+  const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -52,6 +52,16 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
+        {/* Expand button when sidebar collapsed */}
+        {collapsed && (
+          <button
+            onClick={() => setCollapsed(false)}
+            className="mr-4 rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
+        
         {/* Search */}
         <div className={cn("flex flex-1", collapsed && "justify-center")} ref={searchRef}>
           <div className="relative w-full max-w-md">
