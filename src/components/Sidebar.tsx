@@ -32,7 +32,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="flex h-screen w-56 flex-col border-r border-sidebar-border bg-sidebar">
+      <aside className="sticky top-0 flex h-screen w-56 flex-col border-r border-sidebar-border bg-sidebar">
         {/* Logo */}
         <div className="flex h-14 items-center px-4">
           <Link to="/" className="flex items-center gap-1.5">
