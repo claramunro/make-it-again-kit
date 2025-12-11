@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StartSessionDialog } from './StartSessionDialog';
+import glassesIcon from '@/assets/glasses-icon.svg';
 
 export function Header() {
   const isMobile = useIsMobile();
@@ -29,7 +30,7 @@ export function Header() {
 
         {/* Start Session Button */}
         <Button variant="action" className="ml-4 gap-2" onClick={() => setStartSessionOpen(true)}>
-          <span className="text-lg">◯◯</span>
+          <img src={glassesIcon} alt="" className="h-5 w-5" />
           Start Session
         </Button>
       </header>
