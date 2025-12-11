@@ -91,7 +91,7 @@ export function Sidebar() {
             onClick={() => setCollapsed(!collapsed)}
             className={cn(
               "rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground",
-              collapsed && "absolute right-1 top-3"
+              collapsed && "absolute -right-3 top-3 bg-card border border-border shadow-sm"
             )}
           >
             {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
