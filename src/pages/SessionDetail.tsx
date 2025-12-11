@@ -52,7 +52,7 @@ const SessionDetail = () => {
       <div className="flex flex-1 flex-col overflow-hidden">
         {!isMobile && <Header />}
         
-        <main className="flex flex-1 flex-col overflow-hidden pb-24 md:pb-0">
+        <main className="flex-1 overflow-auto pb-20 md:pb-20">
           {/* Session Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
             <div className="mx-auto max-w-4xl">
@@ -374,29 +374,30 @@ const SessionDetail = () => {
             </div>
           </div>
 
-          {/* Audio Player */}
-          <div className="sticky bottom-0 z-10 border-t border-border bg-card px-4 py-3">
-            <div className="mx-auto flex max-w-4xl items-center gap-4">
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
-              >
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-              </button>
-              <div className="flex flex-1 items-center gap-3">
-                <div className="h-1 w-2 rounded-full bg-primary" />
-                <div className="h-1 flex-1 rounded-full bg-muted" />
-              </div>
-              <span className="text-sm text-muted-foreground">22:28</span>
-              <button className="rounded-lg border border-border px-2 py-1 text-sm text-muted-foreground hover:bg-muted">
-                1.0×
-              </button>
-              <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
-                <MoreVertical className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
         </main>
+        
+        {/* Audio Player - Fixed at bottom */}
+        <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-border bg-card px-4 py-3 md:left-56">
+          <div className="mx-auto flex max-w-4xl items-center gap-4">
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+            >
+              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+            </button>
+            <div className="flex flex-1 items-center gap-3">
+              <div className="h-1 w-2 rounded-full bg-primary" />
+              <div className="h-1 flex-1 rounded-full bg-muted" />
+            </div>
+            <span className="text-sm text-muted-foreground">22:28</span>
+            <button className="rounded-lg border border-border px-2 py-1 text-sm text-muted-foreground hover:bg-muted">
+              1.0×
+            </button>
+            <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
+              <MoreVertical className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       </div>
 
       <MobileBottomNav />
