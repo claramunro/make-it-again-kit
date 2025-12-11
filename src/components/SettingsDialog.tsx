@@ -50,11 +50,17 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [showSystemTrayIcon, setShowSystemTrayIcon] = useState(true);
   const [startOnBoot, setStartOnBoot] = useState(true);
 
+  if (!open) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm">
-      <div className="animate-fade-in relative flex h-[700px] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm" onClick={onClose}>
+      <div 
+        className="animate-fade-in relative flex h-[700px] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close button */}
         <button
+          type="button"
           onClick={onClose}
           className="absolute right-4 top-4 z-10 rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
         >
