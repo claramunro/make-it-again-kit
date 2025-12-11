@@ -30,10 +30,22 @@ export function useSidebarCollapsed() {
   });
 
   useEffect(() => {
-    localStorage.setItem('sidebar-collapsed', JSON.stringify(collapsed));
-  }, [collapsed]);
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('sidebar-collapsed');
+      setCollapsed(saved ? JSON.parse(saved) : false);
+    };
+    
+    window.addEventListener('sidebar-collapsed-change', handleStorageChange);
+    return () => window.removeEventListener('sidebar-collapsed-change', handleStorageChange);
+  }, []);
 
-  return { collapsed, setCollapsed };
+  const updateCollapsed = (value: boolean) => {
+    setCollapsed(value);
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(value));
+    window.dispatchEvent(new Event('sidebar-collapsed-change'));
+  };
+
+  return { collapsed, setCollapsed: updateCollapsed };
 }
 
 export function Sidebar() {
@@ -45,6 +57,9 @@ export function Sidebar() {
   const isActive = (path: string) => {
     if (path === '/') {
       return location.pathname === '/' || location.pathname.startsWith('/session');
+    }
+    if (path === '/topics') {
+      return location.pathname === '/topics' || location.pathname.startsWith('/topic');
     }
     return location.pathname.startsWith(path);
   };
