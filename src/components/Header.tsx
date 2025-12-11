@@ -30,7 +30,7 @@ export function Header() {
 
         {/* Start Session Button */}
         <Button variant="action" className="ml-4 gap-2" onClick={() => setStartSessionOpen(true)}>
-          <img src={glassesIcon} alt="" className="h-5 w-5" />
+          <img src={glassesIcon} alt="" className="h-7 w-7" />
           Start Session
         </Button>
       </header>
