@@ -1,6 +1,13 @@
-import { MoreVertical, Users } from 'lucide-react';
+import { MoreVertical, Users, Pencil, UserPlus, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface TopicCardProps {
   topic: Topic;
@@ -16,8 +23,17 @@ const iconBgColors: Record<string, string> = {
 };
 
 export function TopicCard({ topic }: TopicCardProps) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/topic/${topic.id}`);
+  };
+
   return (
-    <button className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm">
+    <button 
+      onClick={handleCardClick}
+      className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm"
+    >
       {/* Icon */}
       <div
         className={cn(
@@ -50,9 +66,30 @@ export function TopicCard({ topic }: TopicCardProps) {
             Shared by {topic.sharedBy}
           </span>
         )}
-        <button className="rounded-lg p-1 opacity-0 transition-smooth hover:bg-muted group-hover:opacity-100">
-          <MoreVertical className="h-4 w-4 text-muted-foreground" />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+            <button className="rounded-lg p-1 opacity-0 transition-smooth hover:bg-muted group-hover:opacity-100">
+              <MoreVertical className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 bg-background">
+            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <UserPlus className="mr-2 h-4 w-4" />
+              Invite to Topic
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={(e) => e.stopPropagation()}
+              className="text-destructive focus:text-destructive"
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </button>
   );
