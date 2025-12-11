@@ -1,11 +1,28 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Sidebar } from '@/components/Sidebar';
+import { Header } from '@/components/Header';
+import { SessionsHeader } from '@/components/SessionsHeader';
+import { SessionList } from '@/components/SessionList';
+import { sessionGroups } from '@/data/sessions';
 
 const Index = () => {
+  const totalSessions = sessionGroups.reduce(
+    (acc, group) => acc + group.sessions.length,
+    0
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="flex h-screen bg-background">
+      <Sidebar />
+      
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Header />
+        
+        <main className="flex-1 overflow-auto p-6">
+          <div className="mx-auto max-w-4xl">
+            <SessionsHeader totalSessions={totalSessions} />
+            <SessionList groups={sessionGroups} />
+          </div>
+        </main>
       </div>
     </div>
   );
