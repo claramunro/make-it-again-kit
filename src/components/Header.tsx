@@ -3,6 +3,7 @@ import { Search, X, Mic, Folder, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StartSessionDialog } from './StartSessionDialog';
+import { useSidebarCollapsed } from './Sidebar';
 import glassesIcon from '@/assets/glasses-icon.svg';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +26,7 @@ const mockHighlights = [
 
 export function Header() {
   const isMobile = useIsMobile();
+  const { collapsed } = useSidebarCollapsed();
   const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -51,7 +53,7 @@ export function Header() {
     <>
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
         {/* Search */}
-        <div className="flex flex-1" ref={searchRef}>
+        <div className={cn("flex flex-1", collapsed && "justify-center")} ref={searchRef}>
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
