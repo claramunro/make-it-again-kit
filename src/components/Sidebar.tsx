@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import hedyLogo from '@/assets/hedy-logo.svg';
-import glassesIcon from '@/assets/glasses-icon.svg';
+import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -79,7 +79,7 @@ export function Sidebar() {
         <div className="flex h-14 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
             {collapsed ? (
-              <img src={glassesIcon} alt="Hedy" className="h-6 w-8" />
+              <img src={hedyGlassesLogo} alt="Hedy" className="h-8 w-10" />
             ) : (
               <img src={hedyLogo} alt="Hedy" className="h-6" />
             )}
