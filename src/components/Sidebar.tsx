@@ -20,7 +20,6 @@ const mainNavItems: NavItem[] = [
 
 const bottomNavItems = [
   { icon: <HelpCircle className="h-4 w-4" />, label: 'Help' },
-  { icon: <Code2 className="h-4 w-4" />, label: 'Dev Tools' },
 ];
 
 export function Sidebar() {
@@ -88,15 +87,18 @@ export function Sidebar() {
 
         {/* User Profile */}
         <div className="border-t border-sidebar-border p-3">
-          <div className="flex items-center gap-3 rounded-lg px-2 py-2">
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 transition-smooth hover:bg-sidebar-accent"
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-avatar text-sm font-semibold text-avatar-foreground">
               CL
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col text-left">
               <span className="text-sm font-medium text-foreground">Clara</span>
               <span className="text-xs text-muted-foreground">clarajmunro@gmail....</span>
             </div>
-          </div>
+          </button>
         </div>
       </aside>
 
