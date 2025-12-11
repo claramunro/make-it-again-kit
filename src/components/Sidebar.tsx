@@ -76,17 +76,23 @@ export function Sidebar() {
         )}
       >
         {/* Logo & Collapse Toggle */}
-        <div className="flex h-14 items-center justify-between px-4">
+        <div className={cn(
+          "flex h-14 items-center px-4",
+          collapsed ? "justify-center" : "justify-between"
+        )}>
           <Link to="/" className="flex items-center">
             {collapsed ? (
-              <img src={hedyGlassesLogo} alt="Hedy" className="h-8 w-10" />
+              <img src={hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
             ) : (
               <img src={hedyLogo} alt="Hedy" className="h-6" />
             )}
           </Link>
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground"
+            className={cn(
+              "rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground",
+              collapsed && "absolute right-1 top-3"
+            )}
           >
             {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </button>
