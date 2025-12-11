@@ -18,14 +18,14 @@ const Index = () => {
       {/* Desktop Sidebar */}
       {!isMobile && <Sidebar />}
       
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col">
         {/* Mobile Header */}
         <MobileHeader title="Sessions" count={totalSessions} />
         
-        {/* Desktop Header */}
+        {/* Desktop Header - Fixed */}
         <Header />
         
-        <main className="flex-1 overflow-auto p-4 pb-24 md:p-6 md:pb-6">
+        <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-4xl">
             {/* Desktop Sessions Header */}
             {!isMobile && <SessionsHeader totalSessions={totalSessions} />}
