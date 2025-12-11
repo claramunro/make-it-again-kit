@@ -5,7 +5,9 @@ import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import hedyLogo from '@/assets/hedy-logo.svg';
+import hedyLogoDark from '@/assets/hedy-logo-dark.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
+import hedyGlassesLogoDark from '@/assets/hedy-glasses-logo-dark.svg';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -53,7 +55,20 @@ export function Sidebar() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsDefaultTab, setSettingsDefaultTab] = useState<'general' | 'support'>('general');
   const { collapsed, setCollapsed } = useSidebarCollapsed();
+  const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
+
+  // Listen for theme changes
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
+    checkDarkMode();
+    
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const openSettings = (tab: 'general' | 'support' = 'general') => {
     setSettingsDefaultTab(tab);
@@ -85,9 +100,9 @@ export function Sidebar() {
         <div className="flex h-14 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
             {collapsed ? (
-              <img src={hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
+              <img src={isDark ? hedyGlassesLogoDark : hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
             ) : (
-              <img src={hedyLogo} alt="Hedy" className="h-6" />
+              <img src={isDark ? hedyLogoDark : hedyLogo} alt="Hedy" className="h-6" />
             )}
           </Link>
           {!collapsed && (
