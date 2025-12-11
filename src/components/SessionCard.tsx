@@ -1,4 +1,5 @@
 import { FileText, Video, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Session } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
 
@@ -8,7 +9,10 @@ interface SessionCardProps {
 
 export function SessionCard({ session }: SessionCardProps) {
   return (
-    <button className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm">
+    <Link 
+      to={`/session/${session.id}`}
+      className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm"
+    >
       {/* Icon */}
       <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground">
         {session.type === 'video' ? (
@@ -33,6 +37,6 @@ export function SessionCard({ session }: SessionCardProps) {
 
       {/* Arrow */}
       <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground/50 transition-smooth group-hover:text-muted-foreground" />
-    </button>
+    </Link>
   );
 }
