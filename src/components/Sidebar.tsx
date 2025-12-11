@@ -63,7 +63,7 @@ export function Sidebar() {
         </nav>
 
         {/* Bottom Navigation */}
-        <div className="border-t border-sidebar-border px-3 py-2">
+        <div className="px-3 py-2">
           <ul className="space-y-1">
             <li>
               <button
@@ -86,7 +86,7 @@ export function Sidebar() {
         </div>
 
         {/* User Profile */}
-        <div className="border-t border-sidebar-border p-3">
+        <div className="p-3">
           <button
             onClick={() => setSettingsOpen(true)}
             className="flex w-full items-center gap-3 rounded-lg px-2 py-2 transition-smooth hover:bg-sidebar-accent"
