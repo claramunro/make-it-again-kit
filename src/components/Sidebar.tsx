@@ -20,7 +20,7 @@ const mainNavItems: NavItem[] = [
 ];
 
 const bottomNavItems = [
-  { icon: <HelpCircle className="h-5 w-5" />, label: 'Help' },
+  { icon: <HelpCircle className="h-5 w-5" />, label: 'Support', action: 'support' },
 ];
 
 export function useSidebarCollapsed() {
@@ -51,8 +51,14 @@ export function useSidebarCollapsed() {
 export function Sidebar() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsDefaultTab, setSettingsDefaultTab] = useState<'general' | 'support'>('general');
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const isMobile = useIsMobile();
+
+  const openSettings = (tab: 'general' | 'support' = 'general') => {
+    setSettingsDefaultTab(tab);
+    setSettingsOpen(true);
+  };
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -128,8 +134,8 @@ export function Sidebar() {
         <div className="px-2 py-2">
           <ul className="space-y-1">
             <li>
-              <button
-                onClick={() => setSettingsOpen(true)}
+            <button
+                onClick={() => openSettings('general')}
                 className={cn(
                   'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                   collapsed 
@@ -149,6 +155,7 @@ export function Sidebar() {
             {bottomNavItems.map((item) => (
               <li key={item.label}>
                 <button 
+                  onClick={() => openSettings('support')}
                   className={cn(
                     'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                     collapsed 
@@ -198,7 +205,7 @@ export function Sidebar() {
         </div>
       </aside>
 
-      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} defaultTab={settingsDefaultTab} />
     </>
   );
 }
