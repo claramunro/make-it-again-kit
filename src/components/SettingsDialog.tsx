@@ -5,7 +5,7 @@ import {
   ChevronDown, ChevronRight, HelpCircle as Question, Zap, Ban,
   Users, LayoutGrid, Check, Lightbulb, MessageSquare, Plus,
   MoreVertical, Phone, ExternalLink, Shield, FileText as FileDoc,
-  Info, Copyright, Link2, LogOut, Trash2, UserPlus
+  Info, Copyright, Link2, LogOut, Trash2, UserPlus, RefreshCw
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
@@ -46,8 +46,9 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [enableAutoDetailedNotes, setEnableAutoDetailedNotes] = useState(true);
   const [includeDetailedNotesInEmail, setIncludeDetailedNotesInEmail] = useState(false);
   const [autoExportTodos, setAutoExportTodos] = useState(false);
-
-  if (!open) return null;
+  const [enableCloudSync, setEnableCloudSync] = useState(true);
+  const [showSystemTrayIcon, setShowSystemTrayIcon] = useState(true);
+  const [startOnBoot, setStartOnBoot] = useState(true);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm">
@@ -442,8 +443,72 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
 
           {/* System Tab */}
           {activeTab === 'system' && (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              <p>System settings coming soon</p>
+            <div className="space-y-6">
+              {/* Privacy Preferences */}
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <h3 className="text-base font-semibold text-foreground">Privacy Preferences</h3>
+                  <Question className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <p className="mb-4 text-sm text-muted-foreground">Control how your meetings sync and choose the data protection region that best matches your privacy requirements.</p>
+                
+                <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3">
+                  <span className="text-sm text-foreground">Enable Cloud Sync</span>
+                  <Switch checked={enableCloudSync} onCheckedChange={setEnableCloudSync} />
+                </div>
+
+                <div className="relative">
+                  <select className="h-10 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-10 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option>United States</option>
+                    <option>European Union</option>
+                    <option>United Kingdom</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
+              </div>
+
+              {/* Microphone Settings */}
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-foreground">Microphone Settings</h3>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    <RefreshCw className="h-4 w-4" />
+                  </button>
+                </div>
+                <p className="mb-4 text-sm text-muted-foreground">Hedy can capture both system audio (from video calls, etc.) and microphone input. Select which microphone to use below.</p>
+                
+                <div className="relative">
+                  <select className="h-10 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-10 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+                    <option>Default System Input</option>
+                    <option>MacBook Pro Microphone</option>
+                    <option>External Microphone</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                </div>
+              </div>
+
+              {/* Desktop Settings */}
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="mb-4 text-base font-semibold text-foreground">Desktop Settings</h3>
+                
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between rounded-lg border border-border bg-background p-4">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Show System Tray Icon</p>
+                      <p className="text-xs text-muted-foreground">Access Hedy instantly. Keep the Hedy icon in your menu bar for one-click access to start, pause, or manage your sessions.</p>
+                    </div>
+                    <Switch checked={showSystemTrayIcon} onCheckedChange={setShowSystemTrayIcon} />
+                  </div>
+
+                  <div className="flex items-start justify-between rounded-lg border border-border bg-background p-4">
+                    <div>
+                      <p className="text-sm font-medium text-foreground">Start Hedy on System Boot</p>
+                      <p className="text-xs text-muted-foreground">Ensure Hedy is always ready. Automatically start Hedy when you log in, so it's prepared to capture insights from your very first meeting of the day.</p>
+                    </div>
+                    <Switch checked={startOnBoot} onCheckedChange={setStartOnBoot} />
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
