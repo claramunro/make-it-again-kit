@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   X, Settings as SettingsIcon, Mic, FileText, Sparkles, Monitor, 
   SlidersHorizontal, HelpCircle, User, Lock, Mail, Sun, Moon, 
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 interface SettingsDialogProps {
   open: boolean;
   onClose: () => void;
+  defaultTab?: SettingsTab;
 }
 
 type SettingsTab = 'general' | 'meeting' | 'transcription' | 'automation' | 'system' | 'advanced' | 'support' | 'account';
@@ -30,9 +31,16 @@ const settingsTabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] 
   { id: 'account', label: 'Account', icon: <User className="h-4 w-4" /> },
 ];
 
-export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
-  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
-  const [themeMode, setThemeMode] = useState<'system' | 'light' | 'dark'>('light');
+export function SettingsDialog({ open, onClose, defaultTab = 'general' }: SettingsDialogProps) {
+  const [activeTab, setActiveTab] = useState<SettingsTab>(defaultTab);
+  const [themeMode, setThemeMode] = useState<'system' | 'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') return 'dark';
+      if (saved === 'light') return 'light';
+    }
+    return 'light';
+  });
   const [showBackgroundImage, setShowBackgroundImage] = useState(false);
   const [enableAudioRecording, setEnableAudioRecording] = useState(true);
   const [suggestionFrequency, setSuggestionFrequency] = useState<'off' | 'selective' | 'balanced' | 'frequent'>('frequent');
@@ -49,6 +57,34 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [enableCloudSync, setEnableCloudSync] = useState(true);
   const [showSystemTrayIcon, setShowSystemTrayIcon] = useState(true);
   const [startOnBoot, setStartOnBoot] = useState(true);
+
+  // Sync active tab with defaultTab when dialog opens
+  useEffect(() => {
+    if (open) {
+      setActiveTab(defaultTab);
+    }
+  }, [open, defaultTab]);
+
+  // Apply theme changes
+  useEffect(() => {
+    const root = document.documentElement;
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else if (themeMode === 'light') {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      // System preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
+      localStorage.setItem('theme', 'system');
+    }
+  }, [themeMode]);
 
   if (!open) return null;
 
