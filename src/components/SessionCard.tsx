@@ -20,9 +20,12 @@ export function SessionCard({ session, onToggleFavorite }: SessionCardProps) {
     onToggleFavorite?.(session.id);
   };
 
+  // Session id "2" goes to the legacy view
+  const sessionUrl = session.id === '2' ? `/session-legacy/${session.id}` : `/session/${session.id}`;
+
   return (
     <Link 
-      to={`/session/${session.id}`}
+      to={sessionUrl}
       className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm"
     >
       {/* Icon */}
