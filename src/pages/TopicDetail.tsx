@@ -985,57 +985,58 @@ const TopicDetail = () => {
           
           {activeTopicTab === 'bookmarks' && (
             <div className="flex flex-1 overflow-hidden">
-              {/* Main Content */}
-              <div className="flex-1 overflow-y-auto p-6">
-                <div className="max-w-4xl mx-auto">
-                  {/* Header */}
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-xl font-semibold text-foreground">Bookmarks</h2>
-                      <span className="text-sm text-muted-foreground">({topicBookmarks.length})</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm text-muted-foreground">Sort By</span>
-                      <span className="text-sm font-medium text-foreground">Recent</span>
-                    </div>
+              {/* Left: Bookmarks List */}
+              <div className="w-80 shrink-0 border-r border-border overflow-y-auto p-4">
+                {/* Header */}
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-foreground">Bookmarks</h2>
+                    <span className="text-sm text-muted-foreground">({topicBookmarks.length})</span>
                   </div>
-                  
-                  {/* Bookmarks List */}
-                  <div className="flex gap-6">
-                    <div className={cn(
-                      'space-y-4',
-                      selectedBookmark ? 'flex-1' : 'w-full'
-                    )}>
-                      {groupedTopicBookmarks.length > 0 ? (
-                        groupedTopicBookmarks.map((group, index) => (
-                          <BookmarkGroup
-                            key={group.id}
-                            title={group.title}
-                            bookmarks={group.bookmarks}
-                            selectedId={selectedBookmark?.id || null}
-                            onSelectBookmark={setSelectedBookmark}
-                            defaultExpanded={index === 0}
-                          />
-                        ))
-                      ) : (
-                        <div className="flex items-center justify-center h-40 text-muted-foreground">
-                          <p>No bookmarks in this topic yet.</p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Bookmark Detail Panel */}
-                    {selectedBookmark && (
-                      <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-6 max-h-[calc(100vh-200px)] flex flex-col overflow-hidden">
-                        <BookmarkDetailPanel 
-                          bookmark={selectedBookmark} 
-                          onClose={() => setSelectedBookmark(null)}
-                          showCloseButton
-                        />
-                      </div>
-                    )}
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Sort By</span>
+                    <span className="font-medium text-foreground">Recent</span>
                   </div>
                 </div>
+                
+                {/* Bookmarks Groups */}
+                <div className="space-y-2">
+                  {groupedTopicBookmarks.length > 0 ? (
+                    groupedTopicBookmarks.map((group, index) => (
+                      <BookmarkGroup
+                        key={group.id}
+                        title={group.title}
+                        bookmarks={group.bookmarks}
+                        selectedId={selectedBookmark?.id || null}
+                        onSelectBookmark={setSelectedBookmark}
+                        defaultExpanded={index === 0}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-40 text-muted-foreground">
+                      <p>No bookmarks in this topic yet.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Middle: Bookmark Detail Panel */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {selectedBookmark ? (
+                  <div className="max-w-2xl mx-auto">
+                    <div className="rounded-xl border border-border bg-card overflow-hidden">
+                      <BookmarkDetailPanel 
+                        bookmark={selectedBookmark} 
+                        onClose={() => setSelectedBookmark(null)}
+                        showCloseButton
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    <p>Select a bookmark to view details</p>
+                  </div>
+                )}
               </div>
               
               {/* Right: Chat Panel */}
