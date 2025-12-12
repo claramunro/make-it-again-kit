@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
-  Calendar, Trash2, Share, Folder, FileText
+  Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
+  Lightbulb, Quote, BarChart3, Clock, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -14,7 +15,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 
-type SessionTab = 'details' | 'chat' | 'transcript';
+type SessionTab = 'details' | 'highlights' | 'transcript';
 
 const sessionTypes = [
   { id: 'business', label: 'Business Meetings', icon: '📁' },
@@ -28,11 +29,56 @@ const sessionTypes = [
   { id: 'interview', label: 'Job Interview (Candidate)', icon: '⭐' },
 ];
 
+// Mock bookmarks for this session
+const mockBookmarks = [
+  {
+    id: '1',
+    title: 'Uncertainty and Initiative in Action',
+    date: 'Oct 21, 2025',
+    time: '7:22 PM',
+    duration: '01:14',
+    mainIdea: 'When faced with uncertainty, taking a small, concrete action—like moving to a workspace—can precede clarity and serve as a catalyst for problem-solving, rather than waiting for full understanding before acting.',
+    originalContext: "Bye bye. I'm going to the desk. I wasn't sure what to do. I'll figure that out.",
+    analysis: 'This reflects the principle of "action preceding insight," common in dynamic work environments where decisions must be made amid ambiguity. By beginning the process—physically relocating and committing to figuring it out—the individual leverages momentum over hesitation, turning uncertainty into productive exploration.',
+  },
+  {
+    id: '2',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:25 PM',
+    duration: '00:45',
+    mainIdea: 'The order of operations matters significantly in any process. Starting with the right foundation prevents costly rework later.',
+    originalContext: "We need to establish the baseline before we can measure improvement. Otherwise, we're just guessing.",
+    analysis: 'This highlights the importance of methodical approach in problem-solving and development processes.',
+  },
+  {
+    id: '3',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:30 PM',
+    duration: '00:52',
+    mainIdea: 'Iterative feedback loops accelerate learning and reduce the time between action and insight.',
+    originalContext: "Every time we test, we learn something new. The faster we can cycle through, the quicker we reach our goal.",
+    analysis: 'This emphasizes the value of rapid iteration in modern development methodologies.',
+  },
+  {
+    id: '4',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:35 PM',
+    duration: '01:03',
+    mainIdea: 'Documentation serves not just as record-keeping but as a tool for thinking through complex problems.',
+    originalContext: "Writing it down forces me to think clearly. If I can't explain it simply, I don't understand it well enough.",
+    analysis: 'This reflects the cognitive benefits of externalization—using writing as a thinking tool rather than merely a recording tool.',
+  },
+];
+
 const SessionDetail = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const isMobile = useIsMobile();
   const { collapsed } = useSidebarCollapsed();
-  const [activeTab, setActiveTab] = useState<SessionTab>('details');
+  const [activeTab, setActiveTab] = useState<SessionTab>('highlights');
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
@@ -40,10 +86,11 @@ const SessionDetail = () => {
   const [selectedTopic, setSelectedTopic] = useState('new');
   const [selectedSessionType, setSelectedSessionType] = useState('coaching');
   const [viewOriginal, setViewOriginal] = useState(false);
-  const [contextEnabled, setContextEnabled] = useState(true);
   const [chatMessage, setChatMessage] = useState('');
+  const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
 
-  const selectedTopicData = topics.find(t => t.id === '2'); // "New" topic
+  const selectedTopicData = topics.find(t => t.id === '2');
   const selectedSessionTypeData = sessionTypes.find(t => t.id === selectedSessionType);
 
   return (
@@ -53,325 +100,216 @@ const SessionDetail = () => {
       <div className="flex flex-1 flex-col">
         {!isMobile && <Header />}
         
-        <main className="flex-1 rounded-tl-2xl bg-background pb-20 md:pb-20">
+        <main className="flex-1 rounded-tl-2xl bg-background">
           {/* Session Header */}
           <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
-            <div className="mx-auto max-w-4xl">
-              {/* Back button and Title */}
-              <div className="mb-3 flex items-start gap-4">
+            <div className="flex items-center justify-between gap-4">
+              {/* Left: Back button + Icon + Title + Meta */}
+              <div className="flex items-center gap-3 min-w-0">
                 <button 
                   onClick={() => navigate('/')}
-                  className="mt-1 rounded-lg p-1 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
                 >
-                  <ArrowLeft className="h-5 w-5" />
+                  <ArrowLeft className="h-4 w-4" />
                 </button>
-                <h1 className="flex-1 text-center text-lg font-semibold text-foreground md:text-xl">
-                  Innovative Affordable Housing and Development Strategies (Ep. 27: Tour of "Atomic Orchard Experiment" (in Portland) // The Essential Housing Campaign)
-                </h1>
-              </div>
-
-              {/* Meta info and dropdowns */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <span className="text-sm text-muted-foreground">Nov 4, 2025 4:58 PM • 12 minutes</span>
-                
-                <div className="flex items-center gap-2">
-                  {/* Topic Dropdown */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setTopicDropdownOpen(!topicDropdownOpen);
-                        setSessionTypeDropdownOpen(false);
-                        setMoreMenuOpen(false);
-                      }}
-                      className="flex items-center gap-2 rounded-lg border border-badge-workout bg-badge-workout-bg px-3 py-1.5 text-sm font-medium text-badge-workout transition-smooth hover:bg-badge-workout-bg/80"
-                    >
-                      📦 New
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                    {topicDropdownOpen && (
-                      <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border bg-card py-1 shadow-lg">
-                        <button className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted">
-                          <Folder className="h-4 w-4 text-muted-foreground" />
-                          None
-                        </button>
-                        {topics.map(topic => (
-                          <button 
-                            key={topic.id}
-                            onClick={() => {
-                              setSelectedTopic(topic.id);
-                              setTopicDropdownOpen(false);
-                            }}
-                            className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
-                          >
-                            <span>{topic.icon}</span>
-                            {topic.name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Session Type Dropdown */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setSessionTypeDropdownOpen(!sessionTypeDropdownOpen);
-                        setTopicDropdownOpen(false);
-                        setMoreMenuOpen(false);
-                      }}
-                      className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-smooth hover:bg-muted"
-                    >
-                      ⚙️ {selectedSessionTypeData?.label}
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                    {sessionTypeDropdownOpen && (
-                      <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
-                        {sessionTypes.map(type => (
-                          <button 
-                            key={type.id}
-                            onClick={() => {
-                              setSelectedSessionType(type.id);
-                              setSessionTypeDropdownOpen(false);
-                            }}
-                            className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
-                          >
-                            <span>{type.icon}</span>
-                            {type.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* More Menu */}
-                  <div className="relative">
-                    <button
-                      onClick={() => {
-                        setMoreMenuOpen(!moreMenuOpen);
-                        setTopicDropdownOpen(false);
-                        setSessionTypeDropdownOpen(false);
-                      }}
-                      className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-                    >
-                      <MoreVertical className="h-5 w-5" />
-                    </button>
-                    {moreMenuOpen && (
-                      <div className="absolute right-0 top-full z-50 mt-1 w-52 rounded-lg border border-border bg-card py-1 shadow-lg">
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Link2 className="h-4 w-4 text-muted-foreground" />
-                          Copy link to session
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <UserPlus className="h-4 w-4 text-muted-foreground" />
-                          Invite to Session
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
-                          Send Recap Email
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Pencil className="h-4 w-4 text-muted-foreground" />
-                          Rename
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          Edit Date & Time
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          Delete
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <Share className="h-4 w-4 text-muted-foreground" />
-                          Share All Data
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                <div className="min-w-0">
+                  <h1 className="truncate text-base font-semibold text-foreground">
+                    Title
+                  </h1>
+                  <p className="text-xs text-muted-foreground">
+                    Date: Oct 18, 2025 9:16 AM<br />
+                    Duration: 2 minutes
+                  </p>
                 </div>
               </div>
 
-              {/* Tabs */}
-              <div className="mt-4 flex justify-center">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['details', 'chat', 'transcript'] as const).map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={cn(
-                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        activeTab === tab
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                  ))}
-                </div>
+              {/* Right: Badge */}
+              <div className="shrink-0">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                  <span className="h-2 w-2 rounded-full bg-primary" />
+                  Badge
+                </span>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="mt-4">
+              <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                      activeTab === tab
+                        ? 'bg-card text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Tab Content */}
-          <div className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="mx-auto max-w-4xl">
-              {/* Details Tab */}
-              {activeTab === 'details' && (
-                <div className="space-y-6">
-                  {/* Summary */}
-                  <div className="rounded-xl border border-border bg-card p-5">
-                    <div className="mb-4 flex items-center justify-between">
-                      <h2 className="text-lg font-semibold text-foreground">Summary</h2>
-                      <MoreVertical className="h-5 w-5 text-muted-foreground" />
+          {/* Main 3-Column Layout */}
+          <div className="flex h-[calc(100vh-180px)]">
+            {/* Left Column - Bookmarks List */}
+            <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
+              <div className="space-y-2">
+                {mockBookmarks.map((bookmark) => (
+                  <button
+                    key={bookmark.id}
+                    onClick={() => setSelectedBookmark(bookmark)}
+                    className={cn(
+                      "w-full rounded-lg p-3 text-left transition-smooth",
+                      selectedBookmark.id === bookmark.id
+                        ? "bg-card border border-border shadow-sm"
+                        : "hover:bg-card/50"
+                    )}
+                  >
+                    <div className="flex items-start gap-2">
+                      <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium text-foreground line-clamp-2">
+                        {bookmark.title}
+                      </span>
                     </div>
-                    <p className="mb-4 text-sm leading-relaxed text-foreground">
-                      The session explored Kevin Cavanaugh's unique approach to urban development, focusing on long-term holds, creative financing, and legal discrimination by profession. Key insights include the profitability of affordable housing without subsidies, architectural innovation using adaptive reuse, and the importance of enlightened investors. The discussion emphasized community-focused development and the potential for replicating these models in other cities.
-                    </p>
-                    <h3 className="mb-2 text-sm font-semibold text-foreground">Key Points:</h3>
-                    <ul className="space-y-2 text-sm text-foreground">
-                      <li>• Kevin Cavanaugh's development model focuses on long-term holds rather than flipping, enabling the creation of profitable yet affordable housing without requiring subsidies.</li>
-                      <li>• Gorilla Development's projects often combine market-rate and subsidized units within the same building, creating mixed-income environments.</li>
-                      <li>• The concept of legal discrimination by profession allows developers to offer reduced rents to specific groups (e.g., social workers, teachers) based on their profession rather than income level.</li>
-                    </ul>
-                  </div>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-                  {/* Your To-Dos */}
-                  <div className="rounded-xl border border-border bg-card p-5">
-                    <div className="mb-4 flex items-center justify-between">
-                      <h2 className="text-lg font-semibold text-foreground">Your To-Dos</h2>
-                      <Download className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-3">
-                      {[
-                        'Review Gorilla Development\'s website and pro forma templates',
-                        'Research legal implications of profession-based rent policies',
-                        'Draft a case study outline based on The Great Scout project',
-                        'Identify a list of potential enlightened investors for a test project',
-                        'Schedule a follow-up call with Kevin Cavanaugh to clarify financial models'
-                      ].map((todo, i) => (
-                        <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
-                          <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border" />
-                          <div>
-                            <p className="text-sm text-foreground">{todo}</p>
-                            <p className="text-xs text-muted-foreground">Due: Not set</p>
-                          </div>
-                        </label>
-                      ))}
+            {/* Center Column - Bookmark Detail */}
+            <div className="flex-1 overflow-auto p-6">
+              <div className="rounded-xl border border-border bg-card p-6">
+                {/* Header */}
+                <div className="mb-6 flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{selectedBookmark.time}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        {selectedBookmark.duration}
+                      </span>
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Chat Tab */}
-              {activeTab === 'chat' && (
-                <div className="flex h-[500px] flex-col">
-                  {/* Context Toggle */}
-                  <div className="mb-4 flex items-center justify-between rounded-lg border border-badge-workout-bg bg-badge-workout-bg/30 px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-badge-workout" />
-                      <div>
-                        <p className="text-sm font-medium text-badge-workout">New</p>
-                        <p className="text-xs text-badge-workout">This chat has context from all sessions in this topic.</p>
-                      </div>
-                    </div>
-                    <Switch checked={contextEnabled} onCheckedChange={setContextEnabled} />
-                  </div>
-
-                  {/* Chat Messages */}
-                  <div className="flex-1 space-y-4 overflow-auto">
-                    {/* User Message */}
-                    <div className="flex justify-end">
-                      <div className="max-w-[80%] rounded-2xl rounded-tr-md bg-muted px-4 py-3">
-                        <p className="text-sm text-foreground">How engaged are they in this opportunity?</p>
-                      </div>
-                    </div>
-
-                    {/* AI Response */}
-                    <div className="rounded-xl border-l-4 border-primary/30 bg-primary/5 p-4">
-                      <p className="mb-3 text-sm leading-relaxed text-foreground">
-                        The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland. He is highly engaged in this opportunity, demonstrating strong commitment through long-term holds, creative financing, and legal experimentation around profession-based housing.
-                      </p>
-                      <ul className="space-y-2 text-sm text-foreground">
-                        <li>- He actively pursues projects that combine affordability with profitability, using market-rate units to internally subsidize social impact units without legal encumbrances.</li>
-                        <li>- His willingness to cap investor returns (4% vs. 8%) and forgo refinancing shows prioritization of mission over maximum yield.</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Chat Input */}
-                  <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-                    <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
-                    <input
-                      type="text"
-                      value={chatMessage}
-                      onChange={(e) => setChatMessage(e.target.value)}
-                      placeholder="How can I help?"
-                      className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
-                    />
-                    <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
-                      <Send className="h-4 w-4" />
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <Upload className="h-4 w-4" />
+                      Share
                     </Button>
-                    <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
-                      <Wand2 className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <Trash2 className="h-4 w-4" />
+                      Delete
                     </Button>
                   </div>
                 </div>
-              )}
 
-              {/* Transcript Tab */}
-              {activeTab === 'transcript' && (
+                {/* Main Idea */}
+                <div className="mb-6">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {selectedBookmark.mainIdea}
+                  </p>
+                </div>
+
+                {/* Original Context */}
+                <div className="mb-6">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Quote className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted-foreground italic">
+                    {selectedBookmark.originalContext}
+                  </p>
+                </div>
+
+                {/* Analysis */}
                 <div>
-                  {/* Transcript Header */}
-                  <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
-                    <div className="flex items-center gap-2 text-sm text-primary">
-                      <Sparkles className="h-4 w-4" />
-                      Viewing cleaned transcript
-                    </div>
-                    <button 
-                      onClick={() => setViewOriginal(!viewOriginal)}
-                      className="text-sm text-muted-foreground hover:text-foreground"
-                    >
-                      {viewOriginal ? 'View cleaned' : 'View original'}
-                    </button>
+                  <div className="mb-2 flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
                   </div>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {selectedBookmark.analysis}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-                  {/* Transcript Content */}
-                  <div className="relative rounded-xl border border-border bg-card p-5">
-                    <div className="space-y-6 text-sm leading-relaxed text-foreground">
-                      <div>
-                        <p className="mb-2 font-semibold">Speaker 1:</p>
-                        <p>This is our first experiment in legal discrimination. I can say, I won't rent to you because you're a lawyer. And if you are on the front lines of fixing the homeless housing problem in the city, here's a key to a loft that's half price. I don't care what you make; I care what you do. So that's the experiment behind this.</p>
+            {/* Right Column - Chat */}
+            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
+              <div className="border-b border-border px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-semibold text-foreground">Chat</h2>
+                  <div className="relative">
+                    <button
+                      onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                      className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                    >
+                      <Upload className="h-4 w-4" />
+                    </button>
+                    {shareMenuOpen && (
+                      <div className="absolute right-0 top-full z-50 mt-1 w-44 rounded-lg border border-border bg-card py-1 shadow-lg">
+                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          Share as Text
+                        </button>
+                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          Share as Markdown
+                        </button>
                       </div>
-                      <div>
-                        <p>I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon. We have a few projects here, infill projects, mostly small to medium scale. Half of them are adaptive reuse projects, and half of them are new construction. We've got 24 projects. A dozen of them are completed, and a dozen are on the boards or under construction.</p>
-                      </div>
-                      <div>
-                        <p>I've been doing this for 20 years. I was trained as an architect, one of the 50% of architecture grads who isn't a licensed architect. I chose the development path. I don't want to call myself a real estate developer because they're like always the bad guy in the movies, but that's my profession.</p>
-                      </div>
-                      <div>
-                        <p>Gorilla Development came out after the last recession. It's "guerrilla" like, you know, guerrilla warfare, like the...</p>
-                      </div>
-                    </div>
-
-                    {/* Floating Actions */}
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 space-y-2">
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Copy className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Download className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Sparkles className="h-4 w-4" />
-                      </button>
-                    </div>
+                    )}
                   </div>
                 </div>
-              )}
+              </div>
+
+              {/* Chat Messages Area */}
+              <div className="flex-1 overflow-auto p-4">
+                {/* Empty state or messages would go here */}
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                  <div className="mb-4 rounded-full bg-muted p-4">
+                    <Sparkles className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">Ask questions about this session</p>
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="border-t border-border p-4">
+                {/* Todo checkboxes */}
+                <div className="mb-3 space-y-2">
+                  <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <input type="checkbox" className="mt-0.5 h-3 w-3 rounded border-border" />
+                    <span>Visit the Endurance website or call the provided number for a quote from Terrie.</span>
+                  </label>
+                  <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <input type="checkbox" className="mt-0.5 h-3 w-3 rounded border-border" />
+                    <span>Evaluate the Endurance warranty plan for potential enrollment.</span>
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                  <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={chatMessage}
+                    onChange={(e) => setChatMessage(e.target.value)}
+                    placeholder="How can I help?"
+                    className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                  />
+                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 

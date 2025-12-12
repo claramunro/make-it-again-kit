@@ -11,6 +11,7 @@ import TopicDetailFocus from "./pages/TopicDetailFocus";
 import Bookmarks from "./pages/Bookmarks";
 import Settings from "./pages/Settings";
 import SessionDetail from "./pages/SessionDetail";
+import SessionDetailLegacy from "./pages/SessionDetailLegacy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/session/:id" element={<SessionDetail />} />
+          <Route path="/session-legacy/:id" element={<SessionDetailLegacy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
