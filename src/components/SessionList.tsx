@@ -3,9 +3,11 @@ import { SessionCard } from './SessionCard';
 
 interface SessionListProps {
   groups: SessionGroup[];
+  selectedSessionId?: string | null;
+  onSelectSession?: (id: string) => void;
 }
 
-export function SessionList({ groups }: SessionListProps) {
+export function SessionList({ groups, selectedSessionId, onSelectSession }: SessionListProps) {
   return (
     <div className="space-y-6">
       {groups.map((group) => (
@@ -15,7 +17,12 @@ export function SessionList({ groups }: SessionListProps) {
           </h2>
           <div className="space-y-3">
             {group.sessions.map((session) => (
-              <SessionCard key={session.id} session={session} />
+              <SessionCard 
+                key={session.id} 
+                session={session} 
+                isSelected={selectedSessionId === session.id}
+                onSelect={onSelectSession}
+              />
             ))}
           </div>
         </div>

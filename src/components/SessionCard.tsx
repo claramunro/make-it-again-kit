@@ -8,9 +8,11 @@ import { cn } from '@/lib/utils';
 interface SessionCardProps {
   session: Session;
   onToggleFavorite?: (id: string) => void;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
-export function SessionCard({ session, onToggleFavorite }: SessionCardProps) {
+export function SessionCard({ session, onToggleFavorite, isSelected, onSelect }: SessionCardProps) {
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -20,13 +22,24 @@ export function SessionCard({ session, onToggleFavorite }: SessionCardProps) {
     onToggleFavorite?.(session.id);
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (onSelect) {
+      e.preventDefault();
+      onSelect(session.id);
+    }
+  };
+
   // Session id "2" goes to the legacy view
   const sessionUrl = session.id === '2' ? `/session-legacy/${session.id}` : `/session/${session.id}`;
 
   return (
     <Link 
-      to={sessionUrl}
-      className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm"
+      to={onSelect ? '#' : sessionUrl}
+      onClick={handleClick}
+      className={cn(
+        "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm",
+        isSelected && "border-primary bg-primary/5"
+      )}
     >
       {/* Icon */}
       <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground">
