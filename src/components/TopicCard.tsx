@@ -1,4 +1,4 @@
-import { Star, ChevronRight } from 'lucide-react';
+import { Star, ChevronRight, FileText } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { cn } from '@/lib/utils';
@@ -7,30 +7,30 @@ interface TopicCardProps {
   topic: Topic;
 }
 
-// Bottom gradient colors for each icon theme
-const topicBottomColors: Record<string, string> = {
-  '🎨': 'rgba(244, 114, 182, 0.3)', // pink
-  '📦': 'rgba(52, 211, 153, 0.3)', // emerald
-  '🏋️': 'rgba(96, 165, 250, 0.3)', // blue
-  '☕': 'rgba(251, 191, 36, 0.3)', // amber
-  '🐶': 'rgba(253, 224, 71, 0.3)', // yellow
-  '📅': 'rgba(251, 191, 36, 0.3)', // yellow/amber
-  '🚀': 'rgba(167, 139, 250, 0.3)', // violet
-  '💻': 'rgba(148, 163, 184, 0.3)', // slate
-  '📢': 'rgba(251, 146, 60, 0.3)', // orange
-  '🤝': 'rgba(45, 212, 191, 0.3)', // teal
-  '💰': 'rgba(74, 222, 128, 0.3)', // green
-  '👥': 'rgba(129, 140, 248, 0.3)', // indigo
-  '🔬': 'rgba(34, 211, 238, 0.3)', // cyan
-  '⚖️': 'rgba(148, 163, 184, 0.3)', // gray
-  '🎉': 'rgba(251, 113, 133, 0.3)', // rose
+// Colors for emoji container (border stronger, fill transparent)
+const topicColors: Record<string, { border: string; bg: string }> = {
+  '🎨': { border: 'border-pink-400', bg: 'bg-pink-400/15' },
+  '📦': { border: 'border-emerald-400', bg: 'bg-emerald-400/15' },
+  '🏋️': { border: 'border-blue-400', bg: 'bg-blue-400/15' },
+  '☕': { border: 'border-amber-400', bg: 'bg-amber-400/15' },
+  '🐶': { border: 'border-yellow-400', bg: 'bg-yellow-400/15' },
+  '📅': { border: 'border-amber-400', bg: 'bg-amber-400/15' },
+  '🚀': { border: 'border-violet-400', bg: 'bg-violet-400/15' },
+  '💻': { border: 'border-slate-400', bg: 'bg-slate-400/15' },
+  '📢': { border: 'border-orange-400', bg: 'bg-orange-400/15' },
+  '🤝': { border: 'border-teal-400', bg: 'bg-teal-400/15' },
+  '💰': { border: 'border-green-400', bg: 'bg-green-400/15' },
+  '👥': { border: 'border-indigo-400', bg: 'bg-indigo-400/15' },
+  '🔬': { border: 'border-cyan-400', bg: 'bg-cyan-400/15' },
+  '⚖️': { border: 'border-gray-400', bg: 'bg-gray-400/15' },
+  '🎉': { border: 'border-rose-400', bg: 'bg-rose-400/15' },
 };
 
-const defaultBottomColor = 'rgba(148, 163, 184, 0.3)';
+const defaultColors = { border: 'border-slate-400', bg: 'bg-slate-400/15' };
 
 export function TopicCard({ topic }: TopicCardProps) {
   const navigate = useNavigate();
-  const bottomColor = topicBottomColors[topic.icon] || defaultBottomColor;
+  const colors = topicColors[topic.icon] || defaultColors;
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
@@ -39,22 +39,21 @@ export function TopicCard({ topic }: TopicCardProps) {
   return (
     <div 
       onClick={handleCardClick}
-      className="group relative rounded-xl border border-border bg-card overflow-hidden transition-smooth hover:border-primary/20 hover:shadow-md cursor-pointer"
+      className="group rounded-xl border border-border bg-card overflow-hidden transition-smooth hover:border-primary/20 hover:shadow-md cursor-pointer"
     >
-      {/* Bottom gradient overlay */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `linear-gradient(to top, ${bottomColor} 0%, transparent 40%)`
-        }}
-      />
-      
       {/* Content area */}
-      <div className="relative p-4">
+      <div className="p-4">
         {/* Header with star */}
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-xl">{topic.icon}</span>
+          <div className="flex items-center gap-3">
+            {/* Emoji container with colored border and transparent fill */}
+            <div className={cn(
+              'flex h-10 w-10 items-center justify-center rounded-lg border-2',
+              colors.border,
+              colors.bg
+            )}>
+              <span className="text-lg">{topic.icon}</span>
+            </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">{topic.name}</h3>
               <div className="flex items-center gap-2 mt-0.5">
@@ -86,15 +85,19 @@ export function TopicCard({ topic }: TopicCardProps) {
               key={session.id}
               to={`/topic/${topic.id}?tab=sessions`}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-between rounded-lg bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
+              className="flex items-center gap-3 rounded-lg bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
             >
+              {/* Session icon */}
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center text-muted-foreground">
+                <FileText className="h-4 w-4" />
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {session.date} · {session.duration}
                 </p>
               </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover/session:opacity-100 transition-opacity shrink-0 ml-2" />
+              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover/session:opacity-100 transition-opacity shrink-0" />
             </Link>
           ))}
           
