@@ -290,7 +290,7 @@ const TopicDetail = () => {
 
   // Chat Panel Component
   const ChatPanel = () => (
-    <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col">
+    <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col relative z-50">
       <div className="p-4 border-b border-border flex items-center justify-between">
         <h3 className="text-lg font-semibold text-primary">Chat in Topic</h3>
         <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -426,6 +426,14 @@ const TopicDetail = () => {
   return (
     <div className="flex h-screen bg-card overflow-hidden">
       {!isMobile && <Sidebar />}
+      
+      {/* Backdrop overlay when prompts modal is open */}
+      {promptsModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setPromptsModalOpen(false)}
+        />
+      )}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
