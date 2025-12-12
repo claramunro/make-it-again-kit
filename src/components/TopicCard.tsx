@@ -7,22 +7,22 @@ interface TopicCardProps {
   topic: Topic;
 }
 
-const iconBgColors: Record<string, string> = {
-  '🎨': 'bg-pink-500/10 dark:bg-pink-500/20',
-  '📦': 'bg-emerald-500/10 dark:bg-emerald-500/20',
-  '🏋️': 'bg-blue-500/10 dark:bg-blue-500/20',
-  '☕': 'bg-amber-500/10 dark:bg-amber-500/20',
-  '🐶': 'bg-amber-500/10 dark:bg-amber-500/20',
-  '📅': 'bg-yellow-500/10 dark:bg-yellow-500/20',
-  '🚀': 'bg-violet-500/10 dark:bg-violet-500/20',
-  '💻': 'bg-slate-500/10 dark:bg-slate-500/20',
-  '📢': 'bg-orange-500/10 dark:bg-orange-500/20',
-  '🤝': 'bg-teal-500/10 dark:bg-teal-500/20',
-  '💰': 'bg-green-500/10 dark:bg-green-500/20',
-  '👥': 'bg-indigo-500/10 dark:bg-indigo-500/20',
-  '🔬': 'bg-cyan-500/10 dark:bg-cyan-500/20',
-  '⚖️': 'bg-gray-500/10 dark:bg-gray-500/20',
-  '🎉': 'bg-rose-500/10 dark:bg-rose-500/20',
+const iconBorderColors: Record<string, string> = {
+  '🎨': 'border-l-pink-500',
+  '📦': 'border-l-emerald-500',
+  '🏋️': 'border-l-blue-500',
+  '☕': 'border-l-amber-500',
+  '🐶': 'border-l-amber-500',
+  '📅': 'border-l-yellow-500',
+  '🚀': 'border-l-violet-500',
+  '💻': 'border-l-slate-500',
+  '📢': 'border-l-orange-500',
+  '🤝': 'border-l-teal-500',
+  '💰': 'border-l-green-500',
+  '👥': 'border-l-indigo-500',
+  '🔬': 'border-l-cyan-500',
+  '⚖️': 'border-l-gray-500',
+  '🎉': 'border-l-rose-500',
 };
 
 export function TopicCard({ topic }: TopicCardProps) {
@@ -35,8 +35,8 @@ export function TopicCard({ topic }: TopicCardProps) {
   return (
     <div 
       className={cn(
-        'group rounded-xl border border-border bg-card p-4 transition-smooth hover:border-primary/20 hover:shadow-sm',
-        iconBgColors[topic.icon] || 'bg-muted/30'
+        'group rounded-xl border border-border border-l-4 bg-card p-4 transition-smooth hover:border-primary/20 hover:shadow-sm',
+        iconBorderColors[topic.icon] || 'border-l-muted-foreground'
       )}
     >
       {/* Header */}
