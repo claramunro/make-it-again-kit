@@ -2,40 +2,40 @@ import { useState, useMemo } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { Header, MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { HighlightGroup } from '@/components/HighlightGroup';
-import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
-import { HighlightDetailDrawer } from '@/components/HighlightDetailDrawer';
-import { highlights, Highlight } from '@/data/highlights';
+import { BookmarkGroup } from '@/components/BookmarkGroup';
+import { BookmarkDetailPanel } from '@/components/BookmarkDetailPanel';
+import { BookmarkDetailDrawer } from '@/components/BookmarkDetailDrawer';
+import { bookmarks, Bookmark } from '@/data/bookmarks';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 type GroupBy = 'topics' | 'sessions';
 
-const Highlights = () => {
+const Bookmarks = () => {
   const isMobile = useIsMobile();
   const [groupBy, setGroupBy] = useState<GroupBy>('topics');
-  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
+  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Group highlights by topic or session
-  const groupedHighlights = useMemo(() => {
-    const groups: Record<string, { title: string; icon?: string; highlights: Highlight[] }> = {};
+  // Group bookmarks by topic or session
+  const groupedBookmarks = useMemo(() => {
+    const groups: Record<string, { title: string; icon?: string; bookmarks: Bookmark[] }> = {};
 
-    highlights.forEach((highlight) => {
+    bookmarks.forEach((bookmark) => {
       const key = groupBy === 'topics' 
-        ? highlight.topicId || 'uncategorized'
-        : highlight.sessionId;
+        ? bookmark.topicId || 'uncategorized'
+        : bookmark.sessionId;
       
       const title = groupBy === 'topics'
-        ? highlight.topicName || 'Uncategorized'
-        : highlight.sessionTitle;
+        ? bookmark.topicName || 'Uncategorized'
+        : bookmark.sessionTitle;
       
-      const icon = groupBy === 'topics' ? highlight.topicIcon : undefined;
+      const icon = groupBy === 'topics' ? bookmark.topicIcon : undefined;
 
       if (!groups[key]) {
-        groups[key] = { title, icon, highlights: [] };
+        groups[key] = { title, icon, bookmarks: [] };
       }
-      groups[key].highlights.push(highlight);
+      groups[key].bookmarks.push(bookmark);
     });
 
     return Object.entries(groups).map(([key, group]) => ({
@@ -44,8 +44,8 @@ const Highlights = () => {
     }));
   }, [groupBy]);
 
-  const handleSelectHighlight = (highlight: Highlight) => {
-    setSelectedHighlight(highlight);
+  const handleSelectBookmark = (bookmark: Bookmark) => {
+    setSelectedBookmark(bookmark);
     if (isMobile) {
       setDrawerOpen(true);
     }
@@ -56,7 +56,7 @@ const Highlights = () => {
       {!isMobile && <Sidebar />}
       
       <div className="flex flex-1 flex-col">
-        <MobileHeader title="Highlights" count={highlights.length} />
+        <MobileHeader title="Bookmarks" count={bookmarks.length} />
         <Header />
         
         <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
@@ -65,7 +65,7 @@ const Highlights = () => {
             {!isMobile && (
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
+                  <h1 className="text-xl font-semibold text-foreground">Bookmarks</h1>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-sm text-muted-foreground">Sort By</span>
@@ -104,30 +104,30 @@ const Highlights = () => {
 
             {/* Main Content */}
             <div className="flex gap-6">
-              {/* Highlights List */}
+              {/* Bookmarks List */}
               <div className={cn(
                 'space-y-4',
-                !isMobile && selectedHighlight ? 'flex-1' : 'w-full'
+                !isMobile && selectedBookmark ? 'flex-1' : 'w-full'
               )}>
-                {groupedHighlights.map((group, index) => (
-                  <HighlightGroup
+                {groupedBookmarks.map((group, index) => (
+                  <BookmarkGroup
                     key={group.id}
                     title={group.title}
                     icon={group.icon}
-                    highlights={group.highlights}
-                    selectedId={selectedHighlight?.id || null}
-                    onSelectHighlight={handleSelectHighlight}
+                    bookmarks={group.bookmarks}
+                    selectedId={selectedBookmark?.id || null}
+                    onSelectBookmark={handleSelectBookmark}
                     defaultExpanded={index === 0}
                   />
                 ))}
               </div>
 
               {/* Desktop Detail Panel */}
-              {!isMobile && selectedHighlight && (
+              {!isMobile && selectedBookmark && (
                 <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-24 max-h-[calc(100vh-140px)] flex flex-col overflow-hidden">
-                  <HighlightDetailPanel 
-                    highlight={selectedHighlight} 
-                    onClose={() => setSelectedHighlight(null)}
+                  <BookmarkDetailPanel 
+                    bookmark={selectedBookmark} 
+                    onClose={() => setSelectedBookmark(null)}
                     showCloseButton
                   />
                 </div>
@@ -138,8 +138,8 @@ const Highlights = () => {
       </div>
 
       {/* Mobile Detail Drawer */}
-      <HighlightDetailDrawer
-        highlight={selectedHighlight}
+      <BookmarkDetailDrawer
+        bookmark={selectedBookmark}
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
       />
@@ -149,4 +149,4 @@ const Highlights = () => {
   );
 };
 
-export default Highlights;
+export default Bookmarks;

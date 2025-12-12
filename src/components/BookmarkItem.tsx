@@ -1,14 +1,14 @@
-import { Bookmark, ChevronRight, Share, Trash2, Clock } from 'lucide-react';
-import { Highlight } from '@/data/highlights';
+import { Bookmark as BookmarkIcon, ChevronRight, Share, Trash2 } from 'lucide-react';
+import { Bookmark } from '@/data/bookmarks';
 import { cn } from '@/lib/utils';
 
-interface HighlightItemProps {
-  highlight: Highlight;
+interface BookmarkItemProps {
+  bookmark: Bookmark;
   isSelected: boolean;
   onSelect: () => void;
 }
 
-export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItemProps) {
+export function BookmarkItem({ bookmark, isSelected, onSelect }: BookmarkItemProps) {
   return (
     <div
       onClick={onSelect}
@@ -24,18 +24,18 @@ export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItem
         'flex h-8 w-8 items-center justify-center rounded',
         isSelected ? 'text-primary' : 'text-muted-foreground'
       )}>
-        <Bookmark className={cn('h-5 w-5', isSelected && 'fill-primary')} />
+        <BookmarkIcon className={cn('h-5 w-5', isSelected && 'fill-primary')} />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-medium text-foreground truncate">
-          {highlight.title}
+          {bookmark.title}
         </h4>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs text-muted-foreground">{highlight.datetime}</span>
+          <span className="text-xs text-muted-foreground">{bookmark.datetime}</span>
           <span className="rounded-full bg-primary/80 px-2 py-0.5 text-xs font-medium text-primary-foreground">
-            {highlight.timestamp}
+            {bookmark.timestamp}
           </span>
         </div>
       </div>

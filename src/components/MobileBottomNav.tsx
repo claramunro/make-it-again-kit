@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Folder, Star, Settings } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
 
@@ -11,7 +11,7 @@ export function MobileBottomNav() {
   const navItems = [
     { icon: FileText, path: '/', label: 'Sessions' },
     { icon: Folder, path: '/topics', label: 'Topics' },
-    { icon: Star, path: '/highlights', label: 'Highlights' },
+    { icon: Bookmark, path: '/bookmarks', label: 'Bookmarks' },
     { icon: Settings, path: '/settings', label: 'Settings' },
   ];
 
@@ -52,15 +52,15 @@ export function MobileBottomNav() {
         </button>
 
         <Link
-          to="/highlights"
+          to="/bookmarks"
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
-            location.pathname === '/highlights'
+            location.pathname === '/bookmarks'
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          <Star className="h-6 w-6" />
+          <Bookmark className="h-6 w-6" />
         </Link>
 
         <Link

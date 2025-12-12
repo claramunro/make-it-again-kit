@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Star, Settings, HelpCircle, ChevronLeft } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, HelpCircle, ChevronLeft, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { sessionGroups } from '@/data/sessions';
 import { topics } from '@/data/topics';
-import { highlights } from '@/data/highlights';
+import { bookmarks } from '@/data/bookmarks';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
@@ -22,19 +22,20 @@ interface SubItem {
   id: string;
   label: string;
   path: string;
+  isStarred?: boolean;
 }
 
 const mainNavItems: NavItem[] = [
   { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
   { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
-  { icon: <Star className="h-5 w-5" />, label: 'Highlights', path: '/highlights' },
+  { icon: <Bookmark className="h-5 w-5" />, label: 'Bookmarks', path: '/bookmarks' },
 ];
 
 const bottomNavItems = [
   { icon: <HelpCircle className="h-5 w-5" />, label: 'Support', action: 'support' },
 ];
 
-// Get first 4 sessions
+// Get first 4 sessions (prioritizing starred ones)
 const recentSessions: SubItem[] = sessionGroups
   .flatMap(group => group.sessions)
   .slice(0, 4)
@@ -44,24 +45,27 @@ const recentSessions: SubItem[] = sessionGroups
     path: `/session/${session.id}`,
   }));
 
-// Get first 4 topics
-const recentTopics: SubItem[] = topics.slice(0, 4).map(topic => ({
+// Get starred topics first, then recent ones
+const starredTopics = topics.filter(t => t.isFavorite);
+const nonStarredTopics = topics.filter(t => !t.isFavorite);
+const recentTopics: SubItem[] = [...starredTopics, ...nonStarredTopics].slice(0, 4).map(topic => ({
   id: topic.id,
   label: topic.name,
   path: `/topic/${topic.id}`,
+  isStarred: topic.isFavorite,
 }));
 
-// Get first 4 highlights
-const recentHighlights: SubItem[] = highlights.slice(0, 4).map(highlight => ({
-  id: highlight.id,
-  label: highlight.title.length > 25 ? highlight.title.substring(0, 25) + '...' : highlight.title,
-  path: `/highlights#${highlight.id}`,
+// Get first 4 bookmarks
+const recentBookmarks: SubItem[] = bookmarks.slice(0, 4).map(bookmark => ({
+  id: bookmark.id,
+  label: bookmark.title.length > 25 ? bookmark.title.substring(0, 25) + '...' : bookmark.title,
+  path: `/bookmarks#${bookmark.id}`,
 }));
 
 const subItemsMap: Record<string, SubItem[]> = {
   Sessions: recentSessions,
   Topics: recentTopics,
-  Highlights: recentHighlights,
+  Bookmarks: recentBookmarks,
 };
 
 export function useSidebarCollapsed() {
@@ -198,13 +202,14 @@ export function Sidebar() {
                         <Link
                           to={subItem.path}
                           className={cn(
-                            'block truncate rounded-md px-2 py-1.5 text-xs transition-smooth',
+                            'flex items-center gap-1.5 truncate rounded-md px-2 py-1.5 text-xs transition-smooth',
                             isSubItemActive(subItem.path)
                               ? 'bg-sidebar-accent/50 text-sidebar-accent-foreground'
                               : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                           )}
                         >
-                          {subItem.label}
+                          {subItem.isStarred && <Star className="h-3 w-3 fill-primary text-primary shrink-0" />}
+                          <span className="truncate">{subItem.label}</span>
                         </Link>
                       </li>
                     ))}
