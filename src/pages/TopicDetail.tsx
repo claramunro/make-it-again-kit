@@ -473,18 +473,18 @@ const TopicDetail = () => {
               {/* Center: Tabs */}
               <div className="flex-1 flex justify-center">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['overview', 'sessions', 'bookmarks', 'appearance'] as TopicTab[]).map((tab) => (
+                  {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
                     <button
                       key={tab}
-                      onClick={() => setActiveTopicTab(tab)}
+                      onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
                       className={cn(
                         'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        activeTopicTab === tab
+                        (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
                           ? 'bg-card text-foreground shadow-sm'
                           : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
-                      {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
                     </button>
                   ))}
                 </div>
