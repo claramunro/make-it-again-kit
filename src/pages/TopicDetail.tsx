@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark } from 'lucide-react';
+import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark, Clock, Trash2, Quote, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -136,6 +136,50 @@ const wallpaperPresets = [
   { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset' },
 ];
 
+// Mock bookmarks for sessions
+const mockSessionBookmarks = [
+  {
+    id: '1',
+    title: 'Uncertainty and Initiative in Action',
+    date: 'Oct 21, 2025',
+    time: '7:22 PM',
+    duration: '01:14',
+    mainIdea: 'When faced with uncertainty, taking a small, concrete action—like moving to a workspace—can precede clarity and serve as a catalyst for problem-solving, rather than waiting for full understanding before acting.',
+    originalContext: "Bye bye. I'm going to the desk. I wasn't sure what to do. I'll figure that out.",
+    analysis: 'This reflects the principle of "action preceding insight," common in dynamic work environments where decisions must be made amid ambiguity. By beginning the process—physically relocating and committing to figuring it out—the individual leverages momentum over hesitation, turning uncertainty into productive exploration.',
+  },
+  {
+    id: '2',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:25 PM',
+    duration: '00:45',
+    mainIdea: 'The order of operations matters significantly in any process. Starting with the right foundation prevents costly rework later.',
+    originalContext: "We need to establish the baseline before we can measure improvement. Otherwise, we're just guessing.",
+    analysis: 'This highlights the importance of methodical approach in problem-solving and development processes.',
+  },
+  {
+    id: '3',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:30 PM',
+    duration: '00:52',
+    mainIdea: 'Iterative feedback loops accelerate learning and reduce the time between action and insight.',
+    originalContext: "Every time we test, we learn something new. The faster we can cycle through, the quicker we reach our goal.",
+    analysis: 'This emphasizes the value of rapid iteration in modern development methodologies.',
+  },
+  {
+    id: '4',
+    title: 'The Importance of Sequence in Process',
+    date: 'Oct 21, 2025',
+    time: '7:35 PM',
+    duration: '01:03',
+    mainIdea: 'Documentation serves not just as record-keeping but as a tool for thinking through complex problems.',
+    originalContext: "Writing it down forces me to think clearly. If I can't explain it simply, I don't understand it well enough.",
+    analysis: 'This reflects the cognitive benefits of externalization—using writing as a thinking tool rather than merely a recording tool.',
+  },
+];
+
 const TopicDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -155,6 +199,9 @@ const TopicDetail = () => {
   const [selectedWallpaper, setSelectedWallpaper] = useState('mint');
   const [blurAmount, setBlurAmount] = useState([50]);
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
+  const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
+  
+  const selectedBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
   const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
@@ -387,8 +434,89 @@ const TopicDetail = () => {
                       )}
                       
                       {activeSessionTab === 'bookmarks' && (
-                        <div className="flex items-center justify-center h-40 text-muted-foreground">
-                          <p>No bookmarks in this session yet.</p>
+                        <div className="flex gap-6 h-full">
+                          {/* Bookmarks List */}
+                          <div className="w-64 shrink-0 space-y-1 overflow-y-auto">
+                            {mockSessionBookmarks.map((bookmark) => (
+                              <button
+                                key={bookmark.id}
+                                onClick={() => setSelectedBookmarkId(bookmark.id)}
+                                className={cn(
+                                  'w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-smooth',
+                                  selectedBookmarkId === bookmark.id
+                                    ? 'bg-card border border-border shadow-sm'
+                                    : 'hover:bg-muted/50'
+                                )}
+                              >
+                                <Bookmark className="h-4 w-4 shrink-0 text-primary" />
+                                <span className="truncate">{bookmark.title}</span>
+                              </button>
+                            ))}
+                          </div>
+                          
+                          {/* Bookmark Detail */}
+                          {selectedBookmark && (
+                            <div className="flex-1 overflow-y-auto">
+                              <div className="rounded-xl border border-border bg-card p-5">
+                                {/* Header */}
+                                <div className="flex items-center justify-between mb-4">
+                                  <div>
+                                    <p className="text-sm text-foreground">{selectedBookmark.date}</p>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                      <span className="text-xs text-muted-foreground">{selectedBookmark.time}</span>
+                                      <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                                        <Clock className="h-3 w-3" />
+                                        {selectedBookmark.duration}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+                                      <Share className="h-4 w-4" />
+                                      Share
+                                    </Button>
+                                    <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+                                      <Trash2 className="h-4 w-4" />
+                                      Delete
+                                    </Button>
+                                  </div>
+                                </div>
+                                
+                                {/* Main Idea */}
+                                <div className="mb-4">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                                    <h4 className="text-sm font-medium">Main Idea</h4>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {selectedBookmark.mainIdea}
+                                  </p>
+                                </div>
+                                
+                                {/* Original Context */}
+                                <div className="mb-4">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <Quote className="h-4 w-4 text-muted-foreground" />
+                                    <h4 className="text-sm font-medium">Original Context</h4>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground italic leading-relaxed">
+                                    {selectedBookmark.originalContext}
+                                  </p>
+                                </div>
+                                
+                                {/* Analysis */}
+                                <div>
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                                    <h4 className="text-sm font-medium">Analysis</h4>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {selectedBookmark.analysis}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                       
