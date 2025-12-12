@@ -22,6 +22,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '45 minutes',
         date: 'Nov 4, 2025',
         type: 'document',
+        isFavorite: true,
       },
     ],
   },

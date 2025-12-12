@@ -233,11 +233,11 @@ const TopicDetail = () => {
               <div className="w-80 shrink-0 border-r border-border overflow-y-auto bg-background">
                 <div className="p-3 space-y-1">
                   {mockSessions.map((session) => (
-                    <button
+                    <div
                       key={session.id}
                       onClick={() => setSelectedSessionId(session.id)}
                       className={cn(
-                        'w-full flex items-start gap-3 rounded-lg px-3 py-3 text-left transition-smooth',
+                        'w-full flex items-start gap-3 rounded-lg px-3 py-3 text-left transition-smooth cursor-pointer',
                         selectedSessionId === session.id
                           ? 'bg-card border border-border shadow-sm'
                           : 'hover:bg-muted/50'
@@ -249,9 +249,22 @@ const TopicDetail = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="flex-1 text-sm font-medium truncate">{session.title}</span>
-                          {sessionFavorites[session.id] && (
-                            <Star className="h-3.5 w-3.5 shrink-0 fill-yellow-400 text-yellow-400" />
-                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSessionFavorite(session.id);
+                            }}
+                            className="shrink-0 p-0.5 rounded hover:bg-muted transition-smooth"
+                          >
+                            <Star 
+                              className={cn(
+                                "h-3.5 w-3.5",
+                                sessionFavorites[session.id] 
+                                  ? "fill-yellow-400 text-yellow-400" 
+                                  : "text-muted-foreground hover:text-yellow-400"
+                              )} 
+                            />
+                          </button>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {session.date} • {session.time} • {session.duration}
@@ -263,7 +276,7 @@ const TopicDetail = () => {
                           </p>
                         )}
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               </div>

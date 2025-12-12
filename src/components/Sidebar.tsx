@@ -36,14 +36,15 @@ const bottomNavItems = [
 ];
 
 // Get first 4 sessions (prioritizing starred ones)
-const recentSessions: SubItem[] = sessionGroups
-  .flatMap(group => group.sessions)
-  .slice(0, 4)
-  .map(session => ({
-    id: session.id,
-    label: session.title.length > 25 ? session.title.substring(0, 25) + '...' : session.title,
-    path: `/session/${session.id}`,
-  }));
+const allSessions = sessionGroups.flatMap(group => group.sessions);
+const starredSessions = allSessions.filter(s => s.isFavorite);
+const nonStarredSessions = allSessions.filter(s => !s.isFavorite);
+const recentSessions: SubItem[] = [...starredSessions, ...nonStarredSessions].slice(0, 4).map(session => ({
+  id: session.id,
+  label: session.title.length > 25 ? session.title.substring(0, 25) + '...' : session.title,
+  path: `/session/${session.id}`,
+  isStarred: session.isFavorite,
+}));
 
 // Get starred topics first, then recent ones
 const starredTopics = topics.filter(t => t.isFavorite);
@@ -208,7 +209,12 @@ export function Sidebar() {
                               : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                           )}
                         >
-                          {subItem.isStarred && <Star className="h-3 w-3 fill-primary text-primary shrink-0" />}
+                          {item.label === 'Bookmarks' && (
+                            <Bookmark className="h-3 w-3 shrink-0 text-muted-foreground" />
+                          )}
+                          {subItem.isStarred && item.label !== 'Bookmarks' && (
+                            <Star className="h-3 w-3 shrink-0 stroke-yellow-500 fill-yellow-400/30" />
+                          )}
                           <span className="truncate">{subItem.label}</span>
                         </Link>
                       </li>
