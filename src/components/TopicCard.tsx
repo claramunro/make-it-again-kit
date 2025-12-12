@@ -14,12 +14,21 @@ interface TopicCardProps {
 }
 
 const iconBgColors: Record<string, string> = {
-  '🎨': 'bg-pink-100',
-  '📦': 'bg-emerald-100',
-  '🏋️': 'bg-blue-100',
-  '☕': 'bg-amber-100',
-  '🐶': 'bg-amber-100',
-  '📅': 'bg-yellow-100',
+  '🎨': 'bg-pink-500/10 dark:bg-pink-500/20',
+  '📦': 'bg-emerald-500/10 dark:bg-emerald-500/20',
+  '🏋️': 'bg-blue-500/10 dark:bg-blue-500/20',
+  '☕': 'bg-amber-500/10 dark:bg-amber-500/20',
+  '🐶': 'bg-amber-500/10 dark:bg-amber-500/20',
+  '📅': 'bg-yellow-500/10 dark:bg-yellow-500/20',
+  '🚀': 'bg-violet-500/10 dark:bg-violet-500/20',
+  '💻': 'bg-slate-500/10 dark:bg-slate-500/20',
+  '📢': 'bg-orange-500/10 dark:bg-orange-500/20',
+  '🤝': 'bg-teal-500/10 dark:bg-teal-500/20',
+  '💰': 'bg-green-500/10 dark:bg-green-500/20',
+  '👥': 'bg-indigo-500/10 dark:bg-indigo-500/20',
+  '🔬': 'bg-cyan-500/10 dark:bg-cyan-500/20',
+  '⚖️': 'bg-gray-500/10 dark:bg-gray-500/20',
+  '🎉': 'bg-rose-500/10 dark:bg-rose-500/20',
 };
 
 export function TopicCard({ topic }: TopicCardProps) {

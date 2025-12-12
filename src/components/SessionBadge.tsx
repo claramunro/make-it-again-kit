@@ -1,4 +1,3 @@
-import { Wifi, Coffee, Dumbbell } from 'lucide-react';
 import { BadgeType } from '@/types/session';
 import { cn } from '@/lib/utils';
 
@@ -11,19 +10,19 @@ export function SessionBadge({ type }: SessionBadgeProps) {
 
   const badgeConfig = {
     new: {
-      icon: <Wifi className="h-3 w-3" />,
+      icon: '📦',
       label: 'New',
-      className: 'bg-primary/10 text-primary',
+      className: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
     },
     coffee: {
-      icon: <Coffee className="h-3 w-3" />,
+      icon: '☕',
       label: 'Coffee',
-      className: 'bg-primary/10 text-primary',
+      className: 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
     },
     workout: {
-      icon: <Dumbbell className="h-3 w-3" />,
+      icon: '🏋️',
       label: 'Working Out',
-      className: 'bg-primary/10 text-primary',
+      className: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
     },
   };
 
@@ -36,7 +35,7 @@ export function SessionBadge({ type }: SessionBadgeProps) {
         config.className
       )}
     >
-      {config.icon}
+      <span className="text-sm">{config.icon}</span>
       {config.label}
     </span>
   );
