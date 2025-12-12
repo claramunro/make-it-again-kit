@@ -162,70 +162,61 @@ const TopicDetail = () => {
         <main className="flex-1 rounded-tl-2xl bg-background pb-24 md:pb-0">
           {/* Topic Header */}
           <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
-            <div className="flex items-center gap-4">
-              {/* Back Button */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => navigate('/topics')}
-                className="shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              
-              {/* Topic Icon & Title */}
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{topic.icon}</span>
-                <h1 className="text-xl font-semibold">{topic.name}</h1>
-              </div>
-              
-              {/* Session Count & Last Updated */}
-              <div className="hidden md:flex items-center gap-3 text-sm text-muted-foreground border border-border rounded-lg px-3 py-1.5">
-                <span className="flex items-center gap-1.5">
-                  <FileText className="h-3.5 w-3.5" />
-                  Total Sessions: {mockSessions.length}
-                </span>
-                <span>•</span>
-                <span>Last Updated: Oct 17, 2025 10:33 AM</span>
-              </div>
-              
-              {/* Topic Tabs */}
-              <div className="ml-auto hidden md:flex items-center gap-1">
-                {(['overview', 'sessions', 'bookmarks'] as TopicTab[]).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTopicTab(tab)}
-                    className={cn(
-                      'px-4 py-2 text-sm font-medium transition-all',
-                      activeTopicTab === tab
-                        ? 'text-foreground border-b-2 border-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+            <div className="mx-auto max-w-6xl">
+              {/* Top row: Back, Title, Shared badge */}
+              <div className="mb-3 flex items-start gap-4">
+                {/* Back Button */}
+                <button 
+                  onClick={() => navigate('/topics')}
+                  className="mt-1 rounded-lg p-1 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+                
+                {/* Topic Icon & Title with meta below */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{topic.icon}</span>
+                    <h1 className="text-xl font-semibold">{topic.name}</h1>
+                    {topic.sharedBy && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                        <Users className="h-3 w-3" />
+                        Shared by {topic.sharedBy}
+                      </span>
                     )}
-                  >
-                    {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </button>
-                ))}
+                  </div>
+                  
+                  {/* Session Count & Last Updated as line items */}
+                  <div className="mt-2 hidden md:flex items-center gap-4 text-sm text-muted-foreground border border-border rounded-lg px-3 py-2 w-fit">
+                    <span className="flex items-center gap-1.5">
+                      <FileText className="h-3.5 w-3.5" />
+                      Total Sessions: {mockSessions.length}
+                    </span>
+                    <span>•</span>
+                    <span>Last Updated: Oct 17, 2025 10:33 AM</span>
+                  </div>
+                </div>
               </div>
-              
-              {/* Appearance Button */}
-              <button
-                onClick={() => setActiveTopicTab('appearance')}
-                className={cn(
-                  'hidden md:block px-4 py-2 text-sm font-medium transition-all',
-                  activeTopicTab === 'appearance'
-                    ? 'text-foreground border-b-2 border-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                )}
-              >
-                Appearance
-              </button>
-              
-              {topic.sharedBy && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
-                  <Users className="h-3 w-3" />
-                  Shared by {topic.sharedBy}
-                </span>
-              )}
+
+              {/* Topic Tabs - matching SessionDetail style */}
+              <div className="mt-4 flex justify-center">
+                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                  {(['overview', 'sessions', 'bookmarks', 'appearance'] as TopicTab[]).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTopicTab(tab)}
+                      className={cn(
+                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                        activeTopicTab === tab
+                          ? 'bg-card text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
           
