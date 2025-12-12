@@ -166,11 +166,11 @@ export function Sidebar() {
 
   return (
     <>
-      <aside 
-        className={cn(
-          "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
-          collapsed ? "w-20" : "w-64"
-        )}
+        <aside 
+          className={cn(
+            "relative sticky top-0 z-30 flex h-screen flex-col bg-sidebar transition-all duration-300",
+            collapsed ? "w-20" : "w-64"
+          )}
       >
         {/* Logo & Collapse Toggle */}
         <div className="flex h-14 items-center justify-between px-4">
