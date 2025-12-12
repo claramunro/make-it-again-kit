@@ -164,8 +164,8 @@ const SessionDetail = () => {
           </div>
 
           {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
-          {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
-          <div className="flex h-[calc(100vh-208px)]">
+          {/* Account for header (56px) + session header (~80px) + audio bar (~72px) = 208px, plus extra padding */}
+          <div className="flex h-[calc(100vh-280px)]">
             {/* Left Column - Only show for Highlights tab */}
             {activeTab === 'highlights' && (
               <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
