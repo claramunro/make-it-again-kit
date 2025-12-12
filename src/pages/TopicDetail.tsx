@@ -181,44 +181,31 @@ const TopicDetail = () => {
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Topic Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
-            <div className="mx-auto max-w-6xl">
-              {/* Top row: Back, Title, Shared badge */}
-              <div className="mb-3 flex items-start gap-4">
-                {/* Back Button */}
+            <div className="flex items-center justify-between gap-4">
+              {/* Left: Back button + Icon + Title + Meta */}
+              <div className="flex items-center gap-3 min-w-0">
                 <button 
                   onClick={() => navigate('/topics')}
-                  className="mt-1 rounded-lg p-1 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
                 >
-                  <ArrowLeft className="h-5 w-5" />
+                  <ArrowLeft className="h-4 w-4" />
                 </button>
-                
-                {/* Topic Icon & Title with meta below */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{topic.icon}</span>
-                    <h1 className="text-xl font-semibold">{topic.name}</h1>
-                    {topic.sharedBy && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
-                        <Users className="h-3 w-3" />
-                        Shared by {topic.sharedBy}
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Session Count & Last Updated as line items */}
-                  <div className="mt-2 hidden md:flex items-center gap-4 text-sm text-muted-foreground border border-border rounded-lg px-3 py-2 w-fit">
-                    <span className="flex items-center gap-1.5">
-                      <FileText className="h-3.5 w-3.5" />
-                      Total Sessions: {mockSessions.length}
-                    </span>
-                    <span>•</span>
-                    <span>Last Updated: Oct 17, 2025 10:33 AM</span>
-                  </div>
+                <span className="text-xl shrink-0">{topic.icon}</span>
+                <div className="min-w-0">
+                  <h1 className="truncate text-sm font-medium leading-snug text-foreground">
+                    {topic.name}
+                  </h1>
+                  <p className="text-xs text-muted-foreground">
+                    {mockSessions.length} Sessions
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Last Updated: Oct 17, 2025 10:33 AM
+                  </p>
                 </div>
               </div>
 
-              {/* Topic Tabs - matching SessionDetail style */}
-              <div className="mt-4 flex justify-center">
+              {/* Center: Tabs */}
+              <div className="flex-1 flex justify-center">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
                   {(['overview', 'sessions', 'bookmarks', 'appearance'] as TopicTab[]).map((tab) => (
                     <button
@@ -235,6 +222,18 @@ const TopicDetail = () => {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Right: Shared badge */}
+              <div className="shrink-0">
+                {topic.sharedBy ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                    <Users className="h-3 w-3" />
+                    Shared by {topic.sharedBy}
+                  </span>
+                ) : (
+                  <div className="w-24" /> 
+                )}
               </div>
             </div>
           </div>
