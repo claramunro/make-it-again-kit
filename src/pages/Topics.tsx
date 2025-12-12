@@ -4,11 +4,19 @@ import { TopicsHeader, TopicsList } from '@/components/TopicsList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { topics } from '@/data/topics';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { ArrowDownUp, Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import TopicsMasterDetail from './TopicsMasterDetail';
 
 const Topics = () => {
   const isMobile = useIsMobile();
+  const isLargeScreen = useIsLargeScreen();
+
+  // Use master-detail layout on large screens
+  if (isLargeScreen) {
+    return <TopicsMasterDetail />;
+  }
 
   const mobileActions = (
     <>

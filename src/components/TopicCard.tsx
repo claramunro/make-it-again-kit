@@ -7,6 +7,12 @@ interface TopicCardProps {
   topic: Topic;
 }
 
+interface TopicCardSelectableProps {
+  topic: Topic;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
+}
+
 // Colors for emoji container (border stronger, fill transparent)
 const topicColors: Record<string, { border: string; bg: string }> = {
   '🎨': { border: 'border-pink-400', bg: 'bg-pink-400/15' },
@@ -108,6 +114,50 @@ export function TopicCard({ topic }: TopicCardProps) {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Selectable version for master-detail layout
+export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSelectableProps) {
+  const colors = topicColors[topic.icon] || defaultColors;
+
+  const handleClick = () => {
+    onSelect?.(topic.id);
+  };
+
+  return (
+    <div 
+      onClick={handleClick}
+      className={cn(
+        "group rounded-xl border bg-card p-3 transition-smooth hover:border-primary/20 hover:shadow-sm cursor-pointer",
+        isSelected ? "border-primary bg-primary/5" : "border-border"
+      )}
+    >
+      <div className="flex items-center gap-3">
+        {/* Emoji container */}
+        <div className={cn(
+          'flex h-9 w-9 items-center justify-center rounded-lg border-2',
+          colors.border,
+          colors.bg
+        )}>
+          <span className="text-base">{topic.icon}</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-foreground truncate">{topic.name}</h3>
+          <p className="text-xs text-muted-foreground">
+            {topic.sessionCount} sessions
+          </p>
+        </div>
+        <Star 
+          className={cn(
+            'h-4 w-4 shrink-0',
+            topic.isFavorite 
+              ? 'fill-yellow-400 text-yellow-400' 
+              : 'text-muted-foreground/30'
+          )} 
+        />
       </div>
     </div>
   );
