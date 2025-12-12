@@ -5,13 +5,21 @@ import { SessionList } from '@/components/SessionList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { sessionGroups } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import SessionsMasterDetail from './SessionsMasterDetail';
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const isLargeScreen = useIsLargeScreen();
   const totalSessions = sessionGroups.reduce(
     (acc, group) => acc + group.sessions.length,
     0
   );
+
+  // Use master-detail layout on large screens
+  if (isLargeScreen) {
+    return <SessionsMasterDetail />;
+  }
 
   return (
     <div className="flex min-h-screen bg-card">
