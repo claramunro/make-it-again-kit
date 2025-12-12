@@ -85,7 +85,10 @@ export function TopicCard({ topic }: TopicCardProps) {
   };
 
   return (
-    <div className="group rounded-xl border border-border bg-card overflow-hidden transition-smooth hover:border-primary/20 hover:shadow-md">
+    <div 
+      onClick={handleCardClick}
+      className="group rounded-xl border border-border bg-card overflow-hidden transition-smooth hover:border-primary/20 hover:shadow-md cursor-pointer"
+    >
       {/* Colorful header with gradient and blur effects */}
       <div className="relative h-24 overflow-hidden">
         {/* Base gradient layer */}
@@ -134,13 +137,10 @@ export function TopicCard({ topic }: TopicCardProps) {
       {/* Content area */}
       <div className="p-4">
         {/* Header */}
-        <button 
-          onClick={handleCardClick}
-          className="flex items-center gap-2.5 text-left hover:opacity-80 transition-smooth mb-3"
-        >
+        <div className="flex items-center gap-2.5 mb-3">
           <span className="text-xl">{topic.icon}</span>
           <h3 className="text-sm font-semibold text-foreground">{topic.name}</h3>
-        </button>
+        </div>
 
         {/* Sessions */}
         <div className="space-y-2">
@@ -148,6 +148,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             <Link
               key={session.id}
               to={`/session/${session.id}`}
+              onClick={(e) => e.stopPropagation()}
               className="flex items-center justify-between rounded-lg bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
             >
               <div className="flex-1 min-w-0">
@@ -162,12 +163,9 @@ export function TopicCard({ topic }: TopicCardProps) {
           
           {/* Show more link if there are more sessions */}
           {topic.sessionCount > 2 && (
-            <button
-              onClick={handleCardClick}
-              className="w-full text-center text-xs text-muted-foreground hover:text-foreground py-2 transition-smooth"
-            >
+            <div className="w-full text-center text-xs text-muted-foreground py-2">
               +{topic.sessionCount - 2} more session{topic.sessionCount - 2 !== 1 ? 's' : ''}
-            </button>
+            </div>
           )}
         </div>
       </div>
