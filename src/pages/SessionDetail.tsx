@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 
 type SessionTab = 'details' | 'highlights' | 'transcript';
+type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript';
 
 const sessionTypes = [
   { id: 'business', label: 'Business Meetings', icon: '📁' },
@@ -79,6 +80,7 @@ const SessionDetail = () => {
   const isMobile = useIsMobile();
   const { collapsed } = useSidebarCollapsed();
   const [activeTab, setActiveTab] = useState<SessionTab>('details');
+  const [mobileActiveTab, setMobileActiveTab] = useState<MobileSessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
@@ -93,12 +95,221 @@ const SessionDetail = () => {
   const selectedTopicData = topics.find(t => t.id === '2');
   const selectedSessionTypeData = sessionTypes.find(t => t.id === selectedSessionType);
 
+  // Mobile/Tablet Layout
+  if (isMobile) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background pb-20">
+        {/* Mobile Header - Title Row */}
+        <header className="sticky top-0 z-10 border-b border-border bg-card">
+          {/* Title Row */}
+          <div className="flex items-center gap-3 px-4 py-3">
+            <button 
+              onClick={() => navigate('/')}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <h1 className="truncate text-sm font-medium leading-snug text-foreground">
+                Session Title
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Oct 18, 2025 9:16 AM • 2 minutes
+              </p>
+            </div>
+          </div>
+
+          {/* Tab Bar - Full Width */}
+          <div className="flex border-t border-border">
+            {(['details', 'highlights', 'chat', 'transcript'] as MobileSessionTab[]).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setMobileActiveTab(tab)}
+                className={cn(
+                  'flex-1 py-3 text-sm font-medium transition-smooth border-b-2',
+                  mobileActiveTab === tab
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        {/* Content - Single Column */}
+        <main className="flex-1 overflow-auto p-4">
+          {/* Details Tab */}
+          {mobileActiveTab === 'details' && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-base font-semibold text-foreground">Summary</h2>
+                <p className="text-sm leading-relaxed text-foreground">
+                  The session explored Kevin Cavanaugh's unique approach to urban development, focusing on long-term holds, creative financing, and legal discrimination by profession.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-base font-semibold text-foreground">Your To-Dos</h2>
+                <div className="space-y-2">
+                  {[
+                    "Review Gorilla Development's website",
+                    'Research legal implications',
+                    'Draft case study outline',
+                  ].map((todo, i) => (
+                    <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
+                      <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border" />
+                      <span className="text-sm text-foreground">{todo}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Highlights Tab */}
+          {mobileActiveTab === 'highlights' && (
+            <div className="space-y-3">
+              {mockBookmarks.map((bookmark) => (
+                <div
+                  key={bookmark.id}
+                  className={cn(
+                    "rounded-xl border border-border bg-card p-4 transition-smooth",
+                    selectedBookmark.id === bookmark.id && "border-primary"
+                  )}
+                  onClick={() => setSelectedBookmark(bookmark)}
+                >
+                  <div className="flex items-start gap-3 mb-3">
+                    <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+                  </div>
+                  {selectedBookmark.id === bookmark.id && (
+                    <div className="space-y-3 pt-2 border-t border-border">
+                      <div>
+                        <div className="mb-1 flex items-center gap-2">
+                          <Lightbulb className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs font-semibold text-foreground">Main Idea</span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-foreground">{bookmark.mainIdea}</p>
+                      </div>
+                      <div>
+                        <div className="mb-1 flex items-center gap-2">
+                          <Quote className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-xs font-semibold text-foreground">Original Context</span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-muted-foreground italic">{bookmark.originalContext}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Chat Tab */}
+          {mobileActiveTab === 'chat' && (
+            <div className="flex flex-col h-[calc(100vh-220px)]">
+              <div className="flex-1 overflow-auto space-y-4 mb-4">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-muted px-4 py-3">
+                    <p className="text-sm text-foreground">How engaged are they in this opportunity?</p>
+                  </div>
+                </div>
+
+                {/* AI Response */}
+                <div className="rounded-xl border-l-4 border-primary/30 bg-primary/5 p-4">
+                  <p className="mb-3 text-sm leading-relaxed text-foreground">
+                    The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland.
+                  </p>
+                  <ul className="space-y-2 text-sm text-foreground">
+                    <li>- He actively pursues projects that combine affordability with profitability.</li>
+                    <li>- His willingness to cap investor returns shows prioritization of mission over yield.</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="shrink-0">
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-2">
+                  <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={chatMessage}
+                    onChange={(e) => setChatMessage(e.target.value)}
+                    placeholder="How can I help?"
+                    className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                  />
+                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Transcript Tab */}
+          {mobileActiveTab === 'transcript' && (
+            <div>
+              <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
+                <div className="flex items-center gap-2 text-sm text-primary">
+                  <Sparkles className="h-4 w-4" />
+                  Viewing cleaned transcript
+                </div>
+                <button 
+                  onClick={() => setViewOriginal(!viewOriginal)}
+                  className="text-xs text-muted-foreground hover:text-foreground"
+                >
+                  {viewOriginal ? 'View cleaned' : 'View original'}
+                </button>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-4">
+                <div className="space-y-4 text-sm leading-relaxed text-foreground">
+                  <div>
+                    <p className="mb-1 font-semibold">Speaker 1:</p>
+                    <p>This is our first experiment in legal discrimination. I can say, I won't rent to you because you're a lawyer.</p>
+                  </div>
+                  <div>
+                    <p className="mb-1 font-semibold">Speaker 2:</p>
+                    <p>I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+
+        {/* Audio Player */}
+        <div className="fixed bottom-20 left-0 right-0 z-20 border-t border-border bg-card px-4 py-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsPlaying(!isPlaying)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+            >
+              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+            </button>
+            <div className="flex-1 h-1 rounded-full bg-muted">
+              <div className="h-1 w-1/6 rounded-full bg-primary" />
+            </div>
+            <span className="text-xs text-muted-foreground">22:28</span>
+          </div>
+        </div>
+
+        <MobileBottomNav />
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="flex min-h-screen bg-card">
-      {!isMobile && <Sidebar />}
+      <Sidebar />
       
       <div className="flex flex-1 flex-col">
-        {!isMobile && <Header />}
+        <Header />
         
         <main className="flex-1 overflow-hidden rounded-tl-2xl bg-background">
           {/* Session Header */}
@@ -433,7 +644,7 @@ const SessionDetail = () => {
         </main>
         
         {/* Audio Player - Fixed at bottom */}
-        <div className={cn("fixed bottom-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", isMobile ? "left-0" : collapsed ? "left-20" : "left-64")}>
+        <div className={cn("fixed bottom-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
           <div className="mx-auto flex max-w-4xl items-center gap-4">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
@@ -455,8 +666,6 @@ const SessionDetail = () => {
           </div>
         </div>
       </div>
-
-      <MobileBottomNav />
     </div>
   );
 };
