@@ -192,7 +192,7 @@ export function Sidebar() {
                 
                 {/* Sub-items - only show when not collapsed */}
                 {!collapsed && subItemsMap[item.label] && (
-                  <ul className="mt-1 ml-4 space-y-0.5 border-l border-border pl-3">
+                  <ul className="mt-1 ml-7 space-y-0.5">
                     {subItemsMap[item.label].map((subItem) => (
                       <li key={subItem.id}>
                         <Link
