@@ -11,7 +11,7 @@ interface HighlightDetailPanelProps {
 
 export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       {/* Header with session link */}
       <div className="flex items-center justify-between border-b border-border p-4">
         <Link 
@@ -28,7 +28,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-5 pb-8 space-y-6">
+      <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-6">
         {/* Main Idea */}
         <div>
           <div className="flex items-center gap-2 mb-3">
