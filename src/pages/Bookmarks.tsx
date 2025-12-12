@@ -52,86 +52,88 @@ const Highlights = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-card overflow-x-hidden">
+    <div className="flex h-screen bg-card overflow-hidden">
       {!isMobile && <Sidebar />}
       
-      <div className="flex flex-1 flex-col min-w-0">
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader title="Highlights" count={bookmarks.length} />
         <Header />
         
-        <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6 overflow-x-hidden">
-          <div className="mx-auto max-w-6xl w-full">
-            {/* Desktop Header */}
-            {!isMobile && (
-              <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-muted-foreground">Sort By</span>
-                  <span className="text-sm font-medium text-foreground">Recent</span>
-                </div>
-              </div>
-            )}
-
-            {/* Group By Toggle */}
-            <div className="mb-6">
-              <div className="inline-flex rounded-lg bg-muted p-1">
-                <button
-                  onClick={() => setGroupBy('sessions')}
-                  className={cn(
-                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                    groupBy === 'sessions'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  Sessions
-                </button>
-                <button
-                  onClick={() => setGroupBy('topics')}
-                  className={cn(
-                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                    groupBy === 'topics'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  Topics
-                </button>
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex gap-6">
-              {/* Bookmarks List */}
-              <div className={cn(
-                'space-y-4',
-                !isMobile && selectedBookmark ? 'flex-1' : 'w-full'
-              )}>
-                {groupedBookmarks.map((group, index) => (
-                  <BookmarkGroup
-                    key={group.id}
-                    title={group.title}
-                    icon={group.icon}
-                    bookmarks={group.bookmarks}
-                    selectedId={selectedBookmark?.id || null}
-                    onSelectBookmark={handleSelectBookmark}
-                    defaultExpanded={index === 0}
-                  />
-                ))}
-              </div>
-
-              {/* Desktop Detail Panel */}
-              {!isMobile && selectedBookmark && (
-                <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-24 max-h-[calc(100vh-140px)] flex flex-col overflow-hidden">
-                  <BookmarkDetailPanel 
-                    bookmark={selectedBookmark} 
-                    onClose={() => setSelectedBookmark(null)}
-                    showCloseButton
-                  />
+        <main className="flex-1 rounded-tl-2xl bg-background overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-y-auto p-4 pb-24 md:p-6 md:pb-6">
+            <div className="mx-auto max-w-6xl w-full">
+              {/* Desktop Header */}
+              {!isMobile && (
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-muted-foreground">Sort By</span>
+                    <span className="text-sm font-medium text-foreground">Recent</span>
+                  </div>
                 </div>
               )}
+
+              {/* Group By Toggle */}
+              <div className="mb-6">
+                <div className="inline-flex rounded-lg bg-muted p-1">
+                  <button
+                    onClick={() => setGroupBy('sessions')}
+                    className={cn(
+                      'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                      groupBy === 'sessions'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    Sessions
+                  </button>
+                  <button
+                    onClick={() => setGroupBy('topics')}
+                    className={cn(
+                      'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                      groupBy === 'topics'
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    Topics
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Content */}
+              <div className="flex gap-6">
+                {/* Bookmarks List */}
+                <div className={cn(
+                  'space-y-4',
+                  !isMobile && selectedBookmark ? 'flex-1' : 'w-full'
+                )}>
+                  {groupedBookmarks.map((group, index) => (
+                    <BookmarkGroup
+                      key={group.id}
+                      title={group.title}
+                      icon={group.icon}
+                      bookmarks={group.bookmarks}
+                      selectedId={selectedBookmark?.id || null}
+                      onSelectBookmark={handleSelectBookmark}
+                      defaultExpanded={index === 0}
+                    />
+                  ))}
+                </div>
+
+                {/* Desktop Detail Panel */}
+                {!isMobile && selectedBookmark && (
+                  <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-0 max-h-[calc(100vh-200px)] flex flex-col overflow-hidden">
+                    <BookmarkDetailPanel 
+                      bookmark={selectedBookmark} 
+                      onClose={() => setSelectedBookmark(null)}
+                      showCloseButton
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </main>
