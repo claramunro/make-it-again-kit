@@ -51,130 +51,127 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-10 flex h-14 items-center bg-card">
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
         {/* Expand button when sidebar collapsed */}
         {collapsed && (
           <button
             onClick={() => setCollapsed(false)}
-            className="ml-4 rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+            className="mr-4 rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
         )}
         
-        {/* Content container matching main content area */}
-        <div className="mx-auto flex w-full max-w-4xl flex-1 items-center justify-between px-4 md:px-6">
-          {/* Search */}
-          <div className="flex flex-1" ref={searchRef}>
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                className={cn(
-                  "h-9 w-full rounded-full border border-border bg-muted/50 pl-9 pr-9 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary",
-                  showDropdown && "rounded-b-none border-b-0"
-                )}
-              />
-              {searchValue && (
-                <button
-                  onClick={() => setSearchValue('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+        {/* Search */}
+        <div className={cn("flex flex-1", collapsed && "justify-center")} ref={searchRef}>
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              className={cn(
+                "h-9 w-full rounded-full border border-border bg-muted/50 pl-9 pr-9 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary",
+                showDropdown && "rounded-b-none border-b-0"
               )}
+            />
+            {searchValue && (
+              <button
+                onClick={() => setSearchValue('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
 
-              {/* Search Dropdown */}
-              {showDropdown && (
-                <div className="absolute left-0 right-0 top-full z-50 rounded-b-2xl border border-t-0 border-border bg-card shadow-lg">
-                  <div className="max-h-96 overflow-auto p-2">
-                    {/* Sessions Section */}
-                    <div className="mb-2">
-                      <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Sessions</h3>
-                      {mockSessions.map((session) => (
-                        <button
-                          key={session.id}
-                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
-                        >
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                            <Mic className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                                part.toLowerCase() === searchValue.toLowerCase() ? 
-                                  <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
-                              )}
-                            </p>
-                            <p className="text-xs text-muted-foreground">{session.time}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+            {/* Search Dropdown */}
+            {showDropdown && (
+              <div className="absolute left-0 right-0 top-full z-50 rounded-b-2xl border border-t-0 border-border bg-card shadow-lg">
+                <div className="max-h-96 overflow-auto p-2">
+                  {/* Sessions Section */}
+                  <div className="mb-2">
+                    <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Sessions</h3>
+                    {mockSessions.map((session) => (
+                      <button
+                        key={session.id}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                          <Mic className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                              part.toLowerCase() === searchValue.toLowerCase() ? 
+                                <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{session.time}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
 
-                    {/* Topics Section */}
-                    <div className="mb-2">
-                      <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Topics</h3>
-                      {mockTopics.map((topic) => (
-                        <button
-                          key={topic.id}
-                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
-                        >
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                            <Folder className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                                part.toLowerCase() === searchValue.toLowerCase() ? 
-                                  <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
-                              )}
-                            </p>
-                            <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                  {/* Topics Section */}
+                  <div className="mb-2">
+                    <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Topics</h3>
+                    {mockTopics.map((topic) => (
+                      <button
+                        key={topic.id}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                          <Folder className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                              part.toLowerCase() === searchValue.toLowerCase() ? 
+                                <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
 
-                    {/* Highlights Section */}
-                    <div>
-                      <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Highlights</h3>
-                      {mockHighlights.map((highlight) => (
-                        <button
-                          key={highlight.id}
-                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
-                        >
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                            <Star className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                                part.toLowerCase() === searchValue.toLowerCase() ? 
-                                  <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
-                              )}
-                            </p>
-                            <p className="text-xs text-muted-foreground">{highlight.source}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                  {/* Highlights Section */}
+                  <div>
+                    <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground">Highlights</h3>
+                    {mockHighlights.map((highlight) => (
+                      <button
+                        key={highlight.id}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                          <Star className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                              part.toLowerCase() === searchValue.toLowerCase() ? 
+                                <mark key={i} className="bg-primary/20 text-foreground">{part}</mark> : part
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{highlight.source}</p>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-
-          {/* Start Session Button */}
-          <Button variant="action" className="ml-4 gap-2" onClick={() => setStartSessionOpen(true)}>
-            <img src={glassesIcon} alt="" className="h-7 w-7" />
-            Start Session
-          </Button>
         </div>
+
+        {/* Start Session Button */}
+        <Button variant="action" className="ml-4 gap-2" onClick={() => setStartSessionOpen(true)}>
+          <img src={glassesIcon} alt="" className="h-7 w-7" />
+          Start Session
+        </Button>
       </header>
 
       <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
