@@ -986,7 +986,7 @@ const TopicDetail = () => {
           {activeTopicTab === 'bookmarks' && (
             <div className="flex flex-1 overflow-hidden">
               {/* Left: Bookmarks List */}
-              <div className="w-80 shrink-0 border-r border-border overflow-y-auto p-4">
+              <div className="w-[400px] shrink-0 border-r border-border overflow-y-auto p-4">
                 {/* Header */}
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -999,18 +999,38 @@ const TopicDetail = () => {
                   </div>
                 </div>
                 
-                {/* Bookmarks Groups */}
-                <div className="space-y-2">
-                  {groupedTopicBookmarks.length > 0 ? (
-                    groupedTopicBookmarks.map((group, index) => (
-                      <BookmarkGroup
-                        key={group.id}
-                        title={group.title}
-                        bookmarks={group.bookmarks}
-                        selectedId={selectedBookmark?.id || null}
-                        onSelectBookmark={setSelectedBookmark}
-                        defaultExpanded={index === 0}
-                      />
+                {/* Bookmarks Flat List */}
+                <div className="space-y-1">
+                  {topicBookmarks.length > 0 ? (
+                    topicBookmarks.map((bookmark) => (
+                      <button
+                        key={bookmark.id}
+                        onClick={() => setSelectedBookmark(bookmark)}
+                        className={cn(
+                          'w-full flex items-center gap-3 rounded-lg p-3 text-left transition-smooth',
+                          selectedBookmark?.id === bookmark.id
+                            ? 'bg-primary/5 border border-primary/20'
+                            : 'hover:bg-muted/50'
+                        )}
+                      >
+                        <BookmarkIcon className={cn(
+                          'h-5 w-5 shrink-0',
+                          bookmark.isFavorite 
+                            ? 'stroke-yellow-500 fill-yellow-400/30' 
+                            : 'text-muted-foreground'
+                        )} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{bookmark.title}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-xs text-muted-foreground">{bookmark.datetime}</span>
+                            <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                              {bookmark.timestamp}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">{bookmark.sessionTitle}</p>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                      </button>
                     ))
                   ) : (
                     <div className="flex items-center justify-center h-40 text-muted-foreground">
