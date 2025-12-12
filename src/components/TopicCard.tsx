@@ -147,7 +147,7 @@ export function TopicCard({ topic }: TopicCardProps) {
           {topic.sessions?.slice(0, 2).map((session) => (
             <Link
               key={session.id}
-              to={`/topic/${topic.id}?tab=sessions&session=${session.id}`}
+              to={`/topic/${topic.id}?tab=sessions`}
               onClick={(e) => e.stopPropagation()}
               className="flex items-center justify-between rounded-lg bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
             >
