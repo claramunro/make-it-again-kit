@@ -358,18 +358,18 @@ const TopicDetailBannerFull = () => {
       <div className="flex min-h-screen flex-col bg-background pb-20">
         <MobileSessionDrawer />
 
-        {/* Color Banner - Solid with shadow */}
+        {/* Color Banner */}
         <div 
-          className="h-16 w-full shrink-0 relative shadow-md"
+          className="h-14 w-full shrink-0 relative"
           style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 30%, white 70%)` }}
         >
           {/* Back Button */}
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-3 left-4 z-10">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate(-1)}
-              className="h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+              className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -377,39 +377,41 @@ const TopicDetailBannerFull = () => {
         </div>
 
         {/* Content Container */}
-        <div className="flex-1 flex flex-col bg-background rounded-t-3xl -mt-4 relative z-10">
-          {/* Header with Emoji + Title */}
-          <div className="px-4 pt-4 pb-4">
-            <div className="flex items-start gap-3">
-              {/* Topic Icon Container - overlapping banner */}
+        <div className="flex-1 flex flex-col bg-background rounded-t-3xl -mt-4 relative z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          {/* Header */}
+          <div className="px-4 pt-5 pb-4">
+            {/* Row 1: Emoji container overlapping banner */}
+            <div className="flex items-start gap-3 ml-8">
+              {/* Topic Icon Container - overlapping banner with white inner stroke */}
               <div 
-                className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl border-4 border-background shadow-sm shrink-0 -mt-8"
-                style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 20%, white 80%)` }}
+                className="w-20 h-20 rounded-xl flex items-center justify-center text-4xl shrink-0 -mt-12"
+                style={{ 
+                  backgroundColor: `color-mix(in srgb, ${topicColor} 15%, white 85%)`,
+                  boxShadow: 'inset 0 0 0 5px white, 0 4px 12px rgba(0,0,0,0.1)'
+                }}
               >
                 {topic.icon}
               </div>
+              
+              {/* Title + Meta + Shared badge */}
               <div className="min-w-0 flex-1 pt-1">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <h1 className="text-xl font-bold text-foreground">{topic.name}</h1>
-                    <p className="text-sm text-muted-foreground mt-0.5">
-                      {mockSessions.length} sessions • Last updated {topic.date}
-                    </p>
-                  </div>
-                  {topic.sharedBy && (
-                    <span 
-                      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium shrink-0"
-                      style={{ 
-                        borderColor: `color-mix(in srgb, ${topicColor} 50%, transparent 50%)`,
-                        backgroundColor: `color-mix(in srgb, ${topicColor} 10%, transparent 90%)`,
-                        color: topicColor
-                      }}
-                    >
-                      <Users className="h-3 w-3" />
-                      Shared by {topic.sharedBy}
-                    </span>
-                  )}
-                </div>
+                <h1 className="text-xl font-bold text-foreground">{topic.name}</h1>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {mockSessions.length} sessions • Last updated {topic.date}
+                </p>
+                {topic.sharedBy && (
+                  <span 
+                    className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium mt-2"
+                    style={{ 
+                      borderColor: `color-mix(in srgb, ${topicColor} 50%, transparent 50%)`,
+                      backgroundColor: `color-mix(in srgb, ${topicColor} 10%, transparent 90%)`,
+                      color: topicColor
+                    }}
+                  >
+                    <Users className="h-3 w-3" />
+                    Shared by {topic.sharedBy}
+                  </span>
+                )}
               </div>
             </div>
           </div>
