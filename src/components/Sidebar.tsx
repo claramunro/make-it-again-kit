@@ -29,7 +29,7 @@ interface SubItem {
 const mainNavItems: NavItem[] = [
   { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
   { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
-  { icon: <Bookmark className="h-5 w-5" />, label: 'Bookmarks', path: '/bookmarks' },
+  { icon: <Bookmark className="h-5 w-5" />, label: 'Highlights', path: '/bookmarks' },
 ];
 
 const bottomNavItems = [
@@ -71,7 +71,7 @@ const recentBookmarks: SubItem[] = [...starredBookmarks, ...nonStarredBookmarks]
 const subItemsMap: Record<string, SubItem[]> = {
   Sessions: recentSessions,
   Topics: recentTopics,
-  Bookmarks: recentBookmarks,
+  Highlights: recentBookmarks,
 };
 
 export function useSidebarCollapsed() {
@@ -113,7 +113,7 @@ export function Sidebar() {
     if (saved) {
       return JSON.parse(saved);
     }
-    return { Sessions: true, Topics: false, Bookmarks: false };
+    return { Sessions: true, Topics: false, Highlights: false };
   });
 
   const toggleSection = (label: string) => {
@@ -258,7 +258,7 @@ export function Sidebar() {
                           >
                             {/* Star/Bookmark indicator - always takes up space for alignment */}
                             <span className="w-3 shrink-0 flex items-center justify-center">
-                              {item.label === 'Bookmarks' && (
+                              {item.label === 'Highlights' && (
                                 <Bookmark className={cn(
                                   "h-3 w-3",
                                   subItem.isStarred 
@@ -266,7 +266,7 @@ export function Sidebar() {
                                     : "text-muted-foreground"
                                 )} />
                               )}
-                              {item.label !== 'Bookmarks' && subItem.isStarred && (
+                              {item.label !== 'Highlights' && subItem.isStarred && (
                                 <Star className="h-3 w-3 stroke-yellow-500 fill-yellow-400/30" />
                               )}
                             </span>

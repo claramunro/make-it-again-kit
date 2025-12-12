@@ -51,7 +51,7 @@ interface SessionDetailPanelProps {
 
 export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<SessionTab>('highlights');
+  const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');

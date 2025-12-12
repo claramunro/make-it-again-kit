@@ -2,6 +2,7 @@ import { Star, ChevronRight, FileText } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TopicCardProps {
   topic: Topic;
@@ -13,34 +14,39 @@ interface TopicCardSelectableProps {
   onSelect?: (id: string) => void;
 }
 
-// Colors for emoji container (border stronger, fill transparent)
-const topicColors: Record<string, { border: string; bg: string }> = {
-  '🎨': { border: 'border-pink-400', bg: 'bg-pink-400/15' },
-  '📦': { border: 'border-emerald-400', bg: 'bg-emerald-400/15' },
-  '🏋️': { border: 'border-blue-400', bg: 'bg-blue-400/15' },
-  '☕': { border: 'border-amber-400', bg: 'bg-amber-400/15' },
-  '🐶': { border: 'border-yellow-400', bg: 'bg-yellow-400/15' },
-  '📅': { border: 'border-amber-400', bg: 'bg-amber-400/15' },
-  '🚀': { border: 'border-violet-400', bg: 'bg-violet-400/15' },
-  '💻': { border: 'border-slate-400', bg: 'bg-slate-400/15' },
-  '📢': { border: 'border-orange-400', bg: 'bg-orange-400/15' },
-  '🤝': { border: 'border-teal-400', bg: 'bg-teal-400/15' },
-  '💰': { border: 'border-green-400', bg: 'bg-green-400/15' },
-  '👥': { border: 'border-indigo-400', bg: 'bg-indigo-400/15' },
-  '🔬': { border: 'border-cyan-400', bg: 'bg-cyan-400/15' },
-  '⚖️': { border: 'border-gray-400', bg: 'bg-gray-400/15' },
-  '🎉': { border: 'border-rose-400', bg: 'bg-rose-400/15' },
+// Colors for emoji container matching SessionBadge style (solid bg, no thick border)
+const topicColors: Record<string, string> = {
+  '🎨': 'bg-pink-500/10 dark:bg-pink-500/20',
+  '📦': 'bg-emerald-500/10 dark:bg-emerald-500/20',
+  '🏋️': 'bg-blue-500/10 dark:bg-blue-500/20',
+  '☕': 'bg-amber-500/10 dark:bg-amber-500/20',
+  '🐶': 'bg-yellow-500/10 dark:bg-yellow-500/20',
+  '📅': 'bg-amber-500/10 dark:bg-amber-500/20',
+  '🚀': 'bg-violet-500/10 dark:bg-violet-500/20',
+  '💻': 'bg-slate-500/10 dark:bg-slate-500/20',
+  '📢': 'bg-orange-500/10 dark:bg-orange-500/20',
+  '🤝': 'bg-teal-500/10 dark:bg-teal-500/20',
+  '💰': 'bg-green-500/10 dark:bg-green-500/20',
+  '👥': 'bg-indigo-500/10 dark:bg-indigo-500/20',
+  '🔬': 'bg-cyan-500/10 dark:bg-cyan-500/20',
+  '⚖️': 'bg-gray-500/10 dark:bg-gray-500/20',
+  '🎉': 'bg-rose-500/10 dark:bg-rose-500/20',
 };
 
-const defaultColors = { border: 'border-slate-400', bg: 'bg-slate-400/15' };
+const defaultColor = 'bg-slate-500/10 dark:bg-slate-500/20';
 
 export function TopicCard({ topic }: TopicCardProps) {
   const navigate = useNavigate();
-  const colors = topicColors[topic.icon] || defaultColors;
+  const isMobile = useIsMobile();
+  const bgColor = topicColors[topic.icon] || defaultColor;
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
   };
+
+  // On mobile, show only 1 session
+  const sessionsToShow = isMobile ? 1 : 2;
+  const remainingSessions = topic.sessionCount - sessionsToShow;
 
   return (
     <div 
@@ -52,11 +58,10 @@ export function TopicCard({ topic }: TopicCardProps) {
         {/* Header with star */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
-            {/* Emoji container with colored border and transparent fill */}
+            {/* Emoji container matching SessionBadge style */}
             <div className={cn(
-              'flex h-10 w-10 items-center justify-center rounded-lg border-2',
-              colors.border,
-              colors.bg
+              'flex h-10 w-10 items-center justify-center rounded-lg',
+              bgColor
             )}>
               <span className="text-lg">{topic.icon}</span>
             </div>
@@ -86,7 +91,7 @@ export function TopicCard({ topic }: TopicCardProps) {
 
         {/* Sessions */}
         <div className="space-y-2">
-          {topic.sessions?.slice(0, 2).map((session) => (
+          {topic.sessions?.slice(0, sessionsToShow).map((session) => (
             <Link
               key={session.id}
               to={`/topic/${topic.id}?tab=sessions`}
@@ -108,9 +113,9 @@ export function TopicCard({ topic }: TopicCardProps) {
           ))}
           
           {/* Show more link if there are more sessions */}
-          {topic.sessionCount > 2 && (
+          {remainingSessions > 0 && (
             <div className="w-full text-center text-xs text-muted-foreground py-2">
-              +{topic.sessionCount - 2} more session{topic.sessionCount - 2 !== 1 ? 's' : ''}
+              +{remainingSessions} more session{remainingSessions !== 1 ? 's' : ''}
             </div>
           )}
         </div>
@@ -121,7 +126,7 @@ export function TopicCard({ topic }: TopicCardProps) {
 
 // Selectable version for master-detail layout
 export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSelectableProps) {
-  const colors = topicColors[topic.icon] || defaultColors;
+  const bgColor = topicColors[topic.icon] || defaultColor;
 
   const handleClick = () => {
     onSelect?.(topic.id);
@@ -136,11 +141,10 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
       )}
     >
       <div className="flex items-center gap-3">
-        {/* Emoji container */}
+        {/* Emoji container matching SessionBadge style */}
         <div className={cn(
-          'flex h-9 w-9 items-center justify-center rounded-lg border-2',
-          colors.border,
-          colors.bg
+          'flex h-9 w-9 items-center justify-center rounded-lg',
+          bgColor
         )}>
           <span className="text-base">{topic.icon}</span>
         </div>
