@@ -9,7 +9,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const duration = 3500; // 3.5 seconds
+    const duration = 6000; // 6 seconds
     const interval = 50;
     const step = (100 * interval) / duration;
 
