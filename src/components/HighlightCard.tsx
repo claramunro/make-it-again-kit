@@ -1,5 +1,6 @@
-import { Clock, FileText } from 'lucide-react';
+import { Clock, FileText, Share, Trash2 } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
+import { Link } from 'react-router-dom';
 
 interface HighlightCardProps {
   highlight: Highlight;
@@ -20,10 +21,13 @@ export function HighlightCard({ highlight }: HighlightCardProps) {
       </div>
 
       {/* Session reference */}
-      <div className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+      <Link 
+        to={`/session/${highlight.sessionId}`}
+        className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-smooth"
+      >
         <FileText className="h-4 w-4" />
         {highlight.sessionTitle}
-      </div>
+      </Link>
 
       {/* Title */}
       <h3 className="mb-2 text-base font-semibold text-foreground">
