@@ -100,7 +100,7 @@ const SessionDetail = () => {
       <div className="flex flex-1 flex-col">
         {!isMobile && <Header />}
         
-        <main className="flex-1 rounded-tl-2xl bg-background">
+        <main className="flex-1 overflow-hidden rounded-tl-2xl bg-background">
           {/* Session Header */}
           <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
             <div className="flex items-center justify-between gap-4">
@@ -165,10 +165,10 @@ const SessionDetail = () => {
 
           {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
           {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
-          <div className="flex h-[calc(100vh-208px)]">
+          <div className="flex h-[calc(100vh-208px)] overflow-hidden">
             {/* Left Column - Only show for Highlights tab */}
             {activeTab === 'highlights' && (
-              <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
+              <div className="w-64 min-w-0 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4 xl:w-80">
                 <div className="space-y-2">
                   {mockBookmarks.map((bookmark) => (
                     <button
@@ -194,7 +194,7 @@ const SessionDetail = () => {
             )}
 
             {/* Center Column - Content based on tab */}
-            <div className="flex-1 overflow-auto p-6">
+            <div className="min-w-0 flex-1 overflow-auto p-6">
               {/* Highlights Tab */}
               {activeTab === 'highlights' && (
                 <div className="rounded-xl border border-border bg-card p-6">
@@ -360,7 +360,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
+            <div className="w-64 min-w-0 shrink-0 flex flex-col border-l border-border bg-card xl:w-80">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-foreground">Chat</h2>
