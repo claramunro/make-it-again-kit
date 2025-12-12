@@ -18,12 +18,12 @@ export function SessionBadge({ type }: SessionBadgeProps) {
     coffee: {
       icon: <Coffee className="h-3 w-3" />,
       label: 'Coffee',
-      className: 'bg-badge-coffee-bg text-badge-coffee',
+      className: 'bg-primary/10 text-primary',
     },
     workout: {
       icon: <Dumbbell className="h-3 w-3" />,
       label: 'Working Out',
-      className: 'bg-badge-workout-bg text-badge-workout',
+      className: 'bg-primary/10 text-primary',
     },
   };
 
