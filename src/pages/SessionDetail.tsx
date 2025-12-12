@@ -102,7 +102,7 @@ const SessionDetail = () => {
         
         <main className="flex-1 overflow-hidden rounded-tl-2xl bg-background">
           {/* Session Header */}
-          <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
+          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
             <div className="flex items-center justify-between gap-4">
               {/* Left: Back button + Icon + Title + Meta */}
               <div className="flex items-center gap-3 min-w-0">
@@ -114,11 +114,14 @@ const SessionDetail = () => {
                 </button>
                 <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
                 <div className="min-w-0">
-                  <h1 className="truncate text-base font-semibold text-foreground">
+                  <h1 className="truncate text-sm font-medium leading-snug text-foreground">
                     Title
                   </h1>
                   <p className="text-xs text-muted-foreground">
-                    Date: Oct 18, 2025 9:16 AM · Duration: 2 minutes
+                    Oct 18, 2025 9:16 AM
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    2 minutes
                   </p>
                 </div>
               </div>
