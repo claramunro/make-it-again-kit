@@ -627,7 +627,7 @@ const TopicDetailBannerFull = () => {
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Color Banner - Solid */}
           <div 
-            className="h-14 w-full shrink-0 relative"
+            className="h-14 w-full shrink-0 relative rounded-tl-2xl"
             style={{ backgroundColor: topicColor }}
           >
             {/* Back Button */}
@@ -641,67 +641,66 @@ const TopicDetailBannerFull = () => {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </div>
-            
-            {/* Topic Icon Container - positioned to overlap banner */}
-            <div className="absolute -bottom-14 left-6 z-20">
-              <div 
-                className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg border-4 border-background"
-                style={{ backgroundColor: topicColor }}
-              >
-                {topic.icon}
-              </div>
-            </div>
           </div>
           
           {/* Content Container - overlapping the banner */}
           <div className="flex-1 -mt-3 relative z-10 bg-background rounded-t-3xl overflow-visible flex flex-col shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
           
             {/* Topic Header */}
-            <div className="sticky top-0 z-10 border-b border-border bg-background px-6 pt-14 pb-4">
-            <div className="flex items-end justify-between gap-4">
-              {/* Left: Title + Meta */}
-              <div className="min-w-0">
-                <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
-                <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                  <span>{mockSessions.length} Sessions</span>
-                  <span>•</span>
-                  <span>Last Updated: Oct 17, 2025 10:33 AM</span>
+            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-5 pb-4">
+              <div className="flex items-center justify-between gap-4">
+                {/* Left: Emoji + Title + Meta */}
+                <div className="flex items-center gap-4 min-w-0">
+                  {/* Topic Icon Container */}
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg border-4 border-background shrink-0"
+                    style={{ backgroundColor: topicColor }}
+                  >
+                    {topic.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
+                    <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                      <span>{mockSessions.length} Sessions</span>
+                      <span>•</span>
+                      <span>Last Updated: Oct 17, 2025 10:33 AM</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Center: Tabs */}
-              <div className="flex-1 flex justify-center">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
-                      className={cn(
-                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                  ))}
+                {/* Center: Tabs */}
+                <div className="flex-1 flex justify-center">
+                  <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                    {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                        className={cn(
+                          'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                          (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
+                            ? 'bg-card text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                        )}
+                      >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Right: Shared badge */}
-              <div className="shrink-0">
-                {topic.sharedBy ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
-                    <Users className="h-3 w-3" />
-                    Shared by {topic.sharedBy}
-                  </span>
-                ) : (
-                  <div className="w-24" /> 
-                )}
+                {/* Right: Shared badge */}
+                <div className="shrink-0">
+                  {topic.sharedBy ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                      <Users className="h-3 w-3" />
+                      Shared by {topic.sharedBy}
+                    </span>
+                  ) : (
+                    <div className="w-24" /> 
+                  )}
+                </div>
               </div>
             </div>
-          </div>
           
           {/* Content Area - Same as original TopicDetail */}
           {activeTopicTab === 'sessions' && (
