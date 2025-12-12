@@ -17,15 +17,8 @@ const Settings = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background pb-20">
       {/* Header */}
-      <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4">
-        <Link
-          to="/"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </Link>
+      <header className="flex h-14 items-center justify-center border-b border-border bg-card px-4">
         <h1 className="text-lg font-semibold text-foreground">Settings</h1>
-        <div className="w-10" /> {/* Spacer for centering */}
       </header>
 
       {/* Content */}

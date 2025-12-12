@@ -8,12 +8,9 @@ export function MobileBottomNav() {
   const location = useLocation();
   const [startSessionOpen, setStartSessionOpen] = useState(false);
 
-  const navItems = [
-    { icon: FileText, path: '/', label: 'Sessions' },
-    { icon: Folder, path: '/topics', label: 'Topics' },
-    { icon: Bookmark, path: '/bookmarks', label: 'Bookmarks' },
-    { icon: Settings, path: '/settings', label: 'Settings' },
-  ];
+  // Check if current route is a session or topic detail page
+  const isSessionRoute = location.pathname.startsWith('/session');
+  const isTopicRoute = location.pathname.startsWith('/topic');
 
   return (
     <>
@@ -23,7 +20,7 @@ export function MobileBottomNav() {
           to="/"
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
-            location.pathname === '/'
+            (location.pathname === '/' || isSessionRoute)
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
@@ -35,7 +32,7 @@ export function MobileBottomNav() {
           to="/topics"
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
-            location.pathname === '/topics'
+            (location.pathname === '/topics' || isTopicRoute)
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}

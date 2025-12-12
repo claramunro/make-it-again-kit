@@ -9,11 +9,11 @@ import { bookmarks, Bookmark } from '@/data/bookmarks';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
-type GroupBy = 'topics' | 'sessions';
+type GroupBy = 'sessions' | 'topics';
 
-const Bookmarks = () => {
+const Highlights = () => {
   const isMobile = useIsMobile();
-  const [groupBy, setGroupBy] = useState<GroupBy>('topics');
+  const [groupBy, setGroupBy] = useState<GroupBy>('sessions');
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -52,20 +52,20 @@ const Bookmarks = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-card">
+    <div className="flex min-h-screen bg-card overflow-x-hidden">
       {!isMobile && <Sidebar />}
       
-      <div className="flex flex-1 flex-col">
-        <MobileHeader title="Bookmarks" count={bookmarks.length} />
+      <div className="flex flex-1 flex-col min-w-0">
+        <MobileHeader title="Highlights" count={bookmarks.length} />
         <Header />
         
-        <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
-          <div className="mx-auto max-w-6xl">
+        <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6 overflow-x-hidden">
+          <div className="mx-auto max-w-6xl w-full">
             {/* Desktop Header */}
             {!isMobile && (
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-semibold text-foreground">Bookmarks</h1>
+                  <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-sm text-muted-foreground">Sort By</span>
@@ -78,17 +78,6 @@ const Bookmarks = () => {
             <div className="mb-6">
               <div className="inline-flex rounded-lg bg-muted p-1">
                 <button
-                  onClick={() => setGroupBy('topics')}
-                  className={cn(
-                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                    groupBy === 'topics'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  Topics
-                </button>
-                <button
                   onClick={() => setGroupBy('sessions')}
                   className={cn(
                     'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
@@ -98,6 +87,17 @@ const Bookmarks = () => {
                   )}
                 >
                   Sessions
+                </button>
+                <button
+                  onClick={() => setGroupBy('topics')}
+                  className={cn(
+                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                    groupBy === 'topics'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  Topics
                 </button>
               </div>
             </div>
@@ -149,4 +149,4 @@ const Bookmarks = () => {
   );
 };
 
-export default Bookmarks;
+export default Highlights;

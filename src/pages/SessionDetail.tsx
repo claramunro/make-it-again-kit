@@ -78,7 +78,7 @@ const SessionDetail = () => {
   const { id } = useParams();
   const isMobile = useIsMobile();
   const { collapsed } = useSidebarCollapsed();
-  const [activeTab, setActiveTab] = useState<SessionTab>('highlights');
+  const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
