@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Star, Settings, HelpCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FileText, Folder, Star, Settings, HelpCircle, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { sessionGroups } from '@/data/sessions';
+import { topics } from '@/data/topics';
+import { highlights } from '@/data/highlights';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
@@ -11,6 +14,12 @@ import hedyGlassesLogoDark from '@/assets/hedy-glasses-logo-dark.svg';
 
 interface NavItem {
   icon: React.ReactNode;
+  label: string;
+  path: string;
+}
+
+interface SubItem {
+  id: string;
   label: string;
   path: string;
 }
@@ -24,6 +33,36 @@ const mainNavItems: NavItem[] = [
 const bottomNavItems = [
   { icon: <HelpCircle className="h-5 w-5" />, label: 'Support', action: 'support' },
 ];
+
+// Get first 4 sessions
+const recentSessions: SubItem[] = sessionGroups
+  .flatMap(group => group.sessions)
+  .slice(0, 4)
+  .map(session => ({
+    id: session.id,
+    label: session.title.length > 25 ? session.title.substring(0, 25) + '...' : session.title,
+    path: `/session/${session.id}`,
+  }));
+
+// Get first 4 topics
+const recentTopics: SubItem[] = topics.slice(0, 4).map(topic => ({
+  id: topic.id,
+  label: topic.name,
+  path: `/topic/${topic.id}`,
+}));
+
+// Get first 4 highlights
+const recentHighlights: SubItem[] = highlights.slice(0, 4).map(highlight => ({
+  id: highlight.id,
+  label: highlight.title.length > 25 ? highlight.title.substring(0, 25) + '...' : highlight.title,
+  path: `/highlights#${highlight.id}`,
+}));
+
+const subItemsMap: Record<string, SubItem[]> = {
+  Sessions: recentSessions,
+  Topics: recentTopics,
+  Highlights: recentHighlights,
+};
 
 export function useSidebarCollapsed() {
   const [collapsed, setCollapsed] = useState(() => {
@@ -77,12 +116,22 @@ export function Sidebar() {
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return location.pathname === '/' || location.pathname.startsWith('/session');
+      return location.pathname === '/';
     }
     if (path === '/topics') {
-      return location.pathname === '/topics' || location.pathname.startsWith('/topic');
+      return location.pathname === '/topics';
     }
-    return location.pathname.startsWith(path);
+    if (path === '/highlights') {
+      return location.pathname === '/highlights';
+    }
+    return location.pathname === path;
+  };
+
+  const isSubItemActive = (path: string) => {
+    if (path.includes('#')) {
+      return location.pathname === '/highlights';
+    }
+    return location.pathname === path;
   };
 
   // Don't render sidebar on mobile
@@ -93,7 +142,7 @@ export function Sidebar() {
       <aside 
         className={cn(
           "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
-          collapsed ? "w-20" : "w-56"
+          collapsed ? "w-20" : "w-64"
         )}
       >
         {/* Logo & Collapse Toggle */}
@@ -116,7 +165,7 @@ export function Sidebar() {
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 px-2 py-2">
+        <nav className="flex-1 overflow-y-auto px-2 py-2">
           <ul className="space-y-1">
             {mainNavItems.map((item) => (
               <li key={item.label}>
@@ -140,6 +189,27 @@ export function Sidebar() {
                     {item.label}
                   </span>
                 </Link>
+                
+                {/* Sub-items - only show when not collapsed */}
+                {!collapsed && subItemsMap[item.label] && (
+                  <ul className="mt-1 ml-4 space-y-0.5 border-l border-border pl-3">
+                    {subItemsMap[item.label].map((subItem) => (
+                      <li key={subItem.id}>
+                        <Link
+                          to={subItem.path}
+                          className={cn(
+                            'block truncate rounded-md px-2 py-1.5 text-xs transition-smooth',
+                            isSubItemActive(subItem.path)
+                              ? 'bg-sidebar-accent/50 text-sidebar-accent-foreground'
+                              : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
