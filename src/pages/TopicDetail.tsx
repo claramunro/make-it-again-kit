@@ -126,6 +126,16 @@ const mockSessions = [
 type TopicTab = 'overview' | 'sessions' | 'bookmarks' | 'appearance';
 type SessionTab = 'details' | 'bookmarks' | 'transcript';
 
+// Wallpaper presets with gradient configurations
+const wallpaperPresets = [
+  { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand' },
+  { id: 'peach', gradient: 'bg-gradient-to-br from-orange-200 via-rose-100 to-orange-300', name: 'Peach' },
+  { id: 'mint', gradient: 'bg-gradient-to-br from-emerald-300 via-teal-200 to-emerald-400', name: 'Mint' },
+  { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender' },
+  { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean' },
+  { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset' },
+];
+
 const TopicDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -142,6 +152,9 @@ const TopicDetail = () => {
   const [topicName, setTopicName] = useState('');
   const [topicDescription, setTopicDescription] = useState('');
   const [aiContext, setAiContext] = useState('Clara is working on design updates to the Hedy app.');
+  const [selectedWallpaper, setSelectedWallpaper] = useState('mint');
+  const [blurAmount, setBlurAmount] = useState([50]);
+  const [overlayOpacity, setOverlayOpacity] = useState([60]);
   
   const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
@@ -159,13 +172,13 @@ const TopicDetail = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-card">
+    <div className="flex min-h-screen bg-card overflow-hidden">
       {!isMobile && <Sidebar />}
       
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
         
-        <main className="flex-1 rounded-tl-2xl bg-background pb-24 md:pb-0">
+        <main className="flex-1 rounded-tl-2xl bg-background pb-24 md:pb-0 overflow-hidden">
           {/* Topic Header */}
           <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
             <div className="mx-auto max-w-6xl">
@@ -228,9 +241,9 @@ const TopicDetail = () => {
           
           {/* Content Area */}
           {activeTopicTab === 'sessions' && (
-            <div className="flex h-[calc(100vh-130px)]">
+            <div className="flex h-[calc(100vh-130px)] overflow-hidden">
               {/* Left: Sessions Sidebar */}
-              <div className="w-80 shrink-0 border-r border-border overflow-y-auto bg-background">
+              <div className="w-64 xl:w-80 shrink-0 border-r border-border overflow-y-auto bg-background min-w-0">
                 <div className="p-3 space-y-1">
                   {mockSessions.map((session) => (
                     <div
@@ -282,7 +295,7 @@ const TopicDetail = () => {
               </div>
               
               {/* Center: Session Content */}
-              <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 flex flex-col overflow-hidden min-w-0">
                 {selectedSession && (
                   <>
                     {/* Session Header */}
@@ -535,11 +548,117 @@ const TopicDetail = () => {
                 </div>
                 
                 {/* Appearance */}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <h3 className="font-semibold">Appearance</h3>
                   
+                  {/* Wallpaper Selection */}
                   <div className="space-y-3">
-                    <Label className="text-sm">Color</Label>
+                    <Label className="text-sm">Wallpaper</Label>
+                    <div className="flex flex-wrap gap-3">
+                      {wallpaperPresets.map((preset) => (
+                        <button
+                          key={preset.id}
+                          onClick={() => setSelectedWallpaper(preset.id)}
+                          disabled={!!topic.sharedBy}
+                          className={cn(
+                            'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
+                            selectedWallpaper === preset.id && 'ring-2 ring-offset-2 ring-primary'
+                          )}
+                        >
+                          {/* Base gradient */}
+                          <div className={cn('absolute inset-0', preset.gradient)} />
+                          {/* Blur overlay based on slider */}
+                          <div 
+                            className="absolute inset-0" 
+                            style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
+                          />
+                          {/* Light effects */}
+                          <div 
+                            className="absolute inset-0"
+                            style={{
+                              background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%)'
+                            }}
+                          />
+                          <div 
+                            className="absolute inset-0"
+                            style={{
+                              background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%)'
+                            }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Blur Amount Slider */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm">Blur Amount</Label>
+                      <span className="text-xs text-muted-foreground">{blurAmount[0]}%</span>
+                    </div>
+                    <div className="relative">
+                      <div className="h-8 rounded-lg overflow-hidden">
+                        <div className={cn(
+                          'absolute inset-0',
+                          wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
+                        )} />
+                        <div 
+                          className="absolute inset-0" 
+                          style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
+                        />
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={blurAmount[0]}
+                        onChange={(e) => setBlurAmount([parseInt(e.target.value)])}
+                        disabled={!!topic.sharedBy}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <div 
+                        className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
+                        style={{ left: `calc(${blurAmount[0]}% - 10px)` }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Overlay Opacity Slider */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm">Overlay Opacity</Label>
+                      <span className="text-xs text-muted-foreground">{overlayOpacity[0]}%</span>
+                    </div>
+                    <div className="relative">
+                      <div className="h-8 rounded-lg overflow-hidden">
+                        <div className={cn(
+                          'absolute inset-0',
+                          wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
+                        )} />
+                        <div 
+                          className="absolute inset-0 bg-white dark:bg-black" 
+                          style={{ opacity: overlayOpacity[0] / 100 }}
+                        />
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={overlayOpacity[0]}
+                        onChange={(e) => setOverlayOpacity([parseInt(e.target.value)])}
+                        disabled={!!topic.sharedBy}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      <div 
+                        className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
+                        style={{ left: `calc(${overlayOpacity[0]}% - 10px)` }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Color Selection (accent color) */}
+                  <div className="space-y-3">
+                    <Label className="text-sm">Accent Color</Label>
                     <div className="flex flex-wrap gap-2">
                       {topicColors.map((color, i) => (
                         <button
@@ -547,7 +666,7 @@ const TopicDetail = () => {
                           onClick={() => setSelectedColor(i)}
                           disabled={!!topic.sharedBy}
                           className={cn(
-                            'h-10 w-10 rounded-full transition-all',
+                            'h-8 w-8 rounded-full transition-all',
                             selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
                           )}
                           style={{ backgroundColor: color }}
@@ -556,6 +675,7 @@ const TopicDetail = () => {
                     </div>
                   </div>
                   
+                  {/* Icon Selection */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Label className="text-sm">Icon</Label>
