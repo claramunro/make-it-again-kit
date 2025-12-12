@@ -7,6 +7,7 @@ interface SplashScreenProps {
 
 const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [progress, setProgress] = useState(0);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     const duration = 6000; // 6 seconds
@@ -18,7 +19,8 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         const next = prev + step;
         if (next >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 200);
+          setIsFadingOut(true);
+          setTimeout(onComplete, 600); // Wait for fade animation
           return 100;
         }
         return next;
@@ -29,7 +31,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-end bg-black">
+    <div className={`fixed inset-0 z-50 flex flex-col items-center justify-end bg-black transition-opacity duration-500 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
       {/* Video Background */}
       <video
         autoPlay
