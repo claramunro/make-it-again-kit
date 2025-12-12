@@ -28,7 +28,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-6">
+      <div className="flex-1 overflow-y-auto p-5 pb-8 space-y-6">
         {/* Main Idea */}
         <div>
           <div className="flex items-center gap-2 mb-3">
