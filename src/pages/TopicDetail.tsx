@@ -180,7 +180,7 @@ const TopicDetail = () => {
         
         <main className="flex-1 rounded-tl-2xl bg-background pb-24 md:pb-0 overflow-hidden">
           {/* Topic Header */}
-          <div className="sticky top-14 z-10 border-b border-border bg-card px-4 py-4 md:px-6">
+          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
             <div className="mx-auto max-w-6xl">
               {/* Top row: Back, Title, Shared badge */}
               <div className="mb-3 flex items-start gap-4">
