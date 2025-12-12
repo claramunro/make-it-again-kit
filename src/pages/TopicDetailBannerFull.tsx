@@ -625,31 +625,13 @@ const TopicDetailBannerFull = () => {
         <Header />
         
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
-          {/* Color Banner with Gradient Fade */}
-          <div className="relative shrink-0">
-            <div 
-              className="h-32 w-full"
-              style={{ backgroundColor: topicColor }}
-            />
-            <div 
-              className="absolute inset-0"
-              style={{ 
-                background: `linear-gradient(to bottom, transparent 0%, transparent 40%, hsl(var(--background)) 100%)` 
-              }}
-            />
-            
-            {/* Topic Icon */}
-            <div className="absolute -bottom-10 left-6">
-              <div 
-                className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg border-4 border-background"
-                style={{ backgroundColor: topicColor }}
-              >
-                {topic.icon}
-              </div>
-            </div>
-            
+          {/* Color Banner - Solid */}
+          <div 
+            className="h-28 w-full shrink-0 relative"
+            style={{ backgroundColor: topicColor }}
+          >
             {/* Back Button */}
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-4 left-4 z-10">
               <Button
                 variant="ghost"
                 size="icon"
@@ -661,8 +643,20 @@ const TopicDetailBannerFull = () => {
             </div>
           </div>
           
-          {/* Topic Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-background px-6 pt-14 pb-4">
+          {/* Content Container - overlapping the banner */}
+          <div className="flex-1 -mt-6 relative z-10 bg-background rounded-t-3xl overflow-hidden flex flex-col shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
+            {/* Topic Icon Container - positioned at the overlap */}
+            <div className="absolute -top-10 left-6 z-20">
+              <div 
+                className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg border-4 border-background"
+                style={{ backgroundColor: topicColor }}
+              >
+                {topic.icon}
+              </div>
+            </div>
+          
+            {/* Topic Header */}
+            <div className="sticky top-0 z-10 border-b border-border bg-background px-6 pt-14 pb-4">
             <div className="flex items-end justify-between gap-4">
               {/* Left: Title + Meta */}
               <div className="min-w-0">
@@ -1205,6 +1199,7 @@ const TopicDetailBannerFull = () => {
               </div>
             </div>
           )}
+          </div>
         </main>
       </div>
     </div>
