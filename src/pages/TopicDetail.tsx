@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -224,10 +224,16 @@ const visibleQuickPrompts = [
 const TopicDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
-  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
+  
+  // Read initial state from URL params
+  const initialSessionId = searchParams.get('session') || mockSessions[0].id;
+  const initialTab = searchParams.get('tab') as TopicTab | null;
+  
+  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(initialTab === 'sessions' ? 'sessions' : 'overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
-  const [selectedSessionId, setSelectedSessionId] = useState(mockSessions[0].id);
+  const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     mockSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite }), {})
   );
