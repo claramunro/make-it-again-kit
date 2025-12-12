@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark, Clock, Trash2, Quote, BarChart3, Pencil, Download } from 'lucide-react';
+import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -8,8 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { BookmarkGroup } from '@/components/BookmarkGroup';
+import { BookmarkDetailPanel } from '@/components/BookmarkDetailPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { topics } from '@/data/topics';
+import { bookmarks, Bookmark } from '@/data/bookmarks';
 import { cn } from '@/lib/utils';
 
 const topicColors = [
@@ -180,11 +183,49 @@ const mockSessionBookmarks = [
   },
 ];
 
+// Quick prompts data
+const quickPromptCategories = [
+  {
+    title: 'Help understand',
+    prompts: [
+      'Summarize last 5 minutes',
+      'Explain it like I\'m 5',
+      'Request concept clarification',
+      'Translate what was said',
+    ],
+  },
+  {
+    title: 'Lead the meeting',
+    prompts: [
+      'Outline next steps',
+      'Identify blindspots',
+      'Challenge idea constructively',
+      'Resolve disagreements',
+      'Recap decisions and actions',
+    ],
+  },
+  {
+    title: 'Contribute ideas',
+    prompts: [
+      'Suggest alternatives',
+      'Brainstorm solutions',
+      'Connect to past discussions',
+    ],
+  },
+];
+
+const visibleQuickPrompts = [
+  'Summarize key points',
+  'What are the action items?',
+  'Explain the main concepts',
+  'Identify key themes',
+];
+
 const TopicDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('sessions');
+  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   const [selectedSessionId, setSelectedSessionId] = useState(mockSessions[0].id);
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
@@ -202,11 +243,38 @@ const TopicDetail = () => {
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
   const [viewOriginal, setViewOriginal] = useState(false);
   const [bookmarkDropdownOpen, setBookmarkDropdownOpen] = useState(false);
+  const [promptsModalOpen, setPromptsModalOpen] = useState(false);
+  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   
-  const selectedBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
+  const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
   const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
+  
+  // Filter bookmarks for this topic
+  const topicBookmarks = useMemo(() => {
+    return bookmarks.filter(b => b.topicId === id || b.topicName === topic?.name);
+  }, [id, topic?.name]);
+  
+  // Group topic bookmarks by session
+  const groupedTopicBookmarks = useMemo(() => {
+    const groups: Record<string, { title: string; bookmarks: Bookmark[] }> = {};
+    
+    topicBookmarks.forEach((bookmark) => {
+      const key = bookmark.sessionId;
+      const title = bookmark.sessionTitle;
+      
+      if (!groups[key]) {
+        groups[key] = { title, bookmarks: [] };
+      }
+      groups[key].bookmarks.push(bookmark);
+    });
+    
+    return Object.entries(groups).map(([key, group]) => ({
+      id: key,
+      ...group,
+    }));
+  }, [topicBookmarks]);
   
   const toggleSessionFavorite = (sessionId: string) => {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
@@ -219,6 +287,141 @@ const TopicDetail = () => {
       </div>
     );
   }
+
+  // Chat Panel Component
+  const ChatPanel = () => (
+    <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-primary">Chat in Topic</h3>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Share className="h-4 w-4" />
+        </Button>
+      </div>
+      
+      {/* Share Options */}
+      <div className="px-4 py-3 border-b border-border space-y-2">
+        <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Share className="h-4 w-4" />
+          Share as Text
+        </button>
+        <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <FileText className="h-4 w-4" />
+          Share as Markdown
+        </button>
+      </div>
+      
+      {/* Chat Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* User Message */}
+        <div className="flex justify-end">
+          <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+            Can you summarize the key points from this topic?
+          </div>
+        </div>
+        
+        {/* AI Response */}
+        <div className="flex justify-start">
+          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
+            <p className="mb-2">Here are the key points from this topic:</p>
+            <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+              <li>UI refinements are nearing completion</li>
+              <li>The main branch merge is ready</li>
+              <li>Mobile responsiveness improvements discussed</li>
+              <li>New font selection in progress</li>
+            </ul>
+          </div>
+        </div>
+        
+        {/* User Message */}
+        <div className="flex justify-end">
+          <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+            What are the next steps?
+          </div>
+        </div>
+        
+        {/* AI Response */}
+        <div className="flex justify-start">
+          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
+            Based on the discussion, the next steps are to finalize the font selection, complete the mobile layout adjustments, and prepare for the design review meeting scheduled for next week.
+          </div>
+        </div>
+      </div>
+      
+      {/* Quick Prompts */}
+      <div className="px-4 py-2 border-t border-border">
+        <div className="flex flex-wrap gap-1.5">
+          {visibleQuickPrompts.map((prompt) => (
+            <button
+              key={prompt}
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth"
+            >
+              {prompt}
+              <Sparkles className="h-3 w-3" />
+            </button>
+          ))}
+          <button
+            onClick={() => setPromptsModalOpen(true)}
+            className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs text-primary hover:bg-primary/10 transition-smooth"
+          >
+            More
+            <ChevronRight className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+      
+      {/* Chat Input */}
+      <div className="p-4 border-t border-border">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+          <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="How can I help?"
+            className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+          />
+          <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      
+      {/* Quick Prompts Modal */}
+      {promptsModalOpen && (
+        <div className="absolute bottom-0 right-80 w-96 max-h-[70vh] bg-card border border-border rounded-t-xl shadow-xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5">
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <h3 className="font-semibold">Quick Prompts</h3>
+            <button
+              onClick={() => setPromptsModalOpen(false)}
+              className="p-1 rounded-md hover:bg-muted transition-smooth"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            {quickPromptCategories.map((category) => (
+              <div key={category.title}>
+                <h4 className="text-sm font-medium text-muted-foreground mb-2">{category.title}</h4>
+                <div className="space-y-1">
+                  {category.prompts.map((prompt) => (
+                    <button
+                      key={prompt}
+                      onClick={() => setPromptsModalOpen(false)}
+                      className="flex w-full items-center justify-between rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground hover:bg-muted transition-smooth"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Lightbulb className="h-4 w-4 text-primary" />
+                        <span>{prompt}</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="flex h-screen bg-card overflow-hidden">
@@ -332,7 +535,7 @@ const TopicDetail = () => {
                         </p>
                         {session.bookmarks > 0 && (
                           <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-                            <Bookmark className="h-3 w-3" />
+                            <BookmarkIcon className="h-3 w-3" />
                             {session.bookmarks} bookmarks
                           </p>
                         )}
@@ -444,8 +647,8 @@ const TopicDetail = () => {
                               className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left text-sm transition-smooth hover:bg-muted/50"
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <Bookmark className="h-4 w-4 shrink-0 text-primary" />
-                                <span className="truncate font-medium">{selectedBookmark?.title}</span>
+                                <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
+                                <span className="truncate font-medium">{selectedSessionBookmark?.title}</span>
                               </div>
                               <ChevronRight className={cn(
                                 "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
@@ -469,7 +672,7 @@ const TopicDetail = () => {
                                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                                     )}
                                   >
-                                    <Bookmark className="h-4 w-4 shrink-0 text-primary" />
+                                    <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
                                     <span className="truncate">{bookmark.title}</span>
                                   </button>
                                 ))}
@@ -478,17 +681,17 @@ const TopicDetail = () => {
                           </div>
                           
                           {/* Bookmark Detail */}
-                          {selectedBookmark && (
+                          {selectedSessionBookmark && (
                             <div className="rounded-xl border border-border bg-card p-5">
                               {/* Header */}
                               <div className="flex items-center justify-between mb-4">
                                 <div>
-                                  <p className="text-sm text-foreground">{selectedBookmark.date}</p>
+                                  <p className="text-sm text-foreground">{selectedSessionBookmark.date}</p>
                                   <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="text-xs text-muted-foreground">{selectedBookmark.time}</span>
+                                    <span className="text-xs text-muted-foreground">{selectedSessionBookmark.time}</span>
                                     <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                                       <Clock className="h-3 w-3" />
-                                      {selectedBookmark.duration}
+                                      {selectedSessionBookmark.duration}
                                     </span>
                                   </div>
                                 </div>
@@ -511,7 +714,7 @@ const TopicDetail = () => {
                                   <h4 className="text-sm font-medium">Main Idea</h4>
                                 </div>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                  {selectedBookmark.mainIdea}
+                                  {selectedSessionBookmark.mainIdea}
                                 </p>
                               </div>
                               
@@ -522,7 +725,7 @@ const TopicDetail = () => {
                                   <h4 className="text-sm font-medium">Original Context</h4>
                                 </div>
                                 <p className="text-sm text-muted-foreground italic leading-relaxed">
-                                  {selectedBookmark.originalContext}
+                                  {selectedSessionBookmark.originalContext}
                                 </p>
                               </div>
                               
@@ -533,7 +736,7 @@ const TopicDetail = () => {
                                   <h4 className="text-sm font-medium">Analysis</h4>
                                 </div>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                  {selectedBookmark.analysis}
+                                  {selectedSessionBookmark.analysis}
                                 </p>
                               </div>
                             </div>
@@ -599,95 +802,25 @@ const TopicDetail = () => {
               </div>
               
               {/* Right: Chat Panel */}
-              <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col">
-                <div className="p-4 border-b border-border flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-primary">Chat in Session</h3>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Share className="h-4 w-4" />
-                  </Button>
-                </div>
-                
-                {/* Share Options */}
-                <div className="px-4 py-3 border-b border-border space-y-2">
-                  <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                    <Share className="h-4 w-4" />
-                    Share as Text
-                  </button>
-                  <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                    <FileText className="h-4 w-4" />
-                    Share as Markdown
-                  </button>
-                </div>
-                
-                {/* Chat Content */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {/* User Message */}
-                  <div className="flex justify-end">
-                    <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                      Can you summarize the key points from this session?
-                    </div>
-                  </div>
-                  
-                  {/* AI Response */}
-                  <div className="flex justify-start">
-                    <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
-                      <p className="mb-2">Here are the key points from this session:</p>
-                      <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
-                        <li>UI refinements are nearing completion</li>
-                        <li>The main branch merge is ready</li>
-                        <li>Mobile responsiveness improvements discussed</li>
-                        <li>New font selection in progress</li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  {/* User Message */}
-                  <div className="flex justify-end">
-                    <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-                      What are the next steps?
-                    </div>
-                  </div>
-                  
-                  {/* AI Response */}
-                  <div className="flex justify-start">
-                    <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
-                      Based on the discussion, the next steps are to finalize the font selection, complete the mobile layout adjustments, and prepare for the design review meeting scheduled for next week.
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Chat Input */}
-                <div className="p-4 border-t border-border">
-                  <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-                    <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
-                    <input
-                      type="text"
-                      placeholder="How can I help?"
-                      className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
-                    />
-                    <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <ChatPanel />
             </div>
           )}
           
           {activeTopicTab === 'overview' && (
-            <div className="p-6 max-w-4xl mx-auto">
-              <div className="space-y-6">
-                {/* Shared by indicator */}
-                {topic.sharedBy && (
-                  <div className="flex items-center gap-2 text-sm text-primary">
-                    <Users className="h-4 w-4" />
-                    <span>Shared by {topic.sharedBy} • View only</span>
-                  </div>
-                )}
-                
-                {/* Topic Insights */}
-                <div>
-                  <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-1 overflow-hidden">
+              {/* Main Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="max-w-4xl mx-auto space-y-6">
+                  {/* Shared by indicator */}
+                  {topic.sharedBy && (
+                    <div className="flex items-center gap-2 text-sm text-primary">
+                      <Users className="h-4 w-4" />
+                      <span>Shared by {topic.sharedBy} • View only</span>
+                    </div>
+                  )}
+                  
+                  {/* Topic Insights Header */}
+                  <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">Topic Insights</h2>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="icon">
@@ -699,282 +832,460 @@ const TopicDetail = () => {
                     </div>
                   </div>
                   
-                  <div className="rounded-xl border border-border bg-card p-4 space-y-4">
-                    <p className="text-sm text-foreground leading-relaxed">
-                      The Hedy Redesign initiative is advancing through its final visual stabilization phase, with the team focused on refining UI components in Figma and preparing for a critical merge of the main branch into the 'feature design updates V2' branch.
+                  {/* Intro Card */}
+                  <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      The topic of {topic.name} has not been directly addressed in any of the three sessions provided. Instead, all sessions focused on demonstrating workflows within an AI-assisted development environment, particularly the use of Plan Mode for feature planning in a personal website project.
+                    </p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Despite the stated topic, no academic content related to {topic.name.toLowerCase()}—such as its history, chemistry, cultivation, or cultural significance—was presented. The sessions served as technical walkthroughs of software tools and interface navigation, with repeated emphasis on highlight activation, keyboard shortcuts, and structured planning before coding.
                     </p>
                     <p className="text-xs text-muted-foreground text-right">
-                      Last Generated: Dec 1, 2025 4:05 PM
+                      Last Generated: Dec 11, 2025 10:25 PM
                     </p>
+                  </div>
+                  
+                  {/* Core Concepts */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold border-t border-border pt-6">Core Concepts</h3>
+                    <div className="space-y-3">
+                      {[
+                        { text: "Plan Mode is a feature that analyzes a user's codebase and generates structured implementation plans before writing code.", detail: "Introduced in Session 3 on Oct 14, 2025, as part of an AI-assisted development workflow for building website features." },
+                        { text: "Highlight activation is a UI function that marks key moments in a chat session for later reference.", detail: "Repeatedly demonstrated in Session 1 on Oct 29, 2025, to test reliability and reinforce usability." },
+                        { text: "Command + N is a keyboard shortcut used to start a new chat in the AI interface.", detail: "Taught in Session 3 on Oct 14, 2025, as part of the standard entry point for initiating tasks." },
+                        { text: "Shift + Tab toggles into Plan Mode, enabling high-level planning and research before code execution.", detail: "Demonstrated in Session 3 as a core step in the feature implementation workflow." },
+                        { text: "The planning-first workflow emphasizes structuring tasks and analyzing existing code before making changes.", detail: "Stressed in Session 3 as a best practice to improve accuracy and reduce errors in development." },
+                      ].map((item, i) => (
+                        <div key={i} className="flex gap-3">
+                          <FileText className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                          <div>
+                            <p className="text-sm text-foreground">{item.text}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Key Takeaways */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold border-t border-border pt-6">Key Takeaways</h3>
+                    <div className="space-y-3">
+                      {[
+                        { text: "Plan Mode is essential for analyzing existing code and generating reliable implementation strategies—this workflow will likely be emphasized in future applied tasks.", detail: null },
+                        { text: "Repeated use of the highlight feature demonstrates its intended role in marking significant interactions for review.", detail: null },
+                        { text: "Keyboard shortcuts like Command + N and Shift + Tab are foundational to efficient navigation and will likely be assessed in practical evaluations.", detail: "Instructor emphasized this in Session 3, indicating it may be test-relevant." },
+                        { text: "Planning before coding helps prevent errors, ensures structural alignment, and supports better decision-making in development projects.", detail: "This rationale was implied through the demonstrated workflow in Session 3." },
+                      ].map((item, i) => (
+                        <div key={i} className="flex gap-3">
+                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                          <div>
+                            <p className="text-sm text-foreground">{item.text}</p>
+                            {item.detail && <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Study Questions */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold border-t border-border pt-6">Study Questions</h3>
+                    <div className="space-y-3">
+                      {[
+                        { q: "What is the purpose of entering Plan Mode before implementing a new feature?", a: "This probes understanding of pre-implementation analysis and structured planning." },
+                        { q: "How does the highlight feature enhance user interaction with the AI interface?", a: "Asks students to connect UI design with user retention and review efficiency." },
+                        { q: "Why might a developer choose to use Command + N followed by Shift + Tab instead of diving directly into coding?", a: "Encourages reflection on workflow discipline and tool mastery." },
+                        { q: "What are the benefits of generating a high-level plan before modifying a codebase?", a: "Tests comprehension of risk mitigation and architectural foresight." },
+                        { q: "What real-world development challenges does the Plan Mode workflow help mitigate?", a: "Also noted: efficiency, error reduction, structural alignment (2 more)" },
+                      ].map((item, i) => (
+                        <div key={i} className="flex gap-3">
+                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                          <div>
+                            <p className="text-sm text-foreground font-medium">{item.q}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{item.a}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Connections & Context */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold border-t border-border pt-6">Connections & Context</h3>
+                    <div className="space-y-3">
+                      {[
+                        { text: "The Plan Mode workflow mirrors software engineering best practices such as requirements analysis and architectural planning.", detail: "Connects to prior coursework on SDLC (Software Development Life Cycle), reinforcing academic foundations." },
+                        { text: "Keyboard shortcut fluency reflects industry-standard IDE efficiency techniques.", detail: "Relates to lab exercises emphasizing tool fluency, similar to VS Code or JetBrains workflows." },
+                        { text: "Highlight functionality parallels version control commenting or code annotation practices.", detail: "Real-world example: Git commit messages or PR reviews, where tracking decisions is critical." },
+                      ].map((item, i) => (
+                        <div key={i} className="flex gap-3">
+                          <FileText className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                          <div>
+                            <p className="text-sm text-foreground">{item.text}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Exam Preparation */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold border-t border-border pt-6">Exam Preparation</h3>
+                    <div className="space-y-3">
+                      {[
+                        { priority: 'P1', text: "Practice navigating the AI interface using only keyboard shortcuts to build muscle memory.", detail: "Focus on Command + N and Shift + Tab sequences demonstrated on Oct 14, 2025." },
+                        { priority: 'P1', text: "Review how Plan Mode analyzes code structures and generates implementation steps—be ready to describe the process in written responses.", detail: "This was central to the demo on Oct 14 and likely to appear on the exam." },
+                        { priority: 'P2', text: "Memorize the sequence: Command + N → Shift + Tab → input feature request, as it may appear in procedural questions.", detail: "A core workflow pattern emphasized in Session 3." },
+                        { priority: 'P2', text: "Be prepared to explain the advantages of planning over immediate coding in a short-answer format.", detail: "Expected due to repeated emphasis on structured workflows." },
+                        { priority: 'P0', text: "Expect at least one question on feature planning workflows—this was emphasized as central to the course's applied objectives.", detail: "Mentioned on Oct 14, 2025; likely a high-weight exam item." },
+                      ].map((item, i) => (
+                        <div key={i} className="flex gap-3">
+                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+                          <div>
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <span className={cn(
+                                "text-xs px-1.5 py-0.5 rounded",
+                                item.priority === 'P0' ? "bg-red-100 text-red-700" :
+                                item.priority === 'P1' ? "bg-orange-100 text-orange-700" :
+                                "bg-yellow-100 text-yellow-700"
+                              )}>
+                                {item.priority}
+                              </span>
+                            </div>
+                            <p className="text-sm text-foreground">{item.text}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Right: Chat Panel */}
+              <ChatPanel />
             </div>
           )}
           
           {activeTopicTab === 'bookmarks' && (
-            <div className="p-6 max-w-4xl mx-auto">
-              <div className="flex items-center justify-center h-40 text-muted-foreground">
-                <p>Topic bookmarks will appear here.</p>
-              </div>
-            </div>
-          )}
-          
-          {activeTopicTab === 'appearance' && (
-            <div className="p-6 max-w-4xl mx-auto">
-              <div className="space-y-8">
-                {/* View-only warning */}
-                {topic.sharedBy && (
-                  <div className="rounded-lg bg-amber-100 px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
-                    <Lock className="h-4 w-4" />
-                    This topic is shared view-only. Ask the owner to make changes.
-                  </div>
-                )}
-                
-                {/* Basic Information */}
-                <div className="space-y-4">
-                  <h3 className="font-semibold">Basic information</h3>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="topicName" className="text-xs text-muted-foreground">Topic Name</Label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                        <FolderOpen className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                      <Input
-                        id="topicName"
-                        value={topicName || topic.name}
-                        onChange={(e) => setTopicName(e.target.value)}
-                        className="pl-10"
-                        disabled={!!topic.sharedBy}
-                      />
+            <div className="flex flex-1 overflow-hidden">
+              {/* Main Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="max-w-4xl mx-auto">
+                  {/* Header */}
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-xl font-semibold text-foreground">Bookmarks</h2>
+                      <span className="text-sm text-muted-foreground">({topicBookmarks.length})</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-sm text-muted-foreground">Sort By</span>
+                      <span className="text-sm font-medium text-foreground">Recent</span>
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <Textarea
-                      placeholder="Topic Description"
-                      value={topicDescription}
-                      onChange={(e) => setTopicDescription(e.target.value)}
-                      className="min-h-[80px]"
-                      disabled={!!topic.sharedBy}
-                    />
-                  </div>
-                </div>
-                
-                {/* Appearance */}
-                <div className="space-y-6">
-                  <h3 className="font-semibold">Appearance</h3>
-                  
-                  {/* Wallpaper Selection */}
-                  <div className="space-y-3">
-                    <Label className="text-sm">Wallpaper</Label>
-                    <div className="flex flex-wrap gap-3">
-                      {wallpaperPresets.map((preset) => (
-                        <button
-                          key={preset.id}
-                          onClick={() => setSelectedWallpaper(preset.id)}
-                          disabled={!!topic.sharedBy}
-                          className={cn(
-                            'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
-                            selectedWallpaper === preset.id && 'ring-2 ring-offset-2 ring-primary'
-                          )}
-                        >
-                          {/* Base gradient */}
-                          <div className={cn('absolute inset-0', preset.gradient)} />
-                          {/* Blur overlay based on slider */}
-                          <div 
-                            className="absolute inset-0" 
-                            style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
+                  {/* Bookmarks List */}
+                  <div className="flex gap-6">
+                    <div className={cn(
+                      'space-y-4',
+                      selectedBookmark ? 'flex-1' : 'w-full'
+                    )}>
+                      {groupedTopicBookmarks.length > 0 ? (
+                        groupedTopicBookmarks.map((group, index) => (
+                          <BookmarkGroup
+                            key={group.id}
+                            title={group.title}
+                            bookmarks={group.bookmarks}
+                            selectedId={selectedBookmark?.id || null}
+                            onSelectBookmark={setSelectedBookmark}
+                            defaultExpanded={index === 0}
                           />
-                          {/* Light effects */}
-                          <div 
-                            className="absolute inset-0"
-                            style={{
-                              background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%)'
-                            }}
-                          />
-                          <div 
-                            className="absolute inset-0"
-                            style={{
-                              background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%)'
-                            }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Blur Amount Slider */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm">Blur Amount</Label>
-                      <span className="text-xs text-muted-foreground">{blurAmount[0]}%</span>
-                    </div>
-                    <div className="relative">
-                      <div className="h-8 rounded-lg overflow-hidden">
-                        <div className={cn(
-                          'absolute inset-0',
-                          wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
-                        )} />
-                        <div 
-                          className="absolute inset-0" 
-                          style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
-                        />
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={blurAmount[0]}
-                        onChange={(e) => setBlurAmount([parseInt(e.target.value)])}
-                        disabled={!!topic.sharedBy}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                      <div 
-                        className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
-                        style={{ left: `calc(${blurAmount[0]}% - 10px)` }}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Overlay Opacity Slider */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm">Overlay Opacity</Label>
-                      <span className="text-xs text-muted-foreground">{overlayOpacity[0]}%</span>
-                    </div>
-                    <div className="relative">
-                      <div className="h-8 rounded-lg overflow-hidden">
-                        <div className={cn(
-                          'absolute inset-0',
-                          wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
-                        )} />
-                        <div 
-                          className="absolute inset-0 bg-white dark:bg-black" 
-                          style={{ opacity: overlayOpacity[0] / 100 }}
-                        />
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={overlayOpacity[0]}
-                        onChange={(e) => setOverlayOpacity([parseInt(e.target.value)])}
-                        disabled={!!topic.sharedBy}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                      <div 
-                        className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
-                        style={{ left: `calc(${overlayOpacity[0]}% - 10px)` }}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Color Selection (accent color) */}
-                  <div className="space-y-3">
-                    <Label className="text-sm">Accent Color</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {topicColors.map((color, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedColor(i)}
-                          disabled={!!topic.sharedBy}
-                          className={cn(
-                            'h-8 w-8 rounded-full transition-all',
-                            selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
-                          )}
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Icon Selection */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Label className="text-sm">Icon</Label>
-                      <div className="flex rounded-lg border border-border overflow-hidden">
-                        <button
-                          onClick={() => setIconType('icons')}
-                          className={cn(
-                            'flex items-center gap-1.5 px-3 py-1.5 text-sm',
-                            iconType === 'icons' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
-                          )}
-                        >
-                          {iconType === 'icons' && <Check className="h-3 w-3" />}
-                          Icons
-                        </button>
-                        <button
-                          onClick={() => setIconType('emoji')}
-                          className={cn(
-                            'flex items-center gap-1.5 px-3 py-1.5 text-sm',
-                            iconType === 'emoji' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
-                          )}
-                        >
-                          😀 Emoji
-                        </button>
-                      </div>
+                        ))
+                      ) : (
+                        <div className="flex items-center justify-center h-40 text-muted-foreground">
+                          <p>No bookmarks in this topic yet.</p>
+                        </div>
+                      )}
                     </div>
                     
-                    {iconType === 'icons' ? (
-                      <div className="flex flex-wrap gap-2">
-                        {topicIcons.map((item, i) => {
-                          const Icon = item.icon;
-                          return (
-                            <button
-                              key={i}
-                              onClick={() => setSelectedIcon(i)}
-                              disabled={!!topic.sharedBy}
-                              className={cn(
-                                'flex h-10 w-10 items-center justify-center rounded-lg border transition-all',
-                                selectedIcon === i 
-                                  ? 'border-primary bg-primary/10 text-primary' 
-                                  : 'border-border bg-background text-muted-foreground hover:border-primary/50'
-                              )}
-                            >
-                              <Icon className="h-5 w-5" />
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap gap-2">
-                        {topicEmojis.map((emoji, i) => (
-                          <button
-                            key={i}
-                            disabled={!!topic.sharedBy}
-                            className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-xl hover:border-primary/50"
-                          >
-                            {emoji}
-                          </button>
-                        ))}
+                    {/* Bookmark Detail Panel */}
+                    {selectedBookmark && (
+                      <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-6 max-h-[calc(100vh-200px)] flex flex-col overflow-hidden">
+                        <BookmarkDetailPanel 
+                          bookmark={selectedBookmark} 
+                          onClose={() => setSelectedBookmark(null)}
+                          showCloseButton
+                        />
                       </div>
                     )}
                   </div>
                 </div>
-                
-                {/* AI Context */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    <h3 className="font-semibold">AI context & instructions</h3>
+              </div>
+              
+              {/* Right: Chat Panel */}
+              <ChatPanel />
+            </div>
+          )}
+          
+          {activeTopicTab === 'appearance' && (
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="max-w-4xl mx-auto">
+                <div className="space-y-8">
+                  {/* View-only warning */}
+                  {topic.sharedBy && (
+                    <div className="rounded-lg bg-amber-100 px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
+                      <Lock className="h-4 w-4" />
+                      This topic is shared view-only. Ask the owner to make changes.
+                    </div>
+                  )}
+                  
+                  {/* Basic Information */}
+                  <div className="space-y-4">
+                    <h3 className="font-semibold">Basic information</h3>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="topicName" className="text-xs text-muted-foreground">Topic Name</Label>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                          <FolderOpen className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <Input
+                          id="topicName"
+                          value={topicName || topic.name}
+                          onChange={(e) => setTopicName(e.target.value)}
+                          className="pl-10"
+                          disabled={!!topic.sharedBy}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Textarea
+                        placeholder="Topic Description"
+                        value={topicDescription}
+                        onChange={(e) => setTopicDescription(e.target.value)}
+                        className="min-h-[80px]"
+                        disabled={!!topic.sharedBy}
+                      />
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Provide context to help Hedy understand this topic.
-                  </p>
-                  <div className="relative">
-                    <Textarea
-                      value={aiContext}
-                      onChange={(e) => setAiContext(e.target.value)}
-                      placeholder="Add context for AI..."
-                      className="min-h-[120px]"
-                      disabled={!!topic.sharedBy}
-                      maxLength={20000}
-                    />
-                    <span className="absolute bottom-2 right-2 text-xs text-muted-foreground">
-                      {aiContext.length}/20000
-                    </span>
+                  
+                  {/* Appearance */}
+                  <div className="space-y-6">
+                    <h3 className="font-semibold">Appearance</h3>
+                    
+                    {/* Wallpaper Selection */}
+                    <div className="space-y-3">
+                      <Label className="text-sm">Wallpaper</Label>
+                      <div className="flex flex-wrap gap-3">
+                        {wallpaperPresets.map((preset) => (
+                          <button
+                            key={preset.id}
+                            onClick={() => setSelectedWallpaper(preset.id)}
+                            disabled={!!topic.sharedBy}
+                            className={cn(
+                              'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
+                              selectedWallpaper === preset.id && 'ring-2 ring-offset-2 ring-primary'
+                            )}
+                          >
+                            {/* Base gradient */}
+                            <div className={cn('absolute inset-0', preset.gradient)} />
+                            {/* Blur overlay based on slider */}
+                            <div 
+                              className="absolute inset-0" 
+                              style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
+                            />
+                            {/* Light effects */}
+                            <div 
+                              className="absolute inset-0"
+                              style={{
+                                background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%)'
+                              }}
+                            />
+                            <div 
+                              className="absolute inset-0"
+                              style={{
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%)'
+                              }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Blur Amount Slider */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">Blur Amount</Label>
+                        <span className="text-xs text-muted-foreground">{blurAmount[0]}%</span>
+                      </div>
+                      <div className="relative">
+                        <div className="h-8 rounded-lg overflow-hidden">
+                          <div className={cn(
+                            'absolute inset-0',
+                            wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
+                          )} />
+                          <div 
+                            className="absolute inset-0" 
+                            style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
+                          />
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={blurAmount[0]}
+                          onChange={(e) => setBlurAmount([parseInt(e.target.value)])}
+                          disabled={!!topic.sharedBy}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
+                          style={{ left: `calc(${blurAmount[0]}% - 10px)` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Overlay Opacity Slider */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm">Overlay Opacity</Label>
+                        <span className="text-xs text-muted-foreground">{overlayOpacity[0]}%</span>
+                      </div>
+                      <div className="relative">
+                        <div className="h-8 rounded-lg overflow-hidden">
+                          <div className={cn(
+                            'absolute inset-0',
+                            wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
+                          )} />
+                          <div 
+                            className="absolute inset-0 bg-white dark:bg-black" 
+                            style={{ opacity: overlayOpacity[0] / 100 }}
+                          />
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={overlayOpacity[0]}
+                          onChange={(e) => setOverlayOpacity([parseInt(e.target.value)])}
+                          disabled={!!topic.sharedBy}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
+                          style={{ left: `calc(${overlayOpacity[0]}% - 10px)` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Color Selection (accent color) */}
+                    <div className="space-y-3">
+                      <Label className="text-sm">Accent Color</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {topicColors.map((color, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setSelectedColor(i)}
+                            disabled={!!topic.sharedBy}
+                            className={cn(
+                              'h-8 w-8 rounded-full transition-all',
+                              selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
+                            )}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Icon Selection */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Label className="text-sm">Icon</Label>
+                        <div className="flex rounded-lg border border-border overflow-hidden">
+                          <button
+                            onClick={() => setIconType('icons')}
+                            className={cn(
+                              'flex items-center gap-1.5 px-3 py-1.5 text-sm',
+                              iconType === 'icons' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
+                            )}
+                          >
+                            {iconType === 'icons' && <Check className="h-3 w-3" />}
+                            Icons
+                          </button>
+                          <button
+                            onClick={() => setIconType('emoji')}
+                            className={cn(
+                              'flex items-center gap-1.5 px-3 py-1.5 text-sm',
+                              iconType === 'emoji' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
+                            )}
+                          >
+                            😀 Emoji
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {iconType === 'icons' ? (
+                        <div className="flex flex-wrap gap-2">
+                          {topicIcons.map((item, i) => {
+                            const Icon = item.icon;
+                            return (
+                              <button
+                                key={i}
+                                onClick={() => setSelectedIcon(i)}
+                                disabled={!!topic.sharedBy}
+                                className={cn(
+                                  'flex h-10 w-10 items-center justify-center rounded-lg border transition-all',
+                                  selectedIcon === i 
+                                    ? 'border-primary bg-primary/10 text-primary' 
+                                    : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+                                )}
+                              >
+                                <Icon className="h-5 w-5" />
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap gap-2">
+                          {topicEmojis.map((emoji, i) => (
+                            <button
+                              key={i}
+                              disabled={!!topic.sharedBy}
+                              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-xl hover:border-primary/50"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* AI Context */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4" />
+                      <h3 className="font-semibold">AI context & instructions</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Provide context to help Hedy understand this topic.
+                    </p>
+                    <div className="relative">
+                      <Textarea
+                        value={aiContext}
+                        onChange={(e) => setAiContext(e.target.value)}
+                        placeholder="Add context for AI..."
+                        className="min-h-[120px]"
+                        disabled={!!topic.sharedBy}
+                        maxLength={20000}
+                      />
+                      <span className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                        {aiContext.length}/20000
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
