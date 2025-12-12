@@ -9,6 +9,8 @@ import Home2 from "./pages/Home2";
 import Topics from "./pages/Topics";
 import TopicDetail from "./pages/TopicDetail";
 import TopicDetailFocus from "./pages/TopicDetailFocus";
+import TopicDetailBannerGradient from "./pages/TopicDetailBannerGradient";
+import TopicDetailBannerSolid from "./pages/TopicDetailBannerSolid";
 import Bookmarks from "./pages/Bookmarks";
 import Settings from "./pages/Settings";
 import SessionDetail from "./pages/SessionDetail";
@@ -46,6 +48,8 @@ const App = () => (
           <Route path="/topics" element={<Topics />} />
           <Route path="/topic/:id" element={<TopicDetail />} />
           <Route path="/topic/:id/focus" element={<TopicDetailFocus />} />
+          <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
+          <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/session/:id" element={<SessionDetail />} />
