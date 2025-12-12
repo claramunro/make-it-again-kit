@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Home2 from "./pages/Home2";
 import Topics from "./pages/Topics";
+import Welcome from "./pages/Welcome";
 import TopicDetail from "./pages/TopicDetail";
 import TopicDetailFocus from "./pages/TopicDetailFocus";
 import TopicDetailBannerGradient from "./pages/TopicDetailBannerGradient";
@@ -44,6 +45,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/welcome" element={<Welcome />} />
           <Route path="/" element={<Index />} />
           <Route path="/home2" element={<Home2 />} />
           <Route path="/topics" element={<Topics />} />
