@@ -154,11 +154,11 @@ const SessionDetail = () => {
             </div>
           </div>
 
-          {/* Main 3-Column Layout */}
+          {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
           <div className="flex h-[calc(100vh-180px)]">
-            {/* Left Column - Changes based on tab */}
-            <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
-              {activeTab === 'highlights' && (
+            {/* Left Column - Only show for Highlights tab */}
+            {activeTab === 'highlights' && (
+              <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
                 <div className="space-y-2">
                   {mockBookmarks.map((bookmark) => (
                     <button
@@ -180,20 +180,8 @@ const SessionDetail = () => {
                     </button>
                   ))}
                 </div>
-              )}
-              {activeTab === 'details' && (
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground mb-2">Session Overview</p>
-                  <p>View the summary and action items from this session.</p>
-                </div>
-              )}
-              {activeTab === 'transcript' && (
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground mb-2">Full Transcript</p>
-                  <p>Read the complete transcript of this session.</p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Center Column - Content based on tab */}
             <div className="flex-1 overflow-auto p-6">
