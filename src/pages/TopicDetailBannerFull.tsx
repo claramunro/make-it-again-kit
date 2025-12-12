@@ -636,14 +636,14 @@ const TopicDetailBannerFull = () => {
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
         
-        <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
-          {/* Color Banner - Light tinted with shadow */}
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Color Banner - Light tinted */}
           <div 
-            className="h-20 w-full shrink-0 relative rounded-tl-2xl shadow-md"
+            className="h-16 w-full shrink-0 relative rounded-tl-2xl"
             style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 25%, white 75%)` }}
           >
             {/* Back Button */}
-            <div className="absolute top-4 left-4 z-10">
+            <div className="absolute top-3 left-4 z-10">
               <Button
                 variant="ghost"
                 size="icon"
@@ -655,54 +655,37 @@ const TopicDetailBannerFull = () => {
             </div>
           </div>
           
-          {/* Content Container - overlapping the banner */}
-          <div className="flex-1 -mt-6 relative z-10 bg-background rounded-t-3xl overflow-visible flex flex-col">
+          {/* Content Container - overlapping the banner with shadow */}
+          <div className="flex-1 -mt-4 relative z-10 bg-background rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] overflow-visible flex flex-col">
           
             {/* Topic Header */}
-            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-4 pb-4">
-              <div className="flex items-center justify-between gap-4">
-                {/* Left: Emoji + Title + Meta */}
-                <div className="flex items-center gap-4 min-w-0">
-                  {/* Topic Icon Container - overlapping into banner */}
-                  <div 
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl border-4 border-background shrink-0 -mt-10"
-                    style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 15%, white 85%)` }}
-                  >
-                    {topic.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                      <span>{mockSessions.length} sessions</span>
-                      <span>•</span>
-                      <span>Last updated Dec 1</span>
-                      <span>•</span>
-                    </div>
-                  </div>
+            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-6 pb-4">
+              {/* Row 1: Emoji + Title + Meta + Shared Badge */}
+              <div className="flex items-start gap-4">
+                {/* Topic Icon Container - overlapping into banner, positioned to the right of back button */}
+                <div 
+                  className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl shrink-0 -mt-14 ml-10 shadow-lg"
+                  style={{ 
+                    backgroundColor: `color-mix(in srgb, ${topicColor} 15%, white 85%)`,
+                    boxShadow: 'inset 0 0 0 5px white, 0 4px 12px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  {topic.icon}
                 </div>
-
-                {/* Center: Tabs */}
-                <div className="flex-1 flex justify-center">
-                  <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                    {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
-                        className={cn(
-                          'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                          (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
-                            ? 'bg-card text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                        )}
-                      >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                      </button>
-                    ))}
+                
+                {/* Title and Meta */}
+                <div className="min-w-0 flex-1 pt-2">
+                  <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
+                  <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                    <span>{mockSessions.length} sessions</span>
+                    <span>•</span>
+                    <span>Last updated Dec 1</span>
+                    <span>•</span>
                   </div>
                 </div>
 
                 {/* Right: Shared badge */}
-                <div className="shrink-0">
+                <div className="shrink-0 pt-2">
                   {topic.sharedBy ? (
                     <span 
                       className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium"
@@ -718,6 +701,26 @@ const TopicDetailBannerFull = () => {
                   ) : (
                     <div className="w-24" /> 
                   )}
+                </div>
+              </div>
+
+              {/* Row 2: Tabs - left justified, aligned with emoji container */}
+              <div className="mt-4 ml-10">
+                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                  {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                      className={cn(
+                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                        (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
+                          ? 'bg-card text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
