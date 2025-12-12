@@ -627,26 +627,23 @@ const TopicDetailBannerFull = () => {
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Color Banner - Solid */}
           <div 
-            className="h-28 w-full shrink-0 relative"
+            className="h-14 w-full shrink-0 relative"
             style={{ backgroundColor: topicColor }}
           >
             {/* Back Button */}
-            <div className="absolute top-4 left-4 z-10">
+            <div className="absolute top-3 left-4 z-10">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => navigate(-1)}
-                className="h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+                className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4" />
               </Button>
             </div>
-          </div>
-          
-          {/* Content Container - overlapping the banner */}
-          <div className="flex-1 -mt-6 relative z-10 bg-background rounded-t-3xl overflow-hidden flex flex-col shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
-            {/* Topic Icon Container - positioned at the overlap */}
-            <div className="absolute -top-10 left-6 z-20">
+            
+            {/* Topic Icon Container - positioned to overlap banner */}
+            <div className="absolute -bottom-14 left-6 z-20">
               <div 
                 className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg border-4 border-background"
                 style={{ backgroundColor: topicColor }}
@@ -654,6 +651,10 @@ const TopicDetailBannerFull = () => {
                 {topic.icon}
               </div>
             </div>
+          </div>
+          
+          {/* Content Container - overlapping the banner */}
+          <div className="flex-1 -mt-3 relative z-10 bg-background rounded-t-3xl overflow-visible flex flex-col shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
           
             {/* Topic Header */}
             <div className="sticky top-0 z-10 border-b border-border bg-background px-6 pt-14 pb-4">
