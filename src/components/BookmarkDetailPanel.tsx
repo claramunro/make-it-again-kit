@@ -1,21 +1,21 @@
-import { Lightbulb, Quote, BarChart3, FileText, Share, Trash2, ChevronRight, X } from 'lucide-react';
-import { Highlight } from '@/data/highlights';
+import { Lightbulb, Quote, BarChart3, ChevronRight, X } from 'lucide-react';
+import { Bookmark } from '@/data/bookmarks';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-interface HighlightDetailPanelProps {
-  highlight: Highlight;
+interface BookmarkDetailPanelProps {
+  bookmark: Bookmark;
   onClose?: () => void;
   showCloseButton?: boolean;
 }
 
-export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
+export function BookmarkDetailPanel({ bookmark, onClose, showCloseButton }: BookmarkDetailPanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Header with session link */}
       <div className="flex items-center justify-between border-b border-border p-4">
         <Link 
-          to={`/session/${highlight.sessionId}`}
+          to={`/session/${bookmark.sessionId}`}
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-smooth"
         >
           Session <ChevronRight className="h-4 w-4" />
@@ -37,13 +37,13 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
           </div>
           <div className="rounded-lg bg-muted/50 p-4">
             <p className="text-sm leading-relaxed text-foreground">
-              {highlight.description}
+              {bookmark.description}
             </p>
           </div>
         </div>
 
         {/* Original Context */}
-        {highlight.originalContext && (
+        {bookmark.originalContext && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Quote className="h-4 w-4 text-primary" />
@@ -51,14 +51,14 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
             </div>
             <div className="rounded-lg bg-muted/50 p-4">
               <p className="text-sm leading-relaxed text-muted-foreground italic">
-                {highlight.originalContext}
+                {bookmark.originalContext}
               </p>
             </div>
           </div>
         )}
 
         {/* Analysis */}
-        {highlight.analysis && (
+        {bookmark.analysis && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <BarChart3 className="h-4 w-4 text-primary" />
@@ -66,7 +66,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
             </div>
             <div className="rounded-lg bg-muted/50 p-4">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {highlight.analysis}
+                {bookmark.analysis}
               </p>
             </div>
           </div>

@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { Highlight } from '@/data/highlights';
-import { HighlightItem } from './HighlightItem';
+import { Bookmark } from '@/data/bookmarks';
+import { BookmarkItem } from './BookmarkItem';
 import { cn } from '@/lib/utils';
 
-interface HighlightGroupProps {
+interface BookmarkGroupProps {
   title: string;
   icon?: string;
-  highlights: Highlight[];
+  bookmarks: Bookmark[];
   selectedId: string | null;
-  onSelectHighlight: (highlight: Highlight) => void;
+  onSelectBookmark: (bookmark: Bookmark) => void;
   defaultExpanded?: boolean;
 }
 
-export function HighlightGroup({ 
+export function BookmarkGroup({ 
   title, 
   icon, 
-  highlights, 
+  bookmarks, 
   selectedId, 
-  onSelectHighlight,
+  onSelectBookmark,
   defaultExpanded = false 
-}: HighlightGroupProps) {
+}: BookmarkGroupProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   return (
@@ -36,7 +36,7 @@ export function HighlightGroup({
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">
-            {highlights.length} highlight{highlights.length !== 1 ? 's' : ''}
+            {bookmarks.length} bookmark{bookmarks.length !== 1 ? 's' : ''}
           </span>
           {isExpanded ? (
             <ChevronUp className="h-5 w-5 text-muted-foreground" />
@@ -52,12 +52,12 @@ export function HighlightGroup({
         isExpanded ? 'max-h-[2000px]' : 'max-h-0'
       )}>
         <div className="space-y-2 p-4 pt-0">
-          {highlights.map((highlight) => (
-            <HighlightItem
-              key={highlight.id}
-              highlight={highlight}
-              isSelected={selectedId === highlight.id}
-              onSelect={() => onSelectHighlight(highlight)}
+          {bookmarks.map((bookmark) => (
+            <BookmarkItem
+              key={bookmark.id}
+              bookmark={bookmark}
+              isSelected={selectedId === bookmark.id}
+              onSelect={() => onSelectBookmark(bookmark)}
             />
           ))}
         </div>
