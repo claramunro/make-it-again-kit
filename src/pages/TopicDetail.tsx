@@ -172,13 +172,13 @@ const TopicDetail = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-card overflow-hidden">
+    <div className="flex h-screen bg-card overflow-hidden">
       {!isMobile && <Sidebar />}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Header />
         
-        <main className="flex-1 rounded-tl-2xl bg-background pb-24 md:pb-0 overflow-hidden">
+        <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Topic Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
             <div className="mx-auto max-w-6xl">
@@ -241,7 +241,7 @@ const TopicDetail = () => {
           
           {/* Content Area */}
           {activeTopicTab === 'sessions' && (
-            <div className="flex h-[calc(100vh-130px)] overflow-hidden">
+            <div className="flex flex-1 overflow-hidden">
               {/* Left: Sessions Sidebar */}
               <div className="w-64 xl:w-80 shrink-0 border-r border-border overflow-y-auto bg-background min-w-0">
                 <div className="p-3 space-y-1">
