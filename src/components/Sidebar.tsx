@@ -196,40 +196,43 @@ export function Sidebar() {
           <ul className="space-y-1">
             {mainNavItems.map((item) => (
               <li key={item.label}>
-                <div className="flex items-center">
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      'flex flex-1 rounded-lg transition-smooth',
-                      collapsed 
-                        ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                        : 'flex-row items-center gap-3 px-3 py-2',
-                      isActive(item.path)
-                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                        : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
-                    )}
-                  >
-                    {item.icon}
-                    <span className={cn(
-                      "font-medium",
-                      collapsed ? "text-[10px]" : "text-sm"
-                    )}>
-                      {item.label}
-                    </span>
-                  </Link>
+                <Link
+                  to={item.path}
+                  className={cn(
+                    'flex w-full rounded-lg transition-smooth',
+                    collapsed 
+                      ? 'flex-col items-center justify-center px-2 py-3 gap-1'
+                      : 'flex-row items-center gap-3 px-3 py-2',
+                    isActive(item.path)
+                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                      : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                  )}
+                >
+                  {item.icon}
+                  <span className={cn(
+                    "font-medium flex-1",
+                    collapsed ? "text-[10px]" : "text-sm"
+                  )}>
+                    {item.label}
+                  </span>
                   {/* Accordion toggle - only show when not collapsed and has sub-items */}
                   {!collapsed && subItemsMap[item.label] && (
-                    <button
-                      onClick={() => toggleSection(item.label)}
-                      className="p-1.5 rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-smooth"
+                    <span
+                      role="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleSection(item.label);
+                      }}
+                      className="p-1 rounded-md text-muted-foreground hover:bg-background/50 hover:text-sidebar-accent-foreground transition-smooth"
                     >
                       <ChevronDown className={cn(
                         "h-4 w-4 transition-transform duration-200",
                         openSections[item.label] ? "rotate-180" : ""
                       )} />
-                    </button>
+                    </span>
                   )}
-                </div>
+                </Link>
                 
                 {/* Sub-items - only show when not collapsed and section is open */}
                 {!collapsed && subItemsMap[item.label] && openSections[item.label] && (
