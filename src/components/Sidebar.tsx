@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings, HelpCircle, ChevronLeft, Star } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, HelpCircle, ChevronLeft, ChevronDown, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -106,6 +106,23 @@ export function Sidebar() {
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
+  
+  // Accordion state - default to only Sessions open
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => {
+    const saved = localStorage.getItem('sidebar-accordion-state');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    return { Sessions: true, Topics: false, Bookmarks: false };
+  });
+
+  const toggleSection = (label: string) => {
+    setOpenSections(prev => {
+      const newState = { ...prev, [label]: !prev[label] };
+      localStorage.setItem('sidebar-accordion-state', JSON.stringify(newState));
+      return newState;
+    });
+  };
 
   // Listen for theme changes
   useEffect(() => {
@@ -179,29 +196,43 @@ export function Sidebar() {
           <ul className="space-y-1">
             {mainNavItems.map((item) => (
               <li key={item.label}>
-                <Link
-                  to={item.path}
-                  className={cn(
-                    'flex w-full rounded-lg transition-smooth',
-                    collapsed 
-                      ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                      : 'flex-row items-center gap-3 px-3 py-2',
-                    isActive(item.path)
-                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                      : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                <div className="flex items-center">
+                  <Link
+                    to={item.path}
+                    className={cn(
+                      'flex flex-1 rounded-lg transition-smooth',
+                      collapsed 
+                        ? 'flex-col items-center justify-center px-2 py-3 gap-1'
+                        : 'flex-row items-center gap-3 px-3 py-2',
+                      isActive(item.path)
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                    )}
+                  >
+                    {item.icon}
+                    <span className={cn(
+                      "font-medium",
+                      collapsed ? "text-[10px]" : "text-sm"
+                    )}>
+                      {item.label}
+                    </span>
+                  </Link>
+                  {/* Accordion toggle - only show when not collapsed and has sub-items */}
+                  {!collapsed && subItemsMap[item.label] && (
+                    <button
+                      onClick={() => toggleSection(item.label)}
+                      className="p-1.5 rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-smooth"
+                    >
+                      <ChevronDown className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        openSections[item.label] ? "rotate-180" : ""
+                      )} />
+                    </button>
                   )}
-                >
-                  {item.icon}
-                  <span className={cn(
-                    "font-medium",
-                    collapsed ? "text-[10px]" : "text-sm"
-                  )}>
-                    {item.label}
-                  </span>
-                </Link>
+                </div>
                 
-                {/* Sub-items - only show when not collapsed */}
-                {!collapsed && subItemsMap[item.label] && (
+                {/* Sub-items - only show when not collapsed and section is open */}
+                {!collapsed && subItemsMap[item.label] && openSections[item.label] && (
                   <ul className="mt-1 ml-7 space-y-0.5">
                     {subItemsMap[item.label].map((subItem) => (
                       <li key={subItem.id}>
