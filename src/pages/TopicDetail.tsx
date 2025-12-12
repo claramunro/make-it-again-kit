@@ -64,54 +64,60 @@ const mockSessions = [
   {
     id: '1',
     title: 'Final UI Refinements and Merge Preparation',
-    date: 'Monday, December 1, 2025 • 3:43 PM',
-    shortDate: 'Date: Oct 18, 2025 9:16 AM',
+    date: 'Oct 18, 2025',
+    time: '9:16 AM',
     duration: '22m',
+    bookmarks: 3,
     summary: 'Julian and Clara reviewed the progress on the final UI refinements for the Hedy app redesign, confirming that the interface is nearing completion and ready for merging into the main branch.',
     isFavorite: true,
   },
   {
     id: '2',
     title: 'Hedy App Redesign Sync',
-    date: 'Tuesday, November 18, 2025 • 3:31 PM',
-    shortDate: 'Date: Nov 18, 2025 3:31 PM',
+    date: 'Nov 18, 2025',
+    time: '3:31 PM',
     duration: '40m',
+    bookmarks: 0,
     summary: 'Julian and Clara reviewed the current state of the Hedy app redesign, focusing on UI refinements, mobile responsiveness, and technical implementation challenges.',
-    isFavorite: false,
+    isFavorite: true,
   },
   {
     id: '3',
     title: 'Hedy App UI Update and Health Discussion',
-    date: 'Friday, November 14, 2025 • 9:33 AM',
-    shortDate: 'Date: Nov 14, 2025 9:33 AM',
+    date: 'Nov 14, 2025',
+    time: '9:33 AM',
     duration: '31m',
+    bookmarks: 2,
     summary: 'Julian and Clara discussed the latest progress on the Hedy app redesign, focusing on UI refinements in the settings area and dropdown component standardization.',
     isFavorite: false,
   },
   {
     id: '4',
     title: 'Hedy Redesign Progress Review',
-    date: 'Wednesday, November 5, 2025 • 2:15 PM',
-    shortDate: 'Date: Nov 5, 2025 2:15 PM',
+    date: 'Nov 5, 2025',
+    time: '2:15 PM',
     duration: '28m',
+    bookmarks: 0,
     summary: 'The team reviewed overall progress on the redesign initiative and discussed next steps.',
     isFavorite: false,
   },
   {
     id: '5',
     title: 'Initial Design Kickoff',
-    date: 'Monday, October 28, 2025 • 10:00 AM',
-    shortDate: 'Date: Oct 28, 2025 10:00 AM',
+    date: 'Oct 28, 2025',
+    time: '10:00 AM',
     duration: '45m',
+    bookmarks: 5,
     summary: 'Initial meeting to establish design goals and brand direction for the refresh.',
-    isFavorite: true,
+    isFavorite: false,
   },
   {
     id: '6',
     title: 'Technical Architecture Review',
-    date: 'Wednesday, October 23, 2025 • 2:00 PM',
-    shortDate: 'Date: Oct 23, 2025 2:00 PM',
+    date: 'Oct 23, 2025',
+    time: '2:00 PM',
     duration: '35m',
+    bookmarks: 1,
     summary: 'Deep dive into the technical architecture required for implementing the new design.',
     isFavorite: false,
   },
@@ -224,23 +230,39 @@ const TopicDetail = () => {
           {activeTopicTab === 'sessions' && (
             <div className="flex h-[calc(100vh-130px)]">
               {/* Left: Sessions Sidebar */}
-              <div className="w-72 shrink-0 border-r border-border overflow-y-auto bg-background">
+              <div className="w-80 shrink-0 border-r border-border overflow-y-auto bg-background">
                 <div className="p-3 space-y-1">
                   {mockSessions.map((session) => (
                     <button
                       key={session.id}
                       onClick={() => setSelectedSessionId(session.id)}
                       className={cn(
-                        'w-full flex items-center gap-3 rounded-lg px-3 py-3 text-left transition-smooth',
+                        'w-full flex items-start gap-3 rounded-lg px-3 py-3 text-left transition-smooth',
                         selectedSessionId === session.id
                           ? 'bg-card border border-border shadow-sm'
                           : 'hover:bg-muted/50'
                       )}
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
                         <Wrench className="h-4 w-4 text-muted-foreground" />
                       </div>
-                      <span className="flex-1 text-sm font-medium truncate">{session.title}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="flex-1 text-sm font-medium truncate">{session.title}</span>
+                          {sessionFavorites[session.id] && (
+                            <Star className="h-3.5 w-3.5 shrink-0 fill-yellow-400 text-yellow-400" />
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {session.date} • {session.time} • {session.duration}
+                        </p>
+                        {session.bookmarks > 0 && (
+                          <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                            <Bookmark className="h-3 w-3" />
+                            {session.bookmarks} bookmarks
+                          </p>
+                        )}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -254,7 +276,7 @@ const TopicDetail = () => {
                     <div className="shrink-0 px-6 pt-6 pb-4">
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">{selectedSession.shortDate}</p>
+                          <p className="text-sm text-muted-foreground">Date: {selectedSession.date} {selectedSession.time}</p>
                           <p className="text-sm text-muted-foreground">Duration: {selectedSession.duration}</p>
                         </div>
                         
@@ -266,22 +288,24 @@ const TopicDetail = () => {
                         </button>
                       </div>
                       
-                      {/* Session Tabs */}
-                      <div className="flex items-center justify-center border-b border-border">
-                        {(['details', 'bookmarks', 'transcript'] as SessionTab[]).map((tab) => (
-                          <button
-                            key={tab}
-                            onClick={() => setActiveSessionTab(tab)}
-                            className={cn(
-                              'px-6 py-3 text-sm font-medium transition-all border-b-2 -mb-[1px]',
-                              activeSessionTab === tab
-                                ? 'text-foreground border-foreground'
-                                : 'text-muted-foreground hover:text-foreground border-transparent'
-                            )}
-                          >
-                            {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
-                          </button>
-                        ))}
+                      {/* Session Tabs - matching pill style */}
+                      <div className="flex justify-center">
+                        <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                          {(['details', 'bookmarks', 'transcript'] as SessionTab[]).map((tab) => (
+                            <button
+                              key={tab}
+                              onClick={() => setActiveSessionTab(tab)}
+                              className={cn(
+                                'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                                activeSessionTab === tab
+                                  ? 'bg-card text-foreground shadow-sm'
+                                  : 'text-muted-foreground hover:text-foreground'
+                              )}
+                            >
+                              {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     
