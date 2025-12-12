@@ -124,13 +124,13 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {/* Center: Tabs */}
           <div className="flex-1 flex justify-center">
             <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              {(['overview', 'sessions', 'bookmarks'] as const).map(tab => (
+              {(['overview', 'sessions', 'highlights'] as const).map(tab => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTopicTab(tab)}
+                  onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
                   className={cn(
                     'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                    activeTopicTab === tab
+                    (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
                       ? 'bg-card text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
@@ -238,13 +238,13 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             <div className="space-y-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['details', 'bookmarks', 'transcript'] as const).map(tab => (
+                  {(['details', 'highlights', 'transcript'] as const).map(tab => (
                     <button
                       key={tab}
-                      onClick={() => setActiveSessionTab(tab)}
+                      onClick={() => setActiveSessionTab(tab === 'highlights' ? 'bookmarks' : tab)}
                       className={cn(
                         'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                        activeSessionTab === tab
+                        (tab === 'highlights' ? activeSessionTab === 'bookmarks' : activeSessionTab === tab)
                           ? 'bg-card text-foreground shadow-sm'
                           : 'text-muted-foreground hover:text-foreground'
                       )}
@@ -310,7 +310,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             </div>
           )}
 
-          {/* Bookmarks Tab */}
+          {/* Highlights Tab */}
           {activeTopicTab === 'bookmarks' && (
             <div className="space-y-4">
               {topicBookmarks.length > 0 ? (
@@ -327,7 +327,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                 ))
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  No bookmarks in this topic yet
+                  No highlights in this topic yet
                 </div>
               )}
             </div>
