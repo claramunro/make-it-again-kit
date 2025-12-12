@@ -224,7 +224,7 @@ export function Sidebar() {
                         e.stopPropagation();
                         toggleSection(item.label);
                       }}
-                      className="p-1 rounded-md text-muted-foreground hover:bg-background/50 hover:text-sidebar-accent-foreground transition-smooth"
+                      className="p-1.5 rounded-full text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-smooth"
                     >
                       <ChevronDown className={cn(
                         "h-4 w-4 transition-transform duration-200",
@@ -234,43 +234,52 @@ export function Sidebar() {
                   )}
                 </Link>
                 
-                {/* Sub-items - only show when not collapsed and section is open */}
-                {!collapsed && subItemsMap[item.label] && openSections[item.label] && (
-                  <ul className="mt-1 ml-7 space-y-0.5">
-                    {subItemsMap[item.label].map((subItem) => (
-                      <li key={subItem.id}>
-                        <Link
-                          to={subItem.path}
-                          className={cn(
-                            'flex items-center gap-1.5 truncate rounded-md px-2 py-1.5 text-xs transition-smooth',
-                            isSubItemActive(subItem.path)
-                              ? 'bg-sidebar-accent/50 text-sidebar-accent-foreground'
-                              : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
-                          )}
-                        >
-                          {/* Star/Bookmark indicator - always takes up space for alignment */}
-                          <span className="w-3 shrink-0 flex items-center justify-center">
-                            {item.label === 'Bookmarks' && (
-                              <Bookmark className={cn(
-                                "h-3 w-3",
-                                subItem.isStarred 
-                                  ? "stroke-yellow-500 fill-yellow-400/30" 
-                                  : "text-muted-foreground"
-                              )} />
+                {/* Sub-items - only show when not collapsed, with animation */}
+                {!collapsed && subItemsMap[item.label] && (
+                  <div 
+                    className={cn(
+                      "overflow-hidden transition-all duration-200 ease-out",
+                      openSections[item.label] 
+                        ? "max-h-96 opacity-100" 
+                        : "max-h-0 opacity-0"
+                    )}
+                  >
+                    <ul className="mt-1 ml-7 space-y-0.5">
+                      {subItemsMap[item.label].map((subItem) => (
+                        <li key={subItem.id}>
+                          <Link
+                            to={subItem.path}
+                            className={cn(
+                              'flex items-center gap-1.5 truncate rounded-md px-2 py-1.5 text-xs transition-smooth',
+                              isSubItemActive(subItem.path)
+                                ? 'bg-sidebar-accent/50 text-sidebar-accent-foreground'
+                                : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                             )}
-                            {item.label !== 'Bookmarks' && subItem.isStarred && (
-                              <Star className="h-3 w-3 stroke-yellow-500 fill-yellow-400/30" />
+                          >
+                            {/* Star/Bookmark indicator - always takes up space for alignment */}
+                            <span className="w-3 shrink-0 flex items-center justify-center">
+                              {item.label === 'Bookmarks' && (
+                                <Bookmark className={cn(
+                                  "h-3 w-3",
+                                  subItem.isStarred 
+                                    ? "stroke-yellow-500 fill-yellow-400/30" 
+                                    : "text-muted-foreground"
+                                )} />
+                              )}
+                              {item.label !== 'Bookmarks' && subItem.isStarred && (
+                                <Star className="h-3 w-3 stroke-yellow-500 fill-yellow-400/30" />
+                              )}
+                            </span>
+                            {/* Topic icon */}
+                            {item.label === 'Topics' && subItem.topicIcon && (
+                              <span className="text-[10px] shrink-0">{subItem.topicIcon}</span>
                             )}
-                          </span>
-                          {/* Topic icon */}
-                          {item.label === 'Topics' && subItem.topicIcon && (
-                            <span className="text-[10px] shrink-0">{subItem.topicIcon}</span>
-                          )}
-                          <span className="truncate">{subItem.label}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                            <span className="truncate">{subItem.label}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </li>
             ))}
