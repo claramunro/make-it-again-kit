@@ -109,12 +109,12 @@ type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'appeara
 type SessionTab = 'details' | 'bookmarks' | 'transcript';
 
 const wallpaperPresets = [
-  { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand' },
-  { id: 'peach', gradient: 'bg-gradient-to-br from-orange-200 via-rose-100 to-orange-300', name: 'Peach' },
-  { id: 'mint', gradient: 'bg-gradient-to-br from-emerald-300 via-teal-200 to-emerald-400', name: 'Mint' },
-  { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender' },
-  { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean' },
-  { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset' },
+  { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand', color: 'hsl(45, 93%, 60%)' },
+  { id: 'peach', gradient: 'bg-gradient-to-br from-orange-200 via-rose-100 to-orange-300', name: 'Peach', color: 'hsl(12, 76%, 61%)' },
+  { id: 'mint', gradient: 'bg-gradient-to-br from-emerald-300 via-teal-200 to-emerald-400', name: 'Mint', color: 'hsl(160, 84%, 39%)' },
+  { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender', color: 'hsl(271, 91%, 65%)' },
+  { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean', color: 'hsl(199, 89%, 48%)' },
+  { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset', color: 'hsl(16, 100%, 50%)' },
 ];
 
 const mockSessionBookmarks = [
@@ -177,7 +177,9 @@ const TopicDetailBannerFull = () => {
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
-  const topicColor = topic ? topicColorMap[topic.icon] || 'hsl(207, 18%, 51%)' : 'hsl(207, 18%, 51%)';
+  const defaultTopicColor = topic ? topicColorMap[topic.icon] || 'hsl(207, 18%, 51%)' : 'hsl(207, 18%, 51%)';
+  const selectedWallpaperPreset = wallpaperPresets.find(w => w.id === selectedWallpaper);
+  const topicColor = selectedWallpaperPreset?.color || defaultTopicColor;
   
   const topicBookmarks = useMemo(() => {
     return bookmarks.filter(b => b.topicId === id || b.topicName === topic?.name);
