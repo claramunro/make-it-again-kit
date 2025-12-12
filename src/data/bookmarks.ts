@@ -11,6 +11,7 @@ export interface Bookmark {
   description: string;
   originalContext?: string;
   analysis?: string;
+  isFavorite?: boolean;
 }
 
 export const bookmarks: Bookmark[] = [
@@ -27,6 +28,7 @@ export const bookmarks: Bookmark[] = [
     description: 'The core idea is the successful activation and confirmation of a live session, marked by a moment of recognition and celebration upon achieving functional engagement, with references to a thematic or coded language (e.g., "Robert Baratheon") possibly signaling internal triggers or modes.',
     originalContext: 'Oh my God, Robert Baratheon, black of hair, black of hair, Joffrey, go. This one\'s still going—let\'s see if it\'ll actually activate. Current session: beautiful. Chat, chat, chat... There we go—and boom, I did it! Good job. Okay, sessions, sessions.',
     analysis: 'This reflects the principle of "action preceding insight," common in dynamic work environments where decisions must be made amid ambiguity. By beginning the process—physically relocating and committing to figuring it out—the individual leverages momentum over hesitation, turning uncertainty into productive exploration.',
+    isFavorite: true,
   },
   {
     id: '2',
@@ -41,6 +43,7 @@ export const bookmarks: Bookmark[] = [
     description: 'During the meeting, fragmented and seemingly random language was used, potentially indicating confusion, technical difficulties, or a breakdown in clear communication, which disrupted the coherence and effectiveness of the session.',
     originalContext: 'Wait, what was that? The words came out jumbled and I couldn\'t follow. Let me try again...',
     analysis: 'Communication breakdowns often signal deeper issues with meeting structure or participant preparation.',
+    isFavorite: true,
   },
   {
     id: '3',
