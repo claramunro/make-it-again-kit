@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark, Clock, Trash2, Quote, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark, Clock, Trash2, Quote, BarChart3, Pencil, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -200,6 +200,7 @@ const TopicDetail = () => {
   const [blurAmount, setBlurAmount] = useState([50]);
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
+  const [viewOriginal, setViewOriginal] = useState(false);
   
   const selectedBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
@@ -521,8 +522,55 @@ const TopicDetail = () => {
                       )}
                       
                       {activeSessionTab === 'transcript' && (
-                        <div className="flex items-center justify-center h-40 text-muted-foreground">
-                          <p>Transcript content will appear here.</p>
+                        <div>
+                          {/* Transcript Header */}
+                          <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
+                            <div className="flex items-center gap-2 text-sm text-primary">
+                              <Sparkles className="h-4 w-4" />
+                              Viewing cleaned transcript
+                            </div>
+                            <button 
+                              onClick={() => setViewOriginal(!viewOriginal)}
+                              className="text-sm text-muted-foreground hover:text-foreground"
+                            >
+                              {viewOriginal ? 'View cleaned' : 'View original'}
+                            </button>
+                          </div>
+
+                          {/* Transcript Content */}
+                          <div className="relative rounded-xl border border-border bg-card p-5">
+                            <div className="space-y-6 text-sm leading-relaxed text-foreground">
+                              <div>
+                                <p className="mb-2 font-semibold">Speaker 1:</p>
+                                <p>This is our first experiment in legal discrimination. I can say, I won't rent to you because you're a lawyer. And if you are on the front lines of fixing the homeless housing problem in the city, here's a key to a loft that's half price. I don't care what you make; I care what you do. So that's the experiment behind this.</p>
+                              </div>
+                              <div>
+                                <p>I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon. We have a few projects here, infill projects, mostly small to medium scale. Half of them are adaptive reuse projects, and half of them are new construction. We've got 24 projects. A dozen of them are completed, and a dozen are on the boards or under construction.</p>
+                              </div>
+                              <div>
+                                <p>I've been doing this for 20 years. I was trained as an architect, one of the 50% of architecture grads who isn't a licensed architect. I chose the development path. I don't want to call myself a real estate developer because they're like always the bad guy in the movies, but that's my profession.</p>
+                              </div>
+                              <div>
+                                <p>Gorilla Development came out after the last recession. It's "guerrilla" like, you know, guerrilla warfare, like the...</p>
+                              </div>
+                            </div>
+
+                            {/* Floating Actions */}
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 space-y-2">
+                              <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
+                                <Pencil className="h-4 w-4" />
+                              </button>
+                              <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                                <Copy className="h-4 w-4" />
+                              </button>
+                              <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                                <Download className="h-4 w-4" />
+                              </button>
+                              <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                                <Sparkles className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
