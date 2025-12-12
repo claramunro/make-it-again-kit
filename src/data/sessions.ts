@@ -12,6 +12,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '12 minutes',
         date: 'Nov 4, 2025',
         type: 'video',
+        isFavorite: true,
       },
       {
         id: '2',

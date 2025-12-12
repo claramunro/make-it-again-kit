@@ -1,13 +1,25 @@
-import { FileText, Video, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { FileText, Video, ChevronRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Session } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
+import { cn } from '@/lib/utils';
 
 interface SessionCardProps {
   session: Session;
+  onToggleFavorite?: (id: string) => void;
 }
 
-export function SessionCard({ session }: SessionCardProps) {
+export function SessionCard({ session, onToggleFavorite }: SessionCardProps) {
+  const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFavorite(!isFavorite);
+    onToggleFavorite?.(session.id);
+  };
+
   return (
     <Link 
       to={`/session/${session.id}`}
@@ -34,6 +46,21 @@ export function SessionCard({ session }: SessionCardProps) {
           </span>
         </div>
       </div>
+
+      {/* Star Button */}
+      <button
+        onClick={handleToggleFavorite}
+        className="mt-1 shrink-0 p-1 rounded-md transition-smooth hover:bg-muted"
+      >
+        <Star 
+          className={cn(
+            "h-4 w-4 transition-colors",
+            isFavorite 
+              ? "fill-yellow-400 text-yellow-400" 
+              : "text-muted-foreground/50 group-hover:text-muted-foreground"
+          )} 
+        />
+      </button>
 
       {/* Arrow */}
       <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground/50 transition-smooth group-hover:text-muted-foreground" />

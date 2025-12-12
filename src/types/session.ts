@@ -8,6 +8,7 @@ export interface Session {
   duration: string;
   date: string;
   type: 'video' | 'document';
+  isFavorite?: boolean;
 }
 
 export interface SessionGroup {
