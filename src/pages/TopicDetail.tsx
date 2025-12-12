@@ -14,6 +14,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { topics } from '@/data/topics';
 import { bookmarks, Bookmark } from '@/data/bookmarks';
 import { cn } from '@/lib/utils';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 
 const topicColors = [
   'hsl(12, 76%, 61%)',
@@ -433,37 +439,50 @@ const TopicDetail = () => {
     </div>
   );
 
-  // Mobile Session Modal
-  const MobileSessionModal = () => {
+  // Mobile Session Drawer
+  const MobileSessionDrawer = () => {
     if (!mobileSelectedSession) return null;
     
     return (
-      <div className="fixed inset-0 z-50 bg-background flex flex-col">
-        {/* Modal Header */}
-        <header className="shrink-0 border-b border-border bg-card">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <button 
-              onClick={() => {
-                setSessionModalOpen(false);
-                setMobileSelectedSession(null);
-              }}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-            <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
-            <div className="flex-1 min-w-0">
-              <h1 className="truncate text-sm font-medium text-foreground">
-                {mobileSelectedSession.title}
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                {mobileSelectedSession.date} • {mobileSelectedSession.duration}
-              </p>
+      <Drawer open={sessionModalOpen} onOpenChange={(open) => {
+        setSessionModalOpen(open);
+        if (!open) setMobileSelectedSession(null);
+      }}>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader className="border-b border-border pb-4">
+            <DrawerTitle className="text-xl font-semibold text-left">
+              {mobileSelectedSession.title}
+            </DrawerTitle>
+            
+            {/* Session link pill */}
+            <div className="inline-flex items-center gap-2 mt-2 rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground w-fit">
+              <FileText className="h-4 w-4" />
+              Session
             </div>
-          </div>
 
+            {/* Date, time, actions */}
+            <div className="flex items-center justify-between mt-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{mobileSelectedSession.date}</span>
+                <span className="rounded-full bg-primary/80 px-2 py-0.5 text-xs font-medium text-primary-foreground">
+                  {mobileSelectedSession.duration}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-smooth">
+                  <Share className="h-4 w-4" />
+                  Share
+                </button>
+                <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-destructive transition-smooth">
+                  <Trash2 className="h-4 w-4" />
+                  Delete
+                </button>
+              </div>
+            </div>
+          </DrawerHeader>
+          
           {/* Session Tabs */}
-          <div className="flex border-t border-border">
+          <div className="flex border-b border-border px-4">
             {(['details', 'highlights', 'transcript'] as const).map(tab => (
               <button
                 key={tab}
@@ -479,51 +498,51 @@ const TopicDetail = () => {
               </button>
             ))}
           </div>
-        </header>
 
-        {/* Modal Content */}
-        <main className="flex-1 overflow-auto p-4">
-          {activeSessionTab === 'details' && (
-            <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-card p-4">
-                <h2 className="mb-3 text-base font-semibold text-foreground">Summary</h2>
-                <p className="text-sm leading-relaxed text-foreground">
-                  {mobileSelectedSession.summary}
-                </p>
+          {/* Modal Content */}
+          <div className="overflow-y-auto p-4">
+            {activeSessionTab === 'details' && (
+              <div className="space-y-4">
+                <div className="rounded-xl border border-border bg-card p-4">
+                  <h2 className="mb-3 text-base font-semibold text-foreground">Summary</h2>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {mobileSelectedSession.summary}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeSessionTab === 'bookmarks' && (
-            <div className="space-y-3">
-              {mockSessionBookmarks.map((bookmark) => (
-                <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
-                  <div className="flex items-start gap-3 mb-2">
-                    <BookmarkIcon className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+            {activeSessionTab === 'bookmarks' && (
+              <div className="space-y-3">
+                {mockSessionBookmarks.map((bookmark) => (
+                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+                    <div className="flex items-start gap-3 mb-2">
+                      <BookmarkIcon className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                      <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{bookmark.mainIdea}</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">{bookmark.mainIdea}</p>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          {activeSessionTab === 'transcript' && (
-            <div className="rounded-xl border border-border bg-card p-4">
-              <div className="flex items-center gap-2 text-sm text-primary mb-4">
-                <Sparkles className="h-4 w-4" />
-                Viewing cleaned transcript
-              </div>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <p className="font-semibold mb-1">Speaker 1:</p>
-                  <p className="text-muted-foreground">This is example transcript content.</p>
+            {activeSessionTab === 'transcript' && (
+              <div className="rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center gap-2 text-sm text-primary mb-4">
+                  <Sparkles className="h-4 w-4" />
+                  Viewing cleaned transcript
+                </div>
+                <div className="space-y-4 text-sm">
+                  <div>
+                    <p className="font-semibold mb-1">Speaker 1:</p>
+                    <p className="text-muted-foreground">This is example transcript content.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </main>
-      </div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     );
   };
 
@@ -531,8 +550,8 @@ const TopicDetail = () => {
   if (isMobile) {
     return (
       <div className="flex min-h-screen flex-col bg-background pb-20">
-        {/* Session Modal */}
-        {sessionModalOpen && <MobileSessionModal />}
+        {/* Session Drawer */}
+        <MobileSessionDrawer />
 
         {/* Mobile Header */}
         <header className="sticky top-0 z-10 border-b border-border bg-card">
