@@ -23,6 +23,7 @@ interface SubItem {
   label: string;
   path: string;
   isStarred?: boolean;
+  topicIcon?: string;
 }
 
 const mainNavItems: NavItem[] = [
@@ -54,6 +55,7 @@ const recentTopics: SubItem[] = [...starredTopics, ...nonStarredTopics].slice(0,
   label: topic.name,
   path: `/topic/${topic.id}`,
   isStarred: topic.isFavorite,
+  topicIcon: topic.icon,
 }));
 
 // Get first 4 bookmarks
@@ -212,7 +214,15 @@ export function Sidebar() {
                           {item.label === 'Bookmarks' && (
                             <Bookmark className="h-3 w-3 shrink-0 text-muted-foreground" />
                           )}
-                          {subItem.isStarred && item.label !== 'Bookmarks' && (
+                          {item.label === 'Topics' && subItem.topicIcon && (
+                            <span className="relative shrink-0 flex items-center justify-center w-4 h-4">
+                              {subItem.isStarred && (
+                                <Star className="absolute h-3.5 w-3.5 stroke-yellow-500 fill-yellow-400/30" />
+                              )}
+                              <span className="relative text-[10px]" style={{ marginLeft: '4px' }}>{subItem.topicIcon}</span>
+                            </span>
+                          )}
+                          {subItem.isStarred && item.label === 'Sessions' && (
                             <Star className="h-3 w-3 shrink-0 stroke-yellow-500 fill-yellow-400/30" />
                           )}
                           <span className="truncate">{subItem.label}</span>
