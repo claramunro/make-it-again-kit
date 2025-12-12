@@ -620,18 +620,38 @@ const TopicDetail = () => {
                 </div>
                 
                 {/* Chat Content */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                  <div className="flex items-start gap-2 text-sm">
-                    <input type="checkbox" className="mt-1 h-4 w-4 rounded border-border" />
-                    <div>
-                      <p className="text-foreground">Visit the Endurance website or call the provided number for a quote</p>
-                      <p className="text-xs text-muted-foreground">Due: Today</p>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {/* User Message */}
+                  <div className="flex justify-end">
+                    <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+                      Can you summarize the key points from this session?
                     </div>
                   </div>
-                  <div className="flex items-start gap-2 text-sm">
-                    <input type="checkbox" className="mt-1 h-4 w-4 rounded border-border" />
-                    <div>
-                      <p className="text-foreground">Evaluate the Endurance warranty plan for potential enrollment</p>
+                  
+                  {/* AI Response */}
+                  <div className="flex justify-start">
+                    <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
+                      <p className="mb-2">Here are the key points from this session:</p>
+                      <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                        <li>UI refinements are nearing completion</li>
+                        <li>The main branch merge is ready</li>
+                        <li>Mobile responsiveness improvements discussed</li>
+                        <li>New font selection in progress</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  {/* User Message */}
+                  <div className="flex justify-end">
+                    <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
+                      What are the next steps?
+                    </div>
+                  </div>
+                  
+                  {/* AI Response */}
+                  <div className="flex justify-start">
+                    <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
+                      Based on the discussion, the next steps are to finalize the font selection, complete the mobile layout adjustments, and prepare for the design review meeting scheduled for next week.
                     </div>
                   </div>
                 </div>
