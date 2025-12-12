@@ -58,11 +58,14 @@ const recentTopics: SubItem[] = [...starredTopics, ...nonStarredTopics].slice(0,
   topicIcon: topic.icon,
 }));
 
-// Get first 4 bookmarks
-const recentBookmarks: SubItem[] = bookmarks.slice(0, 4).map(bookmark => ({
+// Get starred bookmarks first, then recent ones
+const starredBookmarks = bookmarks.filter(b => b.isFavorite);
+const nonStarredBookmarks = bookmarks.filter(b => !b.isFavorite);
+const recentBookmarks: SubItem[] = [...starredBookmarks, ...nonStarredBookmarks].slice(0, 4).map(bookmark => ({
   id: bookmark.id,
   label: bookmark.title.length > 25 ? bookmark.title.substring(0, 25) + '...' : bookmark.title,
   path: `/bookmarks#${bookmark.id}`,
+  isStarred: bookmark.isFavorite,
 }));
 
 const subItemsMap: Record<string, SubItem[]> = {
@@ -211,19 +214,23 @@ export function Sidebar() {
                               : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                           )}
                         >
-                          {item.label === 'Bookmarks' && (
-                            <Bookmark className="h-3 w-3 shrink-0 text-muted-foreground" />
-                          )}
+                          {/* Star/Bookmark indicator - always takes up space for alignment */}
+                          <span className="w-3 shrink-0 flex items-center justify-center">
+                            {item.label === 'Bookmarks' && (
+                              <Bookmark className={cn(
+                                "h-3 w-3",
+                                subItem.isStarred 
+                                  ? "stroke-yellow-500 fill-yellow-400/30" 
+                                  : "text-muted-foreground"
+                              )} />
+                            )}
+                            {item.label !== 'Bookmarks' && subItem.isStarred && (
+                              <Star className="h-3 w-3 stroke-yellow-500 fill-yellow-400/30" />
+                            )}
+                          </span>
+                          {/* Topic icon */}
                           {item.label === 'Topics' && subItem.topicIcon && (
-                            <span className="relative shrink-0 flex items-center justify-center w-4 h-4">
-                              {subItem.isStarred && (
-                                <Star className="absolute h-3.5 w-3.5 stroke-yellow-500 fill-yellow-400/30" />
-                              )}
-                              <span className="relative text-[10px]" style={{ marginLeft: '4px' }}>{subItem.topicIcon}</span>
-                            </span>
-                          )}
-                          {subItem.isStarred && item.label === 'Sessions' && (
-                            <Star className="h-3 w-3 shrink-0 stroke-yellow-500 fill-yellow-400/30" />
+                            <span className="text-[10px] shrink-0">{subItem.topicIcon}</span>
                           )}
                           <span className="truncate">{subItem.label}</span>
                         </Link>
