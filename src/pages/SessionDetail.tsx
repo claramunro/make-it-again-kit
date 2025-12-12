@@ -118,44 +118,54 @@ const SessionDetail = () => {
                     Title
                   </h1>
                   <p className="text-xs text-muted-foreground">
-                    Date: Oct 18, 2025 9:16 AM<br />
-                    Duration: 2 minutes
+                    Date: Oct 18, 2025 9:16 AM · Duration: 2 minutes
                   </p>
                 </div>
               </div>
 
-              {/* Right: Badge */}
-              <div className="shrink-0">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
-                  <span className="h-2 w-2 rounded-full bg-primary" />
-                  Badge
-                </span>
+              {/* Center: Tabs */}
+              <div className="flex-1 flex justify-center">
+                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                  {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={cn(
+                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                        activeTab === tab
+                          ? 'bg-card text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Tabs */}
-            <div className="mt-4">
-              <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                {(['details', 'highlights', 'transcript'] as const).map(tab => (
+              {/* Right: Topic Tag */}
+              <div className="shrink-0">
+                {selectedTopicData ? (
                   <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={cn(
-                      'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                      activeTab === tab
-                        ? 'bg-card text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
+                    onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
+                    className="inline-flex items-center gap-2 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 px-3 py-1.5 text-sm font-medium text-foreground hover:bg-violet-500/20 dark:hover:bg-violet-500/30 transition-smooth"
                   >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    <span>{selectedTopicData.icon}</span>
+                    <span>{selectedTopicData.name}</span>
                   </button>
-                ))}
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                    No Topic
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
           {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
-          <div className="flex h-[calc(100vh-180px)]">
+          {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
+          <div className="flex h-[calc(100vh-208px)]">
             {/* Left Column - Only show for Highlights tab */}
             {activeTab === 'highlights' && (
               <div className="w-80 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
@@ -377,7 +387,7 @@ const SessionDetail = () => {
                 </div>
               </div>
 
-              {/* Chat Messages Area */}
+              {/* Chat Messages Area - scrollable */}
               <div className="flex-1 overflow-auto p-4 space-y-4">
                 {/* User Message */}
                 <div className="flex justify-end">
@@ -398,20 +408,8 @@ const SessionDetail = () => {
                 </div>
               </div>
 
-              {/* Chat Input */}
-              <div className="border-t border-border p-4">
-                {/* Todo checkboxes */}
-                <div className="mb-3 space-y-2">
-                  <label className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <input type="checkbox" className="mt-0.5 h-3 w-3 rounded border-border" />
-                    <span>Visit the Endurance website or call the provided number for a quote from Terrie.</span>
-                  </label>
-                  <label className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <input type="checkbox" className="mt-0.5 h-3 w-3 rounded border-border" />
-                    <span>Evaluate the Endurance warranty plan for potential enrollment.</span>
-                  </label>
-                </div>
-
+              {/* Chat Input - always visible at bottom */}
+              <div className="shrink-0 border-t border-border p-4">
                 <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
                   <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
                   <input
