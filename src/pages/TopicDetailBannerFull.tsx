@@ -358,31 +358,13 @@ const TopicDetailBannerFull = () => {
       <div className="flex min-h-screen flex-col bg-background pb-20">
         <MobileSessionDrawer />
 
-        {/* Color Banner with Gradient Fade */}
-        <div className="relative">
-          <div 
-            className="h-28 w-full"
-            style={{ backgroundColor: topicColor }}
-          />
-          <div 
-            className="absolute inset-0"
-            style={{ 
-              background: `linear-gradient(to bottom, transparent 0%, transparent 40%, hsl(var(--background)) 100%)` 
-            }}
-          />
-          
-          {/* Topic Icon */}
-          <div className="absolute -bottom-8 left-4">
-            <div 
-              className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shadow-lg border-4 border-background"
-              style={{ backgroundColor: topicColor }}
-            >
-              {topic.icon}
-            </div>
-          </div>
-          
+        {/* Color Banner - Solid with shadow */}
+        <div 
+          className="h-16 w-full shrink-0 relative shadow-md"
+          style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 30%, white 70%)` }}
+        >
           {/* Back Button */}
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-4 left-4 z-10">
             <Button
               variant="ghost"
               size="icon"
@@ -394,36 +376,66 @@ const TopicDetailBannerFull = () => {
           </div>
         </div>
 
-        {/* Header Info */}
-        <div className="pt-12 px-4 pb-4">
-          <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {mockSessions.length} Sessions • Last updated {topic.date}
-          </p>
-          {topic.sharedBy && (
-            <div className="flex items-center gap-1.5 mt-2 rounded-full bg-muted px-2.5 py-1 text-xs w-fit">
-              <Users className="h-3 w-3" />
-              Shared by {topic.sharedBy}
+        {/* Content Container */}
+        <div className="flex-1 flex flex-col bg-background rounded-t-3xl -mt-4 relative z-10">
+          {/* Header with Emoji + Title */}
+          <div className="px-4 pt-4 pb-4">
+            <div className="flex items-start gap-3">
+              {/* Topic Icon Container - overlapping banner */}
+              <div 
+                className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl border-4 border-background shadow-sm shrink-0 -mt-8"
+                style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 20%, white 80%)` }}
+              >
+                {topic.icon}
+              </div>
+              <div className="min-w-0 flex-1 pt-1">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h1 className="text-xl font-bold text-foreground">{topic.name}</h1>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {mockSessions.length} sessions • Last updated {topic.date}
+                    </p>
+                  </div>
+                  {topic.sharedBy && (
+                    <span 
+                      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium shrink-0"
+                      style={{ 
+                        borderColor: `color-mix(in srgb, ${topicColor} 50%, transparent 50%)`,
+                        backgroundColor: `color-mix(in srgb, ${topicColor} 10%, transparent 90%)`,
+                        color: topicColor
+                      }}
+                    >
+                      <Users className="h-3 w-3" />
+                      Shared by {topic.sharedBy}
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Tab Bar */}
-        <div className="flex border-t border-b border-border overflow-x-auto">
-          {(['overview', 'sessions', 'chat', 'highlights', 'appearance'] as MobileTopicTab[]).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setMobileActiveTab(tab)}
-              className={cn(
-                'flex-1 min-w-0 py-3 text-xs font-medium transition-smooth border-b-2 whitespace-nowrap px-2',
-                mobileActiveTab === tab
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground'
-              )}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </button>
-          ))}
+          {/* Tab Bar */}
+          <div className="flex border-t border-b border-border overflow-x-auto px-2">
+            {(['overview', 'sessions', 'chat', 'highlights', 'appearance'] as MobileTopicTab[]).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setMobileActiveTab(tab)}
+                className={cn(
+                  'flex-1 min-w-0 py-3 text-xs font-medium transition-smooth whitespace-nowrap px-2',
+                  mobileActiveTab === tab
+                    ? 'text-foreground'
+                    : 'text-muted-foreground'
+                )}
+              >
+                <span className={cn(
+                  'inline-block px-3 py-1.5 rounded-lg',
+                  mobileActiveTab === tab && 'bg-muted'
+                )}>
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Content */}
@@ -625,13 +637,13 @@ const TopicDetailBannerFull = () => {
         <Header />
         
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
-          {/* Color Banner - Solid */}
+          {/* Color Banner - Light tinted with shadow */}
           <div 
-            className="h-14 w-full shrink-0 relative rounded-tl-2xl"
-            style={{ backgroundColor: topicColor }}
+            className="h-20 w-full shrink-0 relative rounded-tl-2xl shadow-md"
+            style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 25%, white 75%)` }}
           >
             {/* Back Button */}
-            <div className="absolute top-3 left-4 z-10">
+            <div className="absolute top-4 left-4 z-10">
               <Button
                 variant="ghost"
                 size="icon"
@@ -644,26 +656,27 @@ const TopicDetailBannerFull = () => {
           </div>
           
           {/* Content Container - overlapping the banner */}
-          <div className="flex-1 -mt-3 relative z-10 bg-background rounded-t-3xl overflow-visible flex flex-col shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.1)]">
+          <div className="flex-1 -mt-6 relative z-10 bg-background rounded-t-3xl overflow-visible flex flex-col">
           
             {/* Topic Header */}
-            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-5 pb-4">
+            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-4 pb-4">
               <div className="flex items-center justify-between gap-4">
                 {/* Left: Emoji + Title + Meta */}
                 <div className="flex items-center gap-4 min-w-0">
-                  {/* Topic Icon Container */}
+                  {/* Topic Icon Container - overlapping into banner */}
                   <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg border-4 border-background shrink-0"
-                    style={{ backgroundColor: topicColor }}
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl border-4 border-background shrink-0 -mt-10"
+                    style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 15%, white 85%)` }}
                   >
                     {topic.icon}
                   </div>
                   <div className="min-w-0">
                     <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
-                    <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                      <span>{mockSessions.length} Sessions</span>
+                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                      <span>{mockSessions.length} sessions</span>
                       <span>•</span>
-                      <span>Last Updated: Oct 17, 2025 10:33 AM</span>
+                      <span>Last updated Dec 1</span>
+                      <span>•</span>
                     </div>
                   </div>
                 </div>
@@ -691,7 +704,14 @@ const TopicDetailBannerFull = () => {
                 {/* Right: Shared badge */}
                 <div className="shrink-0">
                   {topic.sharedBy ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                    <span 
+                      className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium"
+                      style={{ 
+                        borderColor: `color-mix(in srgb, ${topicColor} 40%, transparent 60%)`,
+                        backgroundColor: `color-mix(in srgb, ${topicColor} 8%, transparent 92%)`,
+                        color: topicColor
+                      }}
+                    >
                       <Users className="h-3 w-3" />
                       Shared by {topic.sharedBy}
                     </span>
