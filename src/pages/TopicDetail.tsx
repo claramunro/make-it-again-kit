@@ -127,6 +127,7 @@ const mockSessions = [
 ];
 
 type TopicTab = 'overview' | 'sessions' | 'bookmarks' | 'appearance';
+type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'appearance';
 type SessionTab = 'details' | 'bookmarks' | 'transcript';
 
 // Wallpaper presets with gradient configurations
@@ -232,6 +233,7 @@ const TopicDetail = () => {
   const initialTab = searchParams.get('tab') as TopicTab | null;
   
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(initialTab === 'sessions' ? 'sessions' : 'overview');
+  const [mobileActiveTab, setMobileActiveTab] = useState<MobileTopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
@@ -251,6 +253,8 @@ const TopicDetail = () => {
   const [bookmarkDropdownOpen, setBookmarkDropdownOpen] = useState(false);
   const [promptsModalOpen, setPromptsModalOpen] = useState(false);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
@@ -429,9 +433,349 @@ const TopicDetail = () => {
     </div>
   );
 
+  // Mobile Session Modal
+  const MobileSessionModal = () => {
+    if (!mobileSelectedSession) return null;
+    
+    return (
+      <div className="fixed inset-0 z-50 bg-background flex flex-col">
+        {/* Modal Header */}
+        <header className="shrink-0 border-b border-border bg-card">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <button 
+              onClick={() => {
+                setSessionModalOpen(false);
+                setMobileSelectedSession(null);
+              }}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <h1 className="truncate text-sm font-medium text-foreground">
+                {mobileSelectedSession.title}
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                {mobileSelectedSession.date} • {mobileSelectedSession.duration}
+              </p>
+            </div>
+          </div>
+
+          {/* Session Tabs */}
+          <div className="flex border-t border-border">
+            {(['details', 'highlights', 'transcript'] as const).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveSessionTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                className={cn(
+                  'flex-1 py-3 text-sm font-medium transition-smooth border-b-2',
+                  (tab === 'highlights' ? activeSessionTab === 'bookmarks' : activeSessionTab === tab)
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground'
+                )}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        {/* Modal Content */}
+        <main className="flex-1 overflow-auto p-4">
+          {activeSessionTab === 'details' && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-base font-semibold text-foreground">Summary</h2>
+                <p className="text-sm leading-relaxed text-foreground">
+                  {mobileSelectedSession.summary}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeSessionTab === 'bookmarks' && (
+            <div className="space-y-3">
+              {mockSessionBookmarks.map((bookmark) => (
+                <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+                  <div className="flex items-start gap-3 mb-2">
+                    <BookmarkIcon className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{bookmark.mainIdea}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeSessionTab === 'transcript' && (
+            <div className="rounded-xl border border-border bg-card p-4">
+              <div className="flex items-center gap-2 text-sm text-primary mb-4">
+                <Sparkles className="h-4 w-4" />
+                Viewing cleaned transcript
+              </div>
+              <div className="space-y-4 text-sm">
+                <div>
+                  <p className="font-semibold mb-1">Speaker 1:</p>
+                  <p className="text-muted-foreground">This is example transcript content.</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  };
+
+  // Mobile/Tablet Layout
+  if (isMobile) {
+    return (
+      <div className="flex min-h-screen flex-col bg-background pb-20">
+        {/* Session Modal */}
+        {sessionModalOpen && <MobileSessionModal />}
+
+        {/* Mobile Header */}
+        <header className="sticky top-0 z-10 border-b border-border bg-card">
+          {/* Title Row */}
+          <div className="flex items-center gap-3 px-4 py-3">
+            <button 
+              onClick={() => navigate('/topics')}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <span className="text-xl shrink-0">{topic.icon}</span>
+            <div className="flex-1 min-w-0">
+              <h1 className="truncate text-sm font-medium text-foreground">{topic.name}</h1>
+              <p className="text-xs text-muted-foreground">
+                {mockSessions.length} Sessions • Last updated Oct 17, 2025
+              </p>
+            </div>
+          </div>
+
+          {/* Tab Bar - Full Width, 5 tabs */}
+          <div className="flex border-t border-border overflow-x-auto">
+            {(['overview', 'sessions', 'chat', 'highlights', 'appearance'] as MobileTopicTab[]).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setMobileActiveTab(tab)}
+                className={cn(
+                  'flex-1 min-w-0 py-3 text-xs font-medium transition-smooth border-b-2 whitespace-nowrap px-2',
+                  mobileActiveTab === tab
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground'
+                )}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        {/* Content - Single Column */}
+        <main className="flex-1 overflow-auto p-4">
+          {/* Overview Tab */}
+          {mobileActiveTab === 'overview' && (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-base font-semibold text-foreground">Topic Overview</h2>
+                <p className="text-sm leading-relaxed text-foreground">
+                  This topic contains {topic.sessionCount} sessions covering various discussions related to {topic.name}.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h2 className="mb-3 text-base font-semibold text-foreground">Recent Sessions</h2>
+                <div className="space-y-2">
+                  {mockSessions.slice(0, 3).map((session) => (
+                    <div key={session.id} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{session.title}</p>
+                        <p className="text-xs text-muted-foreground">{session.date}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sessions Tab */}
+          {mobileActiveTab === 'sessions' && (
+            <div className="space-y-3">
+              {mockSessions.map((session) => (
+                <button
+                  key={session.id}
+                  onClick={() => {
+                    setMobileSelectedSession(session);
+                    setSessionModalOpen(true);
+                    setActiveSessionTab('details');
+                  }}
+                  className="w-full flex items-start gap-3 rounded-xl border border-border bg-card p-4 text-left"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="flex-1 text-sm font-medium truncate">{session.title}</span>
+                      <Star 
+                        className={cn(
+                          "h-4 w-4 shrink-0",
+                          sessionFavorites[session.id] 
+                            ? "fill-yellow-400 text-yellow-400" 
+                            : "text-muted-foreground"
+                        )} 
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {session.date} • {session.duration}
+                    </p>
+                    {session.bookmarks > 0 && (
+                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                        <BookmarkIcon className="h-3 w-3" />
+                        {session.bookmarks} highlights
+                      </p>
+                    )}
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground mt-3" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Chat Tab */}
+          {mobileActiveTab === 'chat' && (
+            <div className="flex flex-col h-[calc(100vh-220px)]">
+              <div className="flex-1 overflow-auto space-y-4 mb-4">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3 text-sm text-primary-foreground">
+                    Can you summarize the key points from this topic?
+                  </div>
+                </div>
+
+                {/* AI Response */}
+                <div className="rounded-xl border-l-4 border-primary/30 bg-primary/5 p-4">
+                  <p className="mb-2 text-sm leading-relaxed text-foreground">
+                    Here are the key points from this topic:
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1 text-sm text-muted-foreground">
+                    <li>UI refinements are nearing completion</li>
+                    <li>The main branch merge is ready</li>
+                    <li>Mobile responsiveness improvements discussed</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div className="shrink-0">
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-2">
+                  <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="How can I help?"
+                    className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                  />
+                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Highlights Tab */}
+          {mobileActiveTab === 'highlights' && (
+            <div className="space-y-3">
+              {topicBookmarks.length > 0 ? (
+                topicBookmarks.map((bookmark) => (
+                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+                    <div className="flex items-start gap-3">
+                      <BookmarkIcon className="mt-0.5 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-foreground">{bookmark.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{bookmark.sessionTitle}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No highlights in this topic yet
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Appearance Tab */}
+          {mobileActiveTab === 'appearance' && (
+            <div className="space-y-6">
+              {/* Wallpaper Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Wallpaper</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {wallpaperPresets.map((preset) => (
+                    <button
+                      key={preset.id}
+                      onClick={() => setSelectedWallpaper(preset.id)}
+                      className={cn(
+                        'aspect-video rounded-lg overflow-hidden border-2 transition-all',
+                        selectedWallpaper === preset.id ? 'border-primary' : 'border-transparent'
+                      )}
+                    >
+                      <div className={cn('h-full w-full', preset.gradient)} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Accent Color</h3>
+                <div className="flex flex-wrap gap-2">
+                  {topicColors.slice(0, 12).map((color, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedColor(i)}
+                      className={cn(
+                        'h-8 w-8 rounded-full transition-all',
+                        selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
+                      )}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Icon Selection */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Icon</h3>
+                <div className="flex flex-wrap gap-2">
+                  {topicEmojis.slice(0, 12).map((emoji, i) => (
+                    <button
+                      key={i}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-xl"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+
+        <MobileBottomNav />
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="flex h-screen bg-card overflow-hidden">
-      {!isMobile && <Sidebar />}
+      <Sidebar />
       
       {/* Backdrop overlay when prompts modal is open */}
       {promptsModalOpen && (
