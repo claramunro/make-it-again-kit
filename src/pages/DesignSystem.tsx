@@ -1063,11 +1063,28 @@ const DesignSystem = () => {
               <Card className="mb-8">
                 <CardHeader>
                   <CardTitle>Session Card</CardTitle>
-                  <CardDescription>Card displaying session information</CardDescription>
+                  <CardDescription>Card displaying session information with icon, title, badge, time, and favorite action</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="max-w-md">
-                    <SessionCard session={allSessions[0]} />
+                <CardContent className="space-y-6">
+                  <div>
+                    <p className="text-sm font-medium mb-3">Default</p>
+                    <div className="max-w-md">
+                      <SessionCard session={allSessions[0]} />
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <p className="text-sm font-medium mb-3">Selected State</p>
+                    <div className="max-w-md">
+                      <SessionCard session={allSessions[1]} isSelected />
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <p className="text-sm font-medium mb-3">Favorited</p>
+                    <div className="max-w-md">
+                      <SessionCard session={{ ...allSessions[2], isFavorite: true }} />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
