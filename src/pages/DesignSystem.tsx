@@ -409,6 +409,18 @@ const DesignSystem = () => {
     { name: "ring", variable: "--ring", class: "bg-ring" },
   ];
 
+  const badgeTokens = [
+    { name: "badge-pro", variable: "--badge-pro", class: "bg-badge-pro", description: "PRO feature indicator" },
+    { name: "badge-new", variable: "--badge-new", class: "bg-badge-new", description: "New item indicator" },
+    { name: "badge-coffee", variable: "--badge-coffee", class: "bg-badge-coffee", description: "Coffee topic" },
+    { name: "badge-workout", variable: "--badge-workout", class: "bg-badge-workout", description: "Workout topic" },
+  ];
+
+  const shadowTokens = [
+    { name: "shadow-overlay", variable: "--shadow-overlay", usage: "Modal/dialog overlays", example: "bg-[hsl(var(--shadow-overlay)/0.5)]" },
+    { name: "shadow-elevation", variable: "--shadow-elevation", usage: "Card elevation shadows", example: "shadow-[0_4px_20px_hsl(var(--shadow-elevation)/0.1)]" },
+  ];
+
   const spacingScale = [
     { name: "0", value: "0px" },
     { name: "0.5", value: "2px" },
@@ -603,7 +615,7 @@ const DesignSystem = () => {
               </Card>
 
               {/* Shadows */}
-              <Card>
+              <Card className="mb-8">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <span className="text-2xl">🌫️</span> Shadows
@@ -618,6 +630,76 @@ const DesignSystem = () => {
                         <code className="text-xs">{shadow.class}</code>
                       </div>
                     ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Badge Tokens */}
+              <Card className="mb-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span className="text-2xl">🏷️</span> Badge Tokens
+                  </CardTitle>
+                  <CardDescription>Semantic colors for badges and status indicators</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {badgeTokens.map((token) => (
+                      <button
+                        key={token.name}
+                        onClick={() => copyToClipboard(token.class, token.name)}
+                        className="group text-left"
+                      >
+                        <div 
+                          className={`h-12 rounded-lg border border-border ${token.class} mb-2 relative overflow-hidden`}
+                        >
+                          {copiedToken === token.name && (
+                            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                              <Check className="h-4 w-4 text-primary" />
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs font-medium truncate">{token.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{token.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-4 p-4 bg-muted rounded-lg">
+                    <p className="text-sm font-medium mb-2">Usage Example:</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="pro">PRO</Badge>
+                      <Badge variant="default">New</Badge>
+                      <Badge variant="secondary">Secondary</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Custom Shadow Tokens */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <span className="text-2xl">✨</span> Custom Shadow Tokens
+                  </CardTitle>
+                  <CardDescription>Semantic shadow tokens for overlays and elevation</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {shadowTokens.map((token) => (
+                      <div key={token.name} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        <div>
+                          <p className="font-medium text-sm">{token.name}</p>
+                          <p className="text-xs text-muted-foreground">{token.usage}</p>
+                        </div>
+                        <code className="text-xs bg-muted px-2 py-1 rounded">{token.variable}</code>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 p-4 bg-muted rounded-lg">
+                    <p className="text-sm font-medium mb-2">Overlay Pattern:</p>
+                    <p className="text-xs text-muted-foreground mb-2">Use <code className="bg-background px-1 rounded">bg-foreground/50</code> for modal overlays (adapts to theme)</p>
+                    <p className="text-sm font-medium mb-2 mt-4">Elevation Pattern:</p>
+                    <p className="text-xs text-muted-foreground">Use <code className="bg-background px-1 rounded">shadow-[0_4px_20px_hsl(var(--shadow-elevation)/0.1)]</code> for themed shadows</p>
                   </div>
                 </CardContent>
               </Card>
@@ -683,6 +765,7 @@ const DesignSystem = () => {
                     <Badge variant="secondary">Secondary</Badge>
                     <Badge variant="outline">Outline</Badge>
                     <Badge variant="destructive">Destructive</Badge>
+                    <Badge variant="pro">PRO</Badge>
                   </div>
                 </CardContent>
               </Card>
