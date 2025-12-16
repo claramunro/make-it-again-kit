@@ -31,79 +31,340 @@ import { sessionGroups } from "@/data/sessions";
 import { topics } from "@/data/topics";
 import { bookmarks } from "@/data/bookmarks";
 
-// File location data for each component category
-const atomFiles = [
-  { name: "Button", path: "src/components/ui/button.tsx" },
-  { name: "Badge", path: "src/components/ui/badge.tsx" },
-  { name: "Input", path: "src/components/ui/input.tsx" },
-  { name: "Label", path: "src/components/ui/label.tsx" },
-  { name: "Checkbox", path: "src/components/ui/checkbox.tsx" },
-  { name: "Switch", path: "src/components/ui/switch.tsx" },
-  { name: "Slider", path: "src/components/ui/slider.tsx" },
-  { name: "Avatar", path: "src/components/ui/avatar.tsx" },
-  { name: "Progress", path: "src/components/ui/progress.tsx" },
-  { name: "Separator", path: "src/components/ui/separator.tsx" },
-  { name: "Textarea", path: "src/components/ui/textarea.tsx" },
+// Component usage data with locations across the app
+const atomComponents = [
+  { 
+    name: "Button", 
+    path: "src/components/ui/button.tsx",
+    usages: [
+      { page: "Sessions", section: "Header → Start Session", route: "/" },
+      { page: "Session Detail", section: "Audio Player Controls", route: "/session/1" },
+      { page: "Topic Detail", section: "Chat Panel → Send Button", route: "/topic/1" },
+      { page: "Settings", section: "Form Actions", route: "/settings" },
+      { page: "Auth Screen", section: "Login/Signup Forms", route: "/auth" },
+      { page: "Onboarding", section: "Navigation Buttons", route: "/welcome" },
+      { page: "Design System", section: "Component Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Badge", 
+    path: "src/components/ui/badge.tsx",
+    usages: [
+      { page: "Design System", section: "Badge Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Input", 
+    path: "src/components/ui/input.tsx",
+    usages: [
+      { page: "Auth Screen", section: "Email/Password Fields", route: "/auth" },
+      { page: "Topic Detail", section: "Chat Input", route: "/topic/1" },
+      { page: "Design System", section: "Input Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Label", 
+    path: "src/components/ui/label.tsx",
+    usages: [
+      { page: "Auth Screen", section: "Form Labels", route: "/auth" },
+      { page: "Topic Detail", section: "Form Labels", route: "/topic/1" },
+      { page: "Design System", section: "Label Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Checkbox", 
+    path: "src/components/ui/checkbox.tsx",
+    usages: [
+      { page: "Design System", section: "Checkbox Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Switch", 
+    path: "src/components/ui/switch.tsx",
+    usages: [
+      { page: "Session Detail", section: "Transcript Toggle", route: "/session/1" },
+      { page: "Settings", section: "Toggle Options", route: "/settings" },
+      { page: "Design System", section: "Switch Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Slider", 
+    path: "src/components/ui/slider.tsx",
+    usages: [
+      { page: "Settings", section: "Volume/Opacity Controls", route: "/settings" },
+      { page: "Design System", section: "Slider Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Avatar", 
+    path: "src/components/ui/avatar.tsx",
+    usages: [
+      { page: "Design System", section: "Avatar Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Progress", 
+    path: "src/components/ui/progress.tsx",
+    usages: [
+      { page: "Splash Screen", section: "Loading Progress Bar", route: "/splash" },
+      { page: "Design System", section: "Progress Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Separator", 
+    path: "src/components/ui/separator.tsx",
+    usages: [
+      { page: "Design System", section: "Separator Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Textarea", 
+    path: "src/components/ui/textarea.tsx",
+    usages: [
+      { page: "Topic Detail", section: "Chat Message Input", route: "/topic/1" },
+      { page: "Design System", section: "Textarea Examples", route: "/design-system" },
+    ]
+  },
 ];
 
-const moleculeFiles = [
-  { name: "Select", path: "src/components/ui/select.tsx" },
-  { name: "Dropdown Menu", path: "src/components/ui/dropdown-menu.tsx" },
-  { name: "Tooltip", path: "src/components/ui/tooltip.tsx" },
-  { name: "Tabs", path: "src/components/ui/tabs.tsx" },
-  { name: "Dialog", path: "src/components/ui/dialog.tsx" },
-  { name: "Sheet", path: "src/components/ui/sheet.tsx" },
-  { name: "Popover", path: "src/components/ui/popover.tsx" },
-  { name: "Accordion", path: "src/components/ui/accordion.tsx" },
+const moleculeComponents = [
+  { 
+    name: "Select", 
+    path: "src/components/ui/select.tsx",
+    usages: [
+      { page: "Design System", section: "Select Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Dropdown Menu", 
+    path: "src/components/ui/dropdown-menu.tsx",
+    usages: [
+      { page: "Design System", section: "Dropdown Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Tooltip", 
+    path: "src/components/ui/tooltip.tsx",
+    usages: [
+      { page: "App Root", section: "TooltipProvider Wrapper", route: "/" },
+      { page: "Design System", section: "Tooltip Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Tabs", 
+    path: "src/components/ui/tabs.tsx",
+    usages: [
+      { page: "Design System", section: "Tab Navigation", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Dialog", 
+    path: "src/components/ui/dialog.tsx",
+    usages: [
+      { page: "Design System", section: "Dialog Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Sheet", 
+    path: "src/components/ui/sheet.tsx",
+    usages: [
+      { page: "Sidebar", section: "Mobile Navigation Drawer", route: "/" },
+    ]
+  },
+  { 
+    name: "Popover", 
+    path: "src/components/ui/popover.tsx",
+    usages: [
+      { page: "Design System", section: "Popover Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Accordion", 
+    path: "src/components/ui/accordion.tsx",
+    usages: [
+      { page: "Design System", section: "File Location Accordions", route: "/design-system" },
+    ]
+  },
 ];
 
-const organismFiles = [
-  { name: "Card", path: "src/components/ui/card.tsx" },
-  { name: "SessionCard", path: "src/components/SessionCard.tsx" },
-  { name: "TopicCard", path: "src/components/TopicCard.tsx" },
-  { name: "BookmarkCard", path: "src/components/BookmarkCard.tsx" },
-  { name: "Header", path: "src/components/Header.tsx" },
-  { name: "Sidebar", path: "src/components/Sidebar.tsx" },
-  { name: "SessionList", path: "src/components/SessionList.tsx" },
-  { name: "TopicsList", path: "src/components/TopicsList.tsx" },
-  { name: "SettingsDialog", path: "src/components/SettingsDialog.tsx" },
+const organismComponents = [
+  { 
+    name: "Card", 
+    path: "src/components/ui/card.tsx",
+    usages: [
+      { page: "Design System", section: "All Section Cards", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "SessionCard", 
+    path: "src/components/SessionCard.tsx",
+    usages: [
+      { page: "Home (Sessions)", section: "Session List Items", route: "/" },
+      { page: "SessionList", section: "Session Rendering", route: "/" },
+      { page: "Design System", section: "Organism Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "TopicCard", 
+    path: "src/components/TopicCard.tsx",
+    usages: [
+      { page: "Topics", section: "Topic Grid/List", route: "/topics" },
+      { page: "TopicsList", section: "Topic Rendering", route: "/topics" },
+      { page: "Design System", section: "Organism Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "BookmarkCard", 
+    path: "src/components/BookmarkCard.tsx",
+    usages: [
+      { page: "Highlights", section: "Bookmark List Items", route: "/bookmarks" },
+      { page: "Design System", section: "Organism Examples", route: "/design-system" },
+    ]
+  },
+  { 
+    name: "Header", 
+    path: "src/components/Header.tsx",
+    usages: [
+      { page: "Home", section: "Page Header", route: "/" },
+      { page: "Topics", section: "Page Header", route: "/topics" },
+      { page: "Session Detail", section: "Page Header", route: "/session/1" },
+      { page: "Topic Detail", section: "Page Header", route: "/topic/1" },
+    ]
+  },
+  { 
+    name: "Sidebar", 
+    path: "src/components/Sidebar.tsx",
+    usages: [
+      { page: "Home", section: "Left Navigation", route: "/" },
+      { page: "Topics", section: "Left Navigation", route: "/topics" },
+      { page: "Session Detail", section: "Left Navigation", route: "/session/1" },
+      { page: "Topic Detail", section: "Left Navigation", route: "/topic/1" },
+      { page: "Highlights", section: "Left Navigation", route: "/bookmarks" },
+    ]
+  },
+  { 
+    name: "SessionList", 
+    path: "src/components/SessionList.tsx",
+    usages: [
+      { page: "Home", section: "Main Content Area", route: "/" },
+    ]
+  },
+  { 
+    name: "TopicsList", 
+    path: "src/components/TopicsList.tsx",
+    usages: [
+      { page: "Topics", section: "Main Content Area", route: "/topics" },
+    ]
+  },
+  { 
+    name: "SettingsDialog", 
+    path: "src/components/SettingsDialog.tsx",
+    usages: [
+      { page: "Desktop Layout", section: "Settings Modal (Desktop)", route: "/" },
+    ]
+  },
 ];
 
-const templateFiles = [
-  { name: "Form Template", path: "src/pages/AuthScreen.tsx" },
-  { name: "List Template", path: "src/components/SessionList.tsx" },
-  { name: "Master-Detail (Sessions)", path: "src/pages/SessionsMasterDetail.tsx" },
-  { name: "Master-Detail (Topics)", path: "src/pages/TopicsMasterDetail.tsx" },
+const templateComponents = [
+  { 
+    name: "Form Template", 
+    path: "src/pages/AuthScreen.tsx",
+    usages: [
+      { page: "Auth Screen", section: "Login/Signup Form Layout", route: "/auth" },
+    ]
+  },
+  { 
+    name: "List Template", 
+    path: "src/components/SessionList.tsx",
+    usages: [
+      { page: "Home", section: "Session List Layout", route: "/" },
+    ]
+  },
+  { 
+    name: "Master-Detail (Sessions)", 
+    path: "src/pages/SessionsMasterDetail.tsx",
+    usages: [
+      { page: "Sessions (Large Screen)", section: "Full Layout", route: "/sessions-master" },
+    ]
+  },
+  { 
+    name: "Master-Detail (Topics)", 
+    path: "src/pages/TopicsMasterDetail.tsx",
+    usages: [
+      { page: "Topics (Large Screen)", section: "Full Layout", route: "/topics-master" },
+    ]
+  },
 ];
 
-const pageFiles = [
+const pageComponents = [
   { name: "Home", path: "src/pages/Index.tsx", route: "/" },
   { name: "Topics", path: "src/pages/Topics.tsx", route: "/topics" },
   { name: "Highlights", path: "src/pages/Bookmarks.tsx", route: "/bookmarks" },
   { name: "Settings", path: "src/pages/Settings.tsx", route: "/settings" },
-  { name: "Session Detail", path: "src/pages/SessionDetail.tsx", route: "/session/:id" },
-  { name: "Topic Detail", path: "src/pages/TopicDetail.tsx", route: "/topic/:id" },
+  { name: "Session Detail", path: "src/pages/SessionDetail.tsx", route: "/session/1" },
+  { name: "Topic Detail", path: "src/pages/TopicDetail.tsx", route: "/topic/1" },
   { name: "Welcome/Onboarding", path: "src/pages/Welcome.tsx", route: "/welcome" },
   { name: "Splash Screen", path: "src/pages/SplashScreen.tsx", route: "/splash" },
   { name: "Auth Screen", path: "src/pages/AuthScreen.tsx", route: "/auth" },
   { name: "Design System", path: "src/pages/DesignSystem.tsx", route: "/design-system" },
 ];
 
-const FileLocationAccordion = ({ files, title }: { files: { name: string; path: string; route?: string }[], title: string }) => (
+interface ComponentUsage {
+  page: string;
+  section: string;
+  route: string;
+}
+
+interface ComponentWithUsages {
+  name: string;
+  path: string;
+  usages?: ComponentUsage[];
+  route?: string;
+}
+
+const ComponentUsageAccordion = ({ components, title }: { components: ComponentWithUsages[], title: string }) => (
   <Accordion type="single" collapsible className="mb-6">
     <AccordionItem value="files" className="border-border">
       <AccordionTrigger className="text-sm text-muted-foreground hover:no-underline py-2">
         <span className="flex items-center gap-2">
           <FileCode className="h-4 w-4" />
-          {title} ({files.length} files)
+          {title} ({components.length} components)
         </span>
       </AccordionTrigger>
       <AccordionContent>
-        <div className="grid gap-2 pt-2">
-          {files.map((file) => (
-            <div key={file.path} className="flex items-center justify-between text-sm bg-muted/50 rounded-md px-3 py-2">
-              <span className="font-medium">{file.name}</span>
-              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{file.path}</code>
+        <div className="space-y-4 pt-2">
+          {components.map((component) => (
+            <div key={component.path} className="bg-muted/50 rounded-md p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium text-sm">{component.name}</span>
+                <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{component.path}</code>
+              </div>
+              {component.usages && component.usages.length > 0 && (
+                <div className="space-y-1 mt-2 pl-2 border-l-2 border-primary/30">
+                  <p className="text-xs text-muted-foreground mb-1">Used in:</p>
+                  {component.usages.map((usage, idx) => (
+                    <Link 
+                      key={idx} 
+                      to={usage.route}
+                      className="flex items-center gap-2 text-xs hover:text-primary transition-colors"
+                    >
+                      <span className="text-foreground">{usage.page}</span>
+                      <span className="text-muted-foreground">→</span>
+                      <span className="text-muted-foreground">{usage.section}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+              {component.route && (
+                <div className="mt-2 pl-2 border-l-2 border-primary/30">
+                  <Link 
+                    to={component.route}
+                    className="text-xs hover:text-primary transition-colors"
+                  >
+                    View page →
+                  </Link>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -229,11 +490,17 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Sub-Atomic (Foundations)</h2>
               <p className="text-muted-foreground mb-4">Design tokens that form the foundation of our visual language.</p>
               
-              <FileLocationAccordion 
-                files={[
-                  { name: "CSS Variables", path: "src/index.css" },
-                  { name: "Tailwind Config", path: "tailwind.config.ts" },
-                  { name: "Utils", path: "src/lib/utils.ts" },
+              <ComponentUsageAccordion 
+                components={[
+                  { name: "CSS Variables", path: "src/index.css", usages: [
+                    { page: "All Pages", section: "Global Styles", route: "/" }
+                  ]},
+                  { name: "Tailwind Config", path: "tailwind.config.ts", usages: [
+                    { page: "All Pages", section: "Theme Configuration", route: "/" }
+                  ]},
+                  { name: "Utils", path: "src/lib/utils.ts", usages: [
+                    { page: "All Pages", section: "Utility Functions (cn)", route: "/" }
+                  ]},
                 ]} 
                 title="Foundation Files" 
               />
@@ -362,7 +629,7 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Atoms</h2>
               <p className="text-muted-foreground mb-4">Basic building blocks that cannot be broken down further.</p>
               
-              <FileLocationAccordion files={atomFiles} title="Atom Component Files" />
+              <ComponentUsageAccordion components={atomComponents} title="Atom Component Files" />
 
               {/* Buttons */}
               <Card className="mb-8">
@@ -533,7 +800,7 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Molecules</h2>
               <p className="text-muted-foreground mb-4">Groups of atoms functioning together as a unit.</p>
               
-              <FileLocationAccordion files={moleculeFiles} title="Molecule Component Files" />
+              <ComponentUsageAccordion components={moleculeComponents} title="Molecule Component Files" />
 
               {/* Form Fields */}
               <Card className="mb-8">
@@ -642,7 +909,7 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Organisms</h2>
               <p className="text-muted-foreground mb-4">Complex UI components made of groups of molecules.</p>
               
-              <FileLocationAccordion files={organismFiles} title="Organism Component Files" />
+              <ComponentUsageAccordion components={organismComponents} title="Organism Component Files" />
 
               {/* Cards */}
               <Card className="mb-8">
@@ -755,7 +1022,7 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Templates</h2>
               <p className="text-muted-foreground mb-4">Page-level layouts that combine organisms into complete structures.</p>
               
-              <FileLocationAccordion files={templateFiles} title="Template Files" />
+              <ComponentUsageAccordion components={templateComponents} title="Template Files" />
 
               <Card className="mb-8">
                 <CardHeader>
@@ -862,7 +1129,7 @@ const DesignSystem = () => {
               <h2 className="text-xl font-semibold mb-2">Pages</h2>
               <p className="text-muted-foreground mb-4">Complete page examples combining all atomic design levels.</p>
               
-              <FileLocationAccordion files={pageFiles} title="Page Files" />
+              <ComponentUsageAccordion components={pageComponents} title="Page Files" />
 
               <Card className="mb-8">
                 <CardHeader>
