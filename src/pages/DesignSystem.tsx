@@ -50,6 +50,7 @@ const atomComponents = [
     name: "Badge", 
     path: "src/components/ui/badge.tsx",
     usages: [
+      { page: "Settings", section: "PRO Feature Badges", route: "/settings" },
       { page: "Design System", section: "Badge Examples", route: "/design-system" },
     ]
   },

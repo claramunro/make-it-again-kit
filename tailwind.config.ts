@@ -67,6 +67,8 @@ export default {
           "coffee-bg": "hsl(var(--badge-coffee-bg))",
           workout: "hsl(var(--badge-workout))",
           "workout-bg": "hsl(var(--badge-workout-bg))",
+          pro: "hsl(var(--badge-pro))",
+          "pro-foreground": "hsl(var(--badge-pro-foreground))",
         },
         avatar: {
           DEFAULT: "hsl(var(--avatar-bg))",

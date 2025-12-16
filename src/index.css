@@ -41,6 +41,8 @@
     --badge-coffee-bg: 35 30% 92%;
     --badge-workout: 142 50% 45%;
     --badge-workout-bg: 142 40% 92%;
+    --badge-pro: 217 91% 60%;
+    --badge-pro-foreground: 0 0% 100%;
     
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 20 10% 40%;
@@ -53,6 +55,10 @@
 
     --avatar-bg: 45 80% 75%;
     --avatar-foreground: 30 40% 25%;
+    
+    /* Shadows */
+    --shadow-overlay: 0 0% 0%;
+    --shadow-elevation: 20 10% 10%;
   }
 
   .dark {
