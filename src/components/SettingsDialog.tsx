@@ -8,6 +8,7 @@ import {
   Info, Copyright, Link2, LogOut, Trash2, UserPlus, RefreshCw
 } from 'lucide-react';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import { Switch } from './ui/switch';
 import { Slider } from './ui/slider';
 import { cn } from '@/lib/utils';
@@ -331,7 +332,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
               <div className="rounded-xl border border-border bg-card p-5">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="text-base font-semibold text-foreground">Session AI Context & Instructions</h3>
-                  <span className="rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">PRO</span>
+                  <Badge variant="pro">PRO</Badge>
                   <Question className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">Get smarter, more personalized insights from Hedy. By providing context – like your role, company details, or project goals – Hedy can tailor its analysis and suggestions to be far more relevant and impactful for you. You can also include specific instructions, such as advice you want Hedy to give you during the session, or a preferred format for the summary. Pro users can save and switch between multiple context profiles.</p>
@@ -466,7 +467,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
               <div className="rounded-xl border border-border bg-card p-5">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="text-base font-semibold text-foreground">Auto Detailed Notes</h3>
-                  <span className="rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">PRO</span>
+                  <Badge variant="pro">PRO</Badge>
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">Save time and ensure nothing is missed. Hedy can automatically create comprehensive detailed notes at the end of each session, ready for review or sharing.</p>
                 <div className="space-y-3">
@@ -560,7 +561,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
               <div className="rounded-xl border border-border bg-card p-5">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="text-base font-semibold text-foreground">API Access</h3>
-                  <span className="rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">PRO</span>
+                  <Badge variant="pro">PRO</Badge>
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">
                   Automate your workflows and integrate Hedy with your favorite tools. Generate an API key to connect Hedy data to Zapier, CRMs, and more, streamlining how you use your meeting insights. (Cloud Sync must be active).{' '}
@@ -658,7 +659,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
               <div className="rounded-xl border border-border bg-card p-5">
                 <div className="mb-2 flex items-center gap-2">
                   <h3 className="text-base font-semibold text-foreground">Invites</h3>
-                  <span className="rounded bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">PRO</span>
+                  <Badge variant="pro">PRO</Badge>
                 </div>
                 <p className="mb-4 text-sm text-muted-foreground">View and manage all your shared content. See what you've shared with others and what others have shared with you.</p>
                 <Button variant="action" className="w-full gap-2">
