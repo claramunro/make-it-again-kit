@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Sun, Moon, Copy, Check } from "lucide-react";
+import { ArrowLeft, Sun, Moon, Copy, Check, FileCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -23,12 +23,94 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SessionCard } from "@/components/SessionCard";
 import { TopicCard } from "@/components/TopicCard";
 import { BookmarkCard } from "@/components/BookmarkCard";
 import { sessionGroups } from "@/data/sessions";
 import { topics } from "@/data/topics";
 import { bookmarks } from "@/data/bookmarks";
+
+// File location data for each component category
+const atomFiles = [
+  { name: "Button", path: "src/components/ui/button.tsx" },
+  { name: "Badge", path: "src/components/ui/badge.tsx" },
+  { name: "Input", path: "src/components/ui/input.tsx" },
+  { name: "Label", path: "src/components/ui/label.tsx" },
+  { name: "Checkbox", path: "src/components/ui/checkbox.tsx" },
+  { name: "Switch", path: "src/components/ui/switch.tsx" },
+  { name: "Slider", path: "src/components/ui/slider.tsx" },
+  { name: "Avatar", path: "src/components/ui/avatar.tsx" },
+  { name: "Progress", path: "src/components/ui/progress.tsx" },
+  { name: "Separator", path: "src/components/ui/separator.tsx" },
+  { name: "Textarea", path: "src/components/ui/textarea.tsx" },
+];
+
+const moleculeFiles = [
+  { name: "Select", path: "src/components/ui/select.tsx" },
+  { name: "Dropdown Menu", path: "src/components/ui/dropdown-menu.tsx" },
+  { name: "Tooltip", path: "src/components/ui/tooltip.tsx" },
+  { name: "Tabs", path: "src/components/ui/tabs.tsx" },
+  { name: "Dialog", path: "src/components/ui/dialog.tsx" },
+  { name: "Sheet", path: "src/components/ui/sheet.tsx" },
+  { name: "Popover", path: "src/components/ui/popover.tsx" },
+  { name: "Accordion", path: "src/components/ui/accordion.tsx" },
+];
+
+const organismFiles = [
+  { name: "Card", path: "src/components/ui/card.tsx" },
+  { name: "SessionCard", path: "src/components/SessionCard.tsx" },
+  { name: "TopicCard", path: "src/components/TopicCard.tsx" },
+  { name: "BookmarkCard", path: "src/components/BookmarkCard.tsx" },
+  { name: "Header", path: "src/components/Header.tsx" },
+  { name: "Sidebar", path: "src/components/Sidebar.tsx" },
+  { name: "SessionList", path: "src/components/SessionList.tsx" },
+  { name: "TopicsList", path: "src/components/TopicsList.tsx" },
+  { name: "SettingsDialog", path: "src/components/SettingsDialog.tsx" },
+];
+
+const templateFiles = [
+  { name: "Form Template", path: "src/pages/AuthScreen.tsx" },
+  { name: "List Template", path: "src/components/SessionList.tsx" },
+  { name: "Master-Detail (Sessions)", path: "src/pages/SessionsMasterDetail.tsx" },
+  { name: "Master-Detail (Topics)", path: "src/pages/TopicsMasterDetail.tsx" },
+];
+
+const pageFiles = [
+  { name: "Home", path: "src/pages/Index.tsx", route: "/" },
+  { name: "Topics", path: "src/pages/Topics.tsx", route: "/topics" },
+  { name: "Highlights", path: "src/pages/Bookmarks.tsx", route: "/bookmarks" },
+  { name: "Settings", path: "src/pages/Settings.tsx", route: "/settings" },
+  { name: "Session Detail", path: "src/pages/SessionDetail.tsx", route: "/session/:id" },
+  { name: "Topic Detail", path: "src/pages/TopicDetail.tsx", route: "/topic/:id" },
+  { name: "Welcome/Onboarding", path: "src/pages/Welcome.tsx", route: "/welcome" },
+  { name: "Splash Screen", path: "src/pages/SplashScreen.tsx", route: "/splash" },
+  { name: "Auth Screen", path: "src/pages/AuthScreen.tsx", route: "/auth" },
+  { name: "Design System", path: "src/pages/DesignSystem.tsx", route: "/design-system" },
+];
+
+const FileLocationAccordion = ({ files, title }: { files: { name: string; path: string; route?: string }[], title: string }) => (
+  <Accordion type="single" collapsible className="mb-6">
+    <AccordionItem value="files" className="border-border">
+      <AccordionTrigger className="text-sm text-muted-foreground hover:no-underline py-2">
+        <span className="flex items-center gap-2">
+          <FileCode className="h-4 w-4" />
+          {title} ({files.length} files)
+        </span>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="grid gap-2 pt-2">
+          {files.map((file) => (
+            <div key={file.path} className="flex items-center justify-between text-sm bg-muted/50 rounded-md px-3 py-2">
+              <span className="font-medium">{file.name}</span>
+              <code className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{file.path}</code>
+            </div>
+          ))}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+);
 
 // Flatten sessions for display
 const allSessions = sessionGroups.flatMap(group => group.sessions);
@@ -145,7 +227,16 @@ const DesignSystem = () => {
           <TabsContent value="foundations" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Sub-Atomic (Foundations)</h2>
-              <p className="text-muted-foreground mb-6">Design tokens that form the foundation of our visual language.</p>
+              <p className="text-muted-foreground mb-4">Design tokens that form the foundation of our visual language.</p>
+              
+              <FileLocationAccordion 
+                files={[
+                  { name: "CSS Variables", path: "src/index.css" },
+                  { name: "Tailwind Config", path: "tailwind.config.ts" },
+                  { name: "Utils", path: "src/lib/utils.ts" },
+                ]} 
+                title="Foundation Files" 
+              />
               
               {/* Color Palette */}
               <Card className="mb-8">
@@ -269,7 +360,9 @@ const DesignSystem = () => {
           <TabsContent value="atoms" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Atoms</h2>
-              <p className="text-muted-foreground mb-6">Basic building blocks that cannot be broken down further.</p>
+              <p className="text-muted-foreground mb-4">Basic building blocks that cannot be broken down further.</p>
+              
+              <FileLocationAccordion files={atomFiles} title="Atom Component Files" />
 
               {/* Buttons */}
               <Card className="mb-8">
@@ -438,7 +531,9 @@ const DesignSystem = () => {
           <TabsContent value="molecules" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Molecules</h2>
-              <p className="text-muted-foreground mb-6">Groups of atoms functioning together as a unit.</p>
+              <p className="text-muted-foreground mb-4">Groups of atoms functioning together as a unit.</p>
+              
+              <FileLocationAccordion files={moleculeFiles} title="Molecule Component Files" />
 
               {/* Form Fields */}
               <Card className="mb-8">
@@ -545,7 +640,9 @@ const DesignSystem = () => {
           <TabsContent value="organisms" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Organisms</h2>
-              <p className="text-muted-foreground mb-6">Complex UI components made of groups of molecules.</p>
+              <p className="text-muted-foreground mb-4">Complex UI components made of groups of molecules.</p>
+              
+              <FileLocationAccordion files={organismFiles} title="Organism Component Files" />
 
               {/* Cards */}
               <Card className="mb-8">
@@ -656,7 +753,9 @@ const DesignSystem = () => {
           <TabsContent value="templates" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Templates</h2>
-              <p className="text-muted-foreground mb-6">Page-level layouts that combine organisms into complete structures.</p>
+              <p className="text-muted-foreground mb-4">Page-level layouts that combine organisms into complete structures.</p>
+              
+              <FileLocationAccordion files={templateFiles} title="Template Files" />
 
               <Card className="mb-8">
                 <CardHeader>
@@ -761,7 +860,9 @@ const DesignSystem = () => {
           <TabsContent value="pages" className="space-y-12">
             <section>
               <h2 className="text-xl font-semibold mb-2">Pages</h2>
-              <p className="text-muted-foreground mb-6">Complete page examples combining all atomic design levels.</p>
+              <p className="text-muted-foreground mb-4">Complete page examples combining all atomic design levels.</p>
+              
+              <FileLocationAccordion files={pageFiles} title="Page Files" />
 
               <Card className="mb-8">
                 <CardHeader>
