@@ -80,46 +80,52 @@ export function TopicCard({ topic }: TopicCardProps) {
     >
       {/* Content area */}
       <div className="p-4">
-        {/* Header with star */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            {/* Emoji container matching SessionBadge style */}
-            <div className={cn(
-              'flex h-10 w-10 items-center justify-center rounded-lg',
-              bgColor
-            )}>
-              <span className="text-lg">{topic.icon}</span>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">{topic.name}</h3>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-xs text-muted-foreground">{topic.date}</span>
-                <span className="text-xs text-muted-foreground">•</span>
-                <span className="text-xs text-muted-foreground">Active</span>
-              </div>
-            </div>
+        {/* Header row */}
+        <div className="flex items-start gap-3 mb-4">
+          {/* Emoji container */}
+          <div className={cn(
+            'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
+            bgColor
+          )}>
+            <span className="text-2xl">{topic.icon}</span>
           </div>
+          
+          {/* Title and description */}
+          <div className="flex-1 min-w-0 pt-0.5">
+            <h3 className="text-base font-semibold text-foreground">{topic.name}</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">Topic Description</p>
+          </div>
+          
+          {/* Right side: badges, date, star, menu */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Shared badge */}
             {topic.sharedBy && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
                 <Users className="h-3 w-3" />
-                Shared
+                Shared by {topic.sharedBy}
               </span>
             )}
+            
+            {/* Date and session count */}
+            <span className="text-sm text-muted-foreground hidden sm:block">
+              {topic.date} • {topic.sessionCount} Sessions
+            </span>
+            
+            {/* Star button */}
             <button 
               className="p-1.5 rounded-full hover:bg-muted transition-smooth"
               onClick={(e) => e.stopPropagation()}
             >
               <Star 
                 className={cn(
-                  'h-4 w-4 transition-smooth',
+                  'h-5 w-5 transition-smooth',
                   topic.isFavorite 
                     ? 'fill-yellow-400 text-yellow-400' 
                     : 'text-muted-foreground hover:text-yellow-400'
                 )} 
               />
             </button>
+            
             {/* Menu button */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -148,32 +154,31 @@ export function TopicCard({ topic }: TopicCardProps) {
           </div>
         </div>
 
-        {/* Sessions */}
+        {/* Sessions list */}
         <div className="space-y-2">
           {topic.sessions?.slice(0, sessionsToShow).map((session) => (
             <Link
               key={session.id}
               to={`/topic/${topic.id}?tab=sessions`}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-3 rounded-lg bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
+              className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-4 transition-smooth group/session"
             >
               {/* Session icon */}
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center text-muted-foreground">
-                <FileText className="h-4 w-4" />
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
+                <FileText className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
+                <p className="text-sm font-medium text-foreground">{session.title}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {session.date} · {session.duration}
                 </p>
               </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover/session:opacity-100 transition-opacity shrink-0" />
             </Link>
           ))}
           
-          {/* Show more link if there are more sessions */}
+          {/* Show more link */}
           {remainingSessions > 0 && (
-            <div className="w-full text-center text-xs text-muted-foreground py-2">
+            <div className="w-full text-center text-sm text-muted-foreground py-3">
               +{remainingSessions} more session{remainingSessions !== 1 ? 's' : ''}
             </div>
           )}
