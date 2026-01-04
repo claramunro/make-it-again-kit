@@ -138,13 +138,32 @@ type SessionTab = 'details' | 'highlights' | 'transcript';
 
 // Wallpaper presets with gradient configurations
 const wallpaperPresets = [
-  { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand' },
-  { id: 'peach', gradient: 'bg-gradient-to-br from-orange-200 via-rose-100 to-orange-300', name: 'Peach' },
-  { id: 'mint', gradient: 'bg-gradient-to-br from-emerald-300 via-teal-200 to-emerald-400', name: 'Mint' },
-  { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender' },
-  { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean' },
-  { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset' },
+  { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand', bannerColor: 'hsl(45, 80%, 80%)' },
+  { id: 'peach', gradient: 'bg-gradient-to-br from-orange-200 via-rose-100 to-orange-300', name: 'Peach', bannerColor: 'hsl(20, 80%, 85%)' },
+  { id: 'mint', gradient: 'bg-gradient-to-br from-emerald-300 via-teal-200 to-emerald-400', name: 'Mint', bannerColor: 'hsl(160, 60%, 75%)' },
+  { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender', bannerColor: 'hsl(280, 60%, 80%)' },
+  { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean', bannerColor: 'hsl(200, 70%, 80%)' },
+  { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset', bannerColor: 'hsl(30, 80%, 75%)' },
 ];
+
+// Map topic icons to wallpaper colors
+const topicIconToWallpaper: Record<string, number> = {
+  '🎨': 2, // mint
+  '📦': 0, // sand
+  '🚀': 2, // mint
+  '🏋️': 3, // lavender
+  '☕': 1, // peach
+  '🐶': 5, // sunset
+  '📅': 4, // ocean
+  '💻': 4, // ocean
+  '📢': 1, // peach
+  '🤝': 2, // mint
+  '💰': 0, // sand
+  '👥': 3, // lavender
+  '🔬': 4, // ocean
+  '⚖️': 3, // lavender
+  '🎉': 5, // sunset
+};
 
 // Mock bookmarks for sessions
 const mockSessionBookmarks = [
@@ -808,78 +827,81 @@ const TopicDetail = () => {
         
         <main className="flex-1 flex flex-col bg-background overflow-hidden">
           {/* Topic Header with Color Banner */}
-          <div className="sticky top-0 z-10">
-            {/* Color Banner */}
-            <div className={cn(
-              "h-14",
-              wallpaperPresets[2].gradient // Default to mint, could be dynamic based on topic
-            )}>
-              {/* Back button positioned on the banner */}
-              <button 
-                onClick={() => navigate('/topics')}
-                className="absolute top-4 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              
-              {/* Shared badge positioned on banner right */}
-              {topic.sharedBy && (
-                <div className="absolute top-4 right-6">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-primary">
-                    <Users className="h-3 w-3" />
-                    Shared by {topic.sharedBy}
-                  </span>
-                </div>
-              )}
-            </div>
-            
-            {/* White content area with rounded top */}
-            <div className="bg-background rounded-t-3xl -mt-4 relative border-b border-border">
-              {/* Emoji container - overlaps banner */}
-              <div className="absolute -top-16 left-16">
-                <div className={cn(
-                  "w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-5xl shadow-lg",
-                  wallpaperPresets[2].gradient.replace('bg-gradient-to-br', 'bg-gradient-to-br').replace(/from-(\w+)-(\d+)/, 'from-$1-100').replace(/to-(\w+)-(\d+)/, 'to-$1-200')
-                )} style={{ background: 'linear-gradient(135deg, hsl(160, 60%, 90%), hsl(160, 60%, 85%))' }}>
-                  {topic.icon}
-                </div>
-              </div>
-              
-              {/* Title and metadata row */}
-              <div className="pt-4 pb-3 px-6 pl-44">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-xl font-semibold text-foreground">
-                      {topic.name}
-                    </h1>
-                    <p className="text-sm text-muted-foreground mt-0.5">
-                      {mockSessions.length} sessions • Last updated Dec 1 •
-                    </p>
-                  </div>
+          {(() => {
+            const wallpaperIndex = topicIconToWallpaper[topic.icon] ?? 2;
+            const wallpaper = wallpaperPresets[wallpaperIndex];
+            return (
+              <div className="sticky top-0 z-10">
+                {/* Color Banner */}
+                <div className={cn("h-14 relative", wallpaper.gradient)}>
+                  {/* Back button positioned on the banner */}
+                  <button 
+                    onClick={() => navigate('/topics')}
+                    className="absolute top-3 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                  
+                  {/* Shared badge positioned on banner right */}
+                  {topic.sharedBy && (
+                    <div className="absolute top-3 right-6">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-primary">
+                        <Users className="h-3 w-3" />
+                        Shared by {topic.sharedBy}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 
-                {/* Tabs row */}
-                <div className="mt-3">
-                  <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                    {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTopicTab(tab)}
-                        className={cn(
-                          'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                          activeTopicTab === tab
-                            ? 'bg-card text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
-                        )}
-                      >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                      </button>
-                    ))}
+                {/* White content area with rounded top */}
+                <div className="bg-background rounded-t-3xl -mt-4 relative border-b border-border">
+                  {/* Emoji container - positioned to overlap banner/content */}
+                  <div className="absolute -top-10 left-16">
+                    <div 
+                      className="w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-5xl shadow-lg"
+                      style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
+                    >
+                      {topic.icon}
+                    </div>
+                  </div>
+                  
+                  {/* Title and metadata row */}
+                  <div className="pt-16 pb-3 px-6 pl-44">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h1 className="text-xl font-semibold text-foreground">
+                          {topic.name}
+                        </h1>
+                        <p className="text-sm text-muted-foreground mt-0.5">
+                          {mockSessions.length} sessions • Last updated Dec 1 •
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Tabs row */}
+                    <div className="mt-3">
+                      <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                        {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
+                          <button
+                            key={tab}
+                            onClick={() => setActiveTopicTab(tab)}
+                            className={cn(
+                              'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                              activeTopicTab === tab
+                                ? 'bg-card text-foreground shadow-sm'
+                                : 'text-muted-foreground hover:text-foreground'
+                            )}
+                          >
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            );
+          })()}
           
           {/* Content Area */}
           {activeTopicTab === 'sessions' && (
