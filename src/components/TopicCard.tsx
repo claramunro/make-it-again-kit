@@ -94,12 +94,12 @@ export function TopicCard({ topic }: TopicCardProps) {
           <div className="flex-1 min-w-0">
             {/* Row 1: Title + badges/actions */}
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-base font-semibold text-foreground truncate">{topic.name}</h3>
+              <h3 className="text-base font-semibold text-foreground truncate leading-none">{topic.name}</h3>
               
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 {/* Shared badge */}
                 {topic.sharedBy && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary">
                     <Users className="h-3 w-3" />
                     Shared
                   </span>
@@ -107,12 +107,12 @@ export function TopicCard({ topic }: TopicCardProps) {
                 
                 {/* Star button */}
                 <button 
-                  className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+                  className="p-1 rounded-full hover:bg-muted transition-smooth"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Star 
                     className={cn(
-                      'h-5 w-5 transition-smooth',
+                      'h-4 w-4 transition-smooth',
                       topic.isFavorite 
                         ? 'fill-yellow-400 text-yellow-400' 
                         : 'text-muted-foreground hover:text-yellow-400'
@@ -124,7 +124,7 @@ export function TopicCard({ topic }: TopicCardProps) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button 
-                      className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+                      className="p-1 rounded-full hover:bg-muted transition-smooth"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <MoreVertical className="h-4 w-4 text-muted-foreground" />
