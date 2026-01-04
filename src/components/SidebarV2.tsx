@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings, HelpCircle, ChevronLeft, Star, Mic } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, ChevronLeft, Star, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
+import { StartSessionDialog } from './StartSessionDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { sessionGroups } from '@/data/sessions';
 import { topics } from '@/data/topics';
 import { bookmarks } from '@/data/bookmarks';
 import hedyLogo from '@/assets/hedy-logo.svg';
-import hedyLogoDark from '@/assets/hedy-logo-dark.svg';
+import hedyLogoDark from '@/assets/hedy-logo-dark-new.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
 import hedyGlassesLogoDark from '@/assets/hedy-glasses-logo-dark.svg';
 
@@ -30,10 +31,6 @@ const mainNavItems: NavItem[] = [
   { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/home2' },
   { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
   { icon: <Bookmark className="h-5 w-5" />, label: 'Bookmarks', path: '/bookmarks' },
-];
-
-const bottomNavItems = [
-  { icon: <HelpCircle className="h-5 w-5" />, label: 'Support', action: 'support' },
 ];
 
 // Get all starred/favorite items
@@ -96,7 +93,7 @@ export function useSidebarCollapsed() {
 export function SidebarV2() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsDefaultTab, setSettingsDefaultTab] = useState<'general' | 'support'>('general');
+  const [startSessionOpen, setStartSessionOpen] = useState(false);
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
@@ -113,8 +110,7 @@ export function SidebarV2() {
     return () => observer.disconnect();
   }, []);
 
-  const openSettings = (tab: 'general' | 'support' = 'general') => {
-    setSettingsDefaultTab(tab);
+  const openSettings = () => {
     setSettingsOpen(true);
   };
 
@@ -250,9 +246,10 @@ export function SidebarV2() {
         {/* Bottom Navigation */}
         <div className="px-2 py-2">
           <ul className="space-y-1">
+            {/* Settings */}
             <li>
               <button
-                onClick={() => openSettings('general')}
+                onClick={openSettings}
                 className={cn(
                   'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                   collapsed 
@@ -269,60 +266,33 @@ export function SidebarV2() {
                 </span>
               </button>
             </li>
-            {bottomNavItems.map((item) => (
-              <li key={item.label}>
-                <button 
-                  onClick={() => openSettings('support')}
-                  className={cn(
-                    'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                    collapsed 
-                      ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                      : 'flex-row items-center gap-3 px-3 py-2'
-                  )}
-                >
-                  {item.icon}
-                  <span className={cn(
-                    "font-medium",
-                    collapsed ? "text-[10px]" : "text-sm"
-                  )}>
-                    {item.label}
-                  </span>
-                </button>
-              </li>
-            ))}
+            
+            {/* Start Session */}
+            <li>
+              <button 
+                onClick={() => setStartSessionOpen(true)}
+                className={cn(
+                  'flex w-full rounded-lg bg-primary text-primary-foreground transition-smooth hover:bg-primary/90',
+                  collapsed 
+                    ? 'flex-col items-center justify-center px-2 py-3 gap-1'
+                    : 'flex-row items-center justify-center gap-2 px-3 py-2.5'
+                )}
+              >
+                <span className="text-lg">◯◯</span>
+                <span className={cn(
+                  "font-medium",
+                  collapsed ? "text-[10px]" : "text-sm"
+                )}>
+                  Start Session
+                </span>
+              </button>
+            </li>
           </ul>
-        </div>
-
-        {/* User Profile */}
-        <div className="p-2">
-          <button
-            onClick={() => setSettingsOpen(true)}
-            className={cn(
-              'flex w-full rounded-lg transition-smooth hover:bg-sidebar-accent',
-              collapsed 
-                ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                : 'flex-row items-center gap-3 px-2 py-2'
-            )}
-          >
-            <div className={cn(
-              "flex items-center justify-center rounded-full bg-avatar font-semibold text-avatar-foreground",
-              collapsed ? "h-8 w-8 text-xs" : "h-9 w-9 text-sm"
-            )}>
-              CL
-            </div>
-            {collapsed ? (
-              <span className="text-[10px] font-medium text-foreground">Clara</span>
-            ) : (
-              <div className="flex flex-col text-left">
-                <span className="text-sm font-medium text-foreground">Clara</span>
-                <span className="text-xs text-muted-foreground">clarajmunro@gmail....</span>
-              </div>
-            )}
-          </button>
         </div>
       </aside>
 
-      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} defaultTab={settingsDefaultTab} />
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
     </>
   );
 }
