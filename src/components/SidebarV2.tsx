@@ -100,7 +100,7 @@ export function SidebarV2() {
       <aside 
         className={cn(
           "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
-          collapsed ? "w-20" : "w-64"
+          collapsed ? "w-20" : "w-48"
         )}
       >
         {/* Logo & Collapse Toggle */}
