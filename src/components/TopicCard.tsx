@@ -90,67 +90,71 @@ export function TopicCard({ topic }: TopicCardProps) {
             <span className="text-2xl">{topic.icon}</span>
           </div>
           
-          {/* Title and description */}
-          <div className="flex-1 min-w-0 pt-0.5">
-            <h3 className="text-base font-semibold text-foreground">{topic.name}</h3>
-            <p className="text-sm text-muted-foreground mt-0.5">Topic Description</p>
-          </div>
-          
-          {/* Right side: badges, date, star, menu */}
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Shared badge */}
-            {topic.sharedBy && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
-                <Users className="h-3 w-3" />
-                Shared
-              </span>
-            )}
-            
-            {/* Date and session count */}
-            <span className="text-sm text-muted-foreground hidden sm:block">
-              {topic.date} • {topic.sessionCount} Sessions
-            </span>
-            
-            {/* Star button */}
-            <button 
-              className="p-1.5 rounded-full hover:bg-muted transition-smooth"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Star 
-                className={cn(
-                  'h-5 w-5 transition-smooth',
-                  topic.isFavorite 
-                    ? 'fill-yellow-400 text-yellow-400' 
-                    : 'text-muted-foreground hover:text-yellow-400'
-                )} 
-              />
-            </button>
-            
-            {/* Menu button */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+          {/* Title, description, and metadata */}
+          <div className="flex-1 min-w-0">
+            {/* Row 1: Title + badges/actions */}
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-base font-semibold text-foreground truncate">{topic.name}</h3>
+              
+              <div className="flex items-center gap-2 shrink-0">
+                {/* Shared badge */}
+                {topic.sharedBy && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+                    <Users className="h-3 w-3" />
+                    Shared
+                  </span>
+                )}
+                
+                {/* Star button */}
                 <button 
                   className="p-1.5 rounded-full hover:bg-muted transition-smooth"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                  <Star 
+                    className={cn(
+                      'h-5 w-5 transition-smooth',
+                      topic.isFavorite 
+                        ? 'fill-yellow-400 text-yellow-400' 
+                        : 'text-muted-foreground hover:text-yellow-400'
+                    )} 
+                  />
                 </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={handleEditClick} className="gap-2">
-                  <Pencil className="h-4 w-4" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  Invite to Topic
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
-                  <Trash2 className="h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                
+                {/* Menu button */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button 
+                      className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem onClick={handleEditClick} className="gap-2">
+                      <Pencil className="h-4 w-4" />
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      Invite to Topic
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+            
+            {/* Row 2: Description + date/sessions */}
+            <div className="flex items-center justify-between gap-2 mt-1">
+              <p className="text-sm text-muted-foreground">Topic Description</p>
+              <span className="text-sm text-muted-foreground shrink-0">
+                {topic.date} • {topic.sessionCount} Sessions
+              </span>
+            </div>
           </div>
         </div>
 
