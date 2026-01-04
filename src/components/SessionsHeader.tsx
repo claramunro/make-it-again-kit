@@ -47,10 +47,7 @@ export function SessionsHeader({
         <div className="text-lg font-semibold text-foreground">
           {selectedCount} selected
         </div>
-        <div className="flex flex-1 items-center justify-end gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
+        <div className="flex flex-1 items-center justify-end">
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleSelectionMode}>
             <X className="h-4 w-4" />
           </Button>
