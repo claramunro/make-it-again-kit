@@ -17,8 +17,15 @@ export function MobileBottomNav() {
 
   return (
     <>
+      {/* Floating Start Session button */}
+      <button 
+        onClick={() => setStartSessionOpen(true)}
+        className="fixed bottom-24 left-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg transition-smooth hover:scale-105 active:scale-95 md:hidden"
+      >
+        <img src={glassesIcon} alt="Start Session" className="h-7 w-7" />
+      </button>
+
       <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 items-center justify-around border-t border-border bg-card/95 pb-2 backdrop-blur-sm md:hidden">
-        {/* Left icons */}
         <Link
           to="/"
           className={cn(
@@ -42,14 +49,6 @@ export function MobileBottomNav() {
         >
           <Folder className="h-5 w-5" />
         </Link>
-
-        {/* Center Start Session button */}
-        <button 
-          onClick={() => setStartSessionOpen(true)}
-          className="flex h-14 w-14 -translate-y-2 items-center justify-center rounded-2xl bg-primary shadow-lg transition-smooth hover:scale-105 active:scale-95"
-        >
-          <img src={glassesIcon} alt="Start Session" className="h-7 w-7" />
-        </button>
 
         <Link
           to="/highlights"
