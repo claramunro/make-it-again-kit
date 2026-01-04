@@ -833,69 +833,68 @@ const TopicDetail = () => {
             return (
               <div className="sticky top-0 z-10">
                 {/* Color Banner */}
-                <div className={cn("h-14 relative", wallpaper.gradient)}>
+                <div className={cn("h-16 relative", wallpaper.gradient)}>
                   {/* Back button positioned on the banner */}
                   <button 
                     onClick={() => navigate('/topics')}
-                    className="absolute top-3 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
+                    className="absolute top-4 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </button>
-                  
-                  {/* Shared badge positioned on banner right */}
-                  {topic.sharedBy && (
-                    <div className="absolute top-3 right-6">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-primary">
-                        <Users className="h-3 w-3" />
-                        Shared by {topic.sharedBy}
-                      </span>
-                    </div>
-                  )}
                 </div>
                 
                 {/* White content area with rounded top */}
-                <div className="bg-background rounded-t-3xl -mt-4 relative border-b border-border">
-                  {/* Emoji container - positioned to overlap banner/content */}
-                  <div className="absolute -top-10 left-16">
-                    <div 
-                      className="w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-5xl shadow-lg"
-                      style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
-                    >
-                      {topic.icon}
-                    </div>
-                  </div>
-                  
-                  {/* Title and metadata row */}
-                  <div className="pt-16 pb-3 px-6 pl-44">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h1 className="text-xl font-semibold text-foreground">
-                          {topic.name}
-                        </h1>
-                        <p className="text-sm text-muted-foreground mt-0.5">
-                          {mockSessions.length} sessions • Last updated Dec 1 •
-                        </p>
+                <div className="bg-background rounded-t-3xl -mt-4 relative border-b border-border px-6 pt-4 pb-3">
+                  {/* Row with emoji, title/meta, and shared badge */}
+                  <div className="flex items-center gap-4">
+                    {/* Emoji container - positioned to overlap banner */}
+                    <div className="relative -mt-20">
+                      <div 
+                        className="w-28 h-28 rounded-2xl border-4 border-background flex items-center justify-center text-5xl shadow-lg"
+                        style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
+                      >
+                        {topic.icon}
                       </div>
                     </div>
                     
-                    {/* Tabs row */}
-                    <div className="mt-3">
-                      <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                        {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
-                          <button
-                            key={tab}
-                            onClick={() => setActiveTopicTab(tab)}
-                            className={cn(
-                              'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                              activeTopicTab === tab
-                                ? 'bg-card text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-foreground'
-                            )}
-                          >
-                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                          </button>
-                        ))}
+                    {/* Title and metadata */}
+                    <div className="flex-1 min-w-0 pt-1">
+                      <h1 className="text-2xl font-semibold text-foreground">
+                        {topic.name}
+                      </h1>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        {mockSessions.length} sessions • Last updated Dec 1 •
+                      </p>
+                    </div>
+                    
+                    {/* Shared badge */}
+                    {topic.sharedBy && (
+                      <div className="shrink-0">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary">
+                          <Users className="h-3.5 w-3.5" />
+                          Shared by {topic.sharedBy}
+                        </span>
                       </div>
+                    )}
+                  </div>
+                  
+                  {/* Tabs row */}
+                  <div className="mt-3 pl-32">
+                    <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                      {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setActiveTopicTab(tab)}
+                          className={cn(
+                            'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                            activeTopicTab === tab
+                              ? 'bg-card text-foreground shadow-sm'
+                              : 'text-muted-foreground hover:text-foreground'
+                          )}
+                        >
+                          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
