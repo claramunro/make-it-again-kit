@@ -174,7 +174,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             <div className="flex items-center justify-between gap-2 mt-1">
               <p className="text-sm text-muted-foreground">Topic Description</p>
               <span className="text-sm text-muted-foreground shrink-0">
-                {topic.date} • {topic.sessionCount} Sessions
+                {topic.sessionCount} Sessions
               </span>
             </div>
           </div>
