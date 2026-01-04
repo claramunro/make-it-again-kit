@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings, ChevronLeft, Star, Mic } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { StartSessionDialog } from './StartSessionDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { sessionGroups } from '@/data/sessions';
-import { topics } from '@/data/topics';
-import { bookmarks } from '@/data/bookmarks';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark-new.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
@@ -19,51 +16,11 @@ interface NavItem {
   path: string;
 }
 
-interface FavoriteItem {
-  id: string;
-  label: string;
-  path: string;
-  type: 'session' | 'topic' | 'bookmark';
-  topicIcon?: string;
-}
-
 const mainNavItems: NavItem[] = [
   { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
   { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
   { icon: <Bookmark className="h-5 w-5" />, label: 'Bookmarks', path: '/bookmarks' },
 ];
-
-// Get all starred/favorite items
-const allSessions = sessionGroups.flatMap(group => group.sessions);
-const starredSessions: FavoriteItem[] = allSessions
-  .filter(s => s.isFavorite)
-  .map(session => ({
-    id: session.id,
-    label: session.title.length > 22 ? session.title.substring(0, 22) + '...' : session.title,
-    path: `/session/${session.id}`,
-    type: 'session' as const,
-  }));
-
-const starredTopics: FavoriteItem[] = topics
-  .filter(t => t.isFavorite)
-  .map(topic => ({
-    id: topic.id,
-    label: topic.name.length > 22 ? topic.name.substring(0, 22) + '...' : topic.name,
-    path: `/topic/${topic.id}`,
-    type: 'topic' as const,
-    topicIcon: topic.icon,
-  }));
-
-const starredBookmarks: FavoriteItem[] = bookmarks
-  .filter(b => b.isFavorite)
-  .map(bookmark => ({
-    id: bookmark.id,
-    label: bookmark.title.length > 22 ? bookmark.title.substring(0, 22) + '...' : bookmark.title,
-    path: `/bookmarks#${bookmark.id}`,
-    type: 'bookmark' as const,
-  }));
-
-const allFavorites: FavoriteItem[] = [...starredSessions, ...starredTopics, ...starredBookmarks];
 
 export function useSidebarCollapsed() {
   const [collapsed, setCollapsed] = useState(() => {
@@ -189,58 +146,6 @@ export function SidebarV2() {
               </li>
             ))}
           </ul>
-
-          {/* Favorites Section */}
-          {!collapsed && allFavorites.length > 0 && (
-            <div className="mt-6">
-              <div className="flex items-center gap-2 px-3 py-2">
-                <Star className="h-4 w-4 text-yellow-500 fill-yellow-400/50" />
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Favorites</span>
-              </div>
-              <ul className="space-y-0.5 mt-1">
-                {allFavorites.map((item) => (
-                  <li key={`${item.type}-${item.id}`}>
-                    <Link
-                      to={item.path}
-                      className={cn(
-                        'flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-smooth',
-                        isSubItemActive(item.path)
-                          ? 'bg-sidebar-accent/50 text-sidebar-accent-foreground'
-                          : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
-                      )}
-                    >
-                      {/* Type icon */}
-                      <span className="w-5 shrink-0 flex items-center justify-center">
-                        {item.type === 'session' && (
-                          <Mic className="h-4 w-4 text-muted-foreground" />
-                        )}
-                        {item.type === 'topic' && item.topicIcon && (
-                          <span className="text-sm">{item.topicIcon}</span>
-                        )}
-                        {item.type === 'bookmark' && (
-                          <Bookmark className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </span>
-                      
-                      {/* Label */}
-                      <span className="truncate flex-1">{item.label}</span>
-                      
-                      {/* Star indicator */}
-                      <Star className="h-3.5 w-3.5 shrink-0 fill-yellow-400 text-yellow-500" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Collapsed favorites indicator */}
-          {collapsed && allFavorites.length > 0 && (
-            <div className="mt-4 flex flex-col items-center">
-              <Star className="h-5 w-5 text-yellow-500 fill-yellow-400/50" />
-              <span className="text-[10px] text-muted-foreground mt-1">{allFavorites.length}</span>
-            </div>
-          )}
         </nav>
 
         {/* Bottom Navigation */}
