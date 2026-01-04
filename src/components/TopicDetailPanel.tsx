@@ -7,11 +7,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { topics } from '@/data/topics';
-import { bookmarks, Bookmark } from '@/data/bookmarks';
+import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 
-type TopicTab = 'overview' | 'sessions' | 'bookmarks' | 'appearance';
-type SessionTab = 'details' | 'bookmarks' | 'transcript';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'appearance';
+type SessionTab = 'details' | 'highlights' | 'transcript';
 
 const mockSessions = [
   {
@@ -87,8 +87,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
-  const topicBookmarks = useMemo(() => {
-    return bookmarks.filter(b => b.topicId === topicId || b.topicName === topic?.name);
+  const topicHighlights = useMemo(() => {
+    return highlights.filter(h => h.topicId === topicId || h.topicName === topic?.name);
   }, [topicId, topic?.name]);
   
   const toggleSessionFavorite = (sessionId: string) => {
@@ -127,10 +127,10 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               {(['overview', 'sessions', 'highlights'] as const).map(tab => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                  onClick={() => setActiveTopicTab(tab)}
                   className={cn(
                     'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                    (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
+                    activeTopicTab === tab
                       ? 'bg-card text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
@@ -238,15 +238,15 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             <div className="space-y-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['details', 'highlights', 'transcript'] as const).map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveSessionTab(tab === 'highlights' ? 'bookmarks' : tab)}
-                      className={cn(
-                        'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                        (tab === 'highlights' ? activeSessionTab === 'bookmarks' : activeSessionTab === tab)
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
+                {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveSessionTab(tab)}
+                    className={cn(
+                      'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                      activeSessionTab === tab
+                        ? 'bg-card text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
                       {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -267,7 +267,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                 </div>
               )}
 
-              {activeSessionTab === 'bookmarks' && selectedSessionBookmark && (
+              {activeSessionTab === 'highlights' && selectedSessionBookmark && (
                 <div className="rounded-xl border border-border bg-card p-6">
                   <div className="mb-4 flex items-start justify-between">
                     <div>
@@ -311,16 +311,16 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           )}
 
           {/* Highlights Tab */}
-          {activeTopicTab === 'bookmarks' && (
+          {activeTopicTab === 'highlights' && (
             <div className="space-y-4">
-              {topicBookmarks.length > 0 ? (
-                topicBookmarks.map((bookmark) => (
-                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+              {topicHighlights.length > 0 ? (
+                topicHighlights.map((highlight) => (
+                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
                     <div className="flex items-start gap-3">
-                      <BookmarkIcon className="mt-0.5 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Sparkles className="mt-0.5 h-4 w-4 text-primary" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{bookmark.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{bookmark.sessionTitle}</p>
+                        <p className="text-sm font-medium text-foreground">{highlight.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{highlight.sessionTitle}</p>
                       </div>
                     </div>
                   </div>

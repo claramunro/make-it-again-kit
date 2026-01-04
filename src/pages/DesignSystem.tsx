@@ -26,10 +26,10 @@ import {
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SessionCard } from "@/components/SessionCard";
 import { TopicCard } from "@/components/TopicCard";
-import { BookmarkCard } from "@/components/BookmarkCard";
+import { HighlightCard } from "@/components/HighlightCard";
 import { sessionGroups } from "@/data/sessions";
 import { topics } from "@/data/topics";
-import { bookmarks } from "@/data/bookmarks";
+import { highlights } from "@/data/highlights";
 
 // Component usage data with locations across the app
 const atomComponents = [
@@ -1102,15 +1102,15 @@ const DesignSystem = () => {
                 </CardContent>
               </Card>
 
-              {/* Bookmark Card */}
+              {/* Highlight Card */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Bookmark Card</CardTitle>
-                  <CardDescription>Card displaying bookmark information</CardDescription>
+                  <CardTitle>Highlight Card</CardTitle>
+                  <CardDescription>Card displaying highlight information</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="max-w-md">
-                    <BookmarkCard bookmark={bookmarks[0]} />
+                    <HighlightCard highlight={highlights[0]} />
                   </div>
                 </CardContent>
               </Card>

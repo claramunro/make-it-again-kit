@@ -1,21 +1,21 @@
 import { Lightbulb, Quote, BarChart3, ChevronRight, X } from 'lucide-react';
-import { Bookmark } from '@/data/bookmarks';
+import { Highlight } from '@/data/highlights';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-interface BookmarkDetailPanelProps {
-  bookmark: Bookmark;
+interface HighlightDetailPanelProps {
+  highlight: Highlight;
   onClose?: () => void;
   showCloseButton?: boolean;
 }
 
-export function BookmarkDetailPanel({ bookmark, onClose, showCloseButton }: BookmarkDetailPanelProps) {
+export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Header with session link */}
       <div className="flex items-center justify-between border-b border-border p-4">
         <Link 
-          to={`/session/${bookmark.sessionId}`}
+          to={`/session/${highlight.sessionId}`}
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-smooth"
         >
           Session <ChevronRight className="h-4 w-4" />
@@ -37,13 +37,13 @@ export function BookmarkDetailPanel({ bookmark, onClose, showCloseButton }: Book
           </div>
           <div className="rounded-lg bg-muted/50 p-4">
             <p className="text-sm leading-relaxed text-foreground">
-              {bookmark.description}
+              {highlight.description}
             </p>
           </div>
         </div>
 
         {/* Original Context */}
-        {bookmark.originalContext && (
+        {highlight.originalContext && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Quote className="h-4 w-4 text-primary" />
@@ -51,14 +51,14 @@ export function BookmarkDetailPanel({ bookmark, onClose, showCloseButton }: Book
             </div>
             <div className="rounded-lg bg-muted/50 p-4">
               <p className="text-sm leading-relaxed text-muted-foreground italic">
-                {bookmark.originalContext}
+                {highlight.originalContext}
               </p>
             </div>
           </div>
         )}
 
         {/* Analysis */}
-        {bookmark.analysis && (
+        {highlight.analysis && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <BarChart3 className="h-4 w-4 text-primary" />
@@ -66,7 +66,7 @@ export function BookmarkDetailPanel({ bookmark, onClose, showCloseButton }: Book
             </div>
             <div className="rounded-lg bg-muted/50 p-4">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {bookmark.analysis}
+                {highlight.analysis}
               </p>
             </div>
           </div>

@@ -8,10 +8,10 @@ import { Label } from '@/components/ui/label';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { BookmarkDetailPanel } from '@/components/BookmarkDetailPanel';
+import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { topics } from '@/data/topics';
-import { bookmarks, Bookmark } from '@/data/bookmarks';
+import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 import {
   Drawer,
@@ -168,9 +168,9 @@ const TopicDetailBannerFull = () => {
   const [topicDescription, setTopicDescription] = useState('');
   const [selectedWallpaper, setSelectedWallpaper] = useState('mint');
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
-  const [bookmarkDropdownOpen, setBookmarkDropdownOpen] = useState(false);
+  const [highlightDropdownOpen, setHighlightDropdownOpen] = useState(false);
   const [promptsModalOpen, setPromptsModalOpen] = useState(false);
-  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   
@@ -181,8 +181,8 @@ const TopicDetailBannerFull = () => {
   const selectedWallpaperPreset = wallpaperPresets.find(w => w.id === selectedWallpaper);
   const topicColor = selectedWallpaperPreset?.color || defaultTopicColor;
   
-  const topicBookmarks = useMemo(() => {
-    return bookmarks.filter(b => b.topicId === id || b.topicName === topic?.name);
+  const topicHighlights = useMemo(() => {
+    return highlights.filter(h => h.topicId === id || h.topicName === topic?.name);
   }, [id, topic?.name]);
   
   const toggleSessionFavorite = (sessionId: string) => {
@@ -1105,14 +1105,14 @@ const TopicDetailBannerFull = () => {
                 </div>
               </div>
               
-              {/* Middle: Bookmark Detail Panel */}
+              {/* Middle: Highlight Detail Panel */}
               <div className="flex-1 overflow-y-auto p-6">
-                {selectedBookmark ? (
+                {selectedHighlight ? (
                   <div className="max-w-2xl mx-auto">
                     <div className="rounded-xl border border-border bg-card overflow-hidden">
-                      <BookmarkDetailPanel 
-                        bookmark={selectedBookmark} 
-                        onClose={() => setSelectedBookmark(null)}
+                      <HighlightDetailPanel 
+                        highlight={selectedHighlight} 
+                        onClose={() => setSelectedHighlight(null)}
                         showCloseButton
                       />
                     </div>

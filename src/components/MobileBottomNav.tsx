@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings } from 'lucide-react';
+import { FileText, Folder, Sparkles, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
 
@@ -49,15 +49,15 @@ export function MobileBottomNav() {
         </button>
 
         <Link
-          to="/bookmarks"
+          to="/highlights"
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
-            location.pathname === '/bookmarks'
+            location.pathname === '/highlights'
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          <Bookmark className="h-6 w-6" />
+          <Sparkles className="h-6 w-6" />
         </Link>
 
         <Link

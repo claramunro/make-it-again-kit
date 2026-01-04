@@ -2,40 +2,40 @@ import { useState, useMemo } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { BookmarkGroup } from '@/components/BookmarkGroup';
-import { BookmarkDetailPanel } from '@/components/BookmarkDetailPanel';
-import { BookmarkDetailDrawer } from '@/components/BookmarkDetailDrawer';
-import { bookmarks, Bookmark } from '@/data/bookmarks';
+import { HighlightGroup } from '@/components/HighlightGroup';
+import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
+import { HighlightDetailDrawer } from '@/components/HighlightDetailDrawer';
+import { highlights, Highlight } from '@/data/highlights';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 type GroupBy = 'sessions' | 'topics';
 
-const Highlights = () => {
+const HighlightsPage = () => {
   const isMobile = useIsMobile();
   const [groupBy, setGroupBy] = useState<GroupBy>('sessions');
-  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Group bookmarks by topic or session
-  const groupedBookmarks = useMemo(() => {
-    const groups: Record<string, { title: string; icon?: string; bookmarks: Bookmark[] }> = {};
+  // Group highlights by topic or session
+  const groupedHighlights = useMemo(() => {
+    const groups: Record<string, { title: string; icon?: string; highlights: Highlight[] }> = {};
 
-    bookmarks.forEach((bookmark) => {
+    highlights.forEach((highlight) => {
       const key = groupBy === 'topics' 
-        ? bookmark.topicId || 'uncategorized'
-        : bookmark.sessionId;
+        ? highlight.topicId || 'uncategorized'
+        : highlight.sessionId;
       
       const title = groupBy === 'topics'
-        ? bookmark.topicName || 'Uncategorized'
-        : bookmark.sessionTitle;
+        ? highlight.topicName || 'Uncategorized'
+        : highlight.sessionTitle;
       
-      const icon = groupBy === 'topics' ? bookmark.topicIcon : undefined;
+      const icon = groupBy === 'topics' ? highlight.topicIcon : undefined;
 
       if (!groups[key]) {
-        groups[key] = { title, icon, bookmarks: [] };
+        groups[key] = { title, icon, highlights: [] };
       }
-      groups[key].bookmarks.push(bookmark);
+      groups[key].highlights.push(highlight);
     });
 
     return Object.entries(groups).map(([key, group]) => ({
@@ -44,8 +44,8 @@ const Highlights = () => {
     }));
   }, [groupBy]);
 
-  const handleSelectBookmark = (bookmark: Bookmark) => {
-    setSelectedBookmark(bookmark);
+  const handleSelectHighlight = (highlight: Highlight) => {
+    setSelectedHighlight(highlight);
     if (isMobile) {
       setDrawerOpen(true);
     }
@@ -56,7 +56,7 @@ const Highlights = () => {
       {!isMobile && <SidebarV2 />}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <MobileHeader title="Highlights" count={bookmarks.length} />
+        <MobileHeader title="Highlights" count={highlights.length} />
         
         <main className="flex-1 rounded-tl-2xl bg-background overflow-hidden flex flex-col">
           <div className="flex-1 overflow-y-auto p-6">
@@ -104,30 +104,30 @@ const Highlights = () => {
 
               {/* Main Content */}
               <div className="flex gap-6">
-                {/* Bookmarks List */}
+                {/* Highlights List */}
                 <div className={cn(
                   'space-y-4',
-                  !isMobile && selectedBookmark ? 'flex-1' : 'w-full'
+                  !isMobile && selectedHighlight ? 'flex-1' : 'w-full'
                 )}>
-                  {groupedBookmarks.map((group, index) => (
-                    <BookmarkGroup
+                  {groupedHighlights.map((group, index) => (
+                    <HighlightGroup
                       key={group.id}
                       title={group.title}
                       icon={group.icon}
-                      bookmarks={group.bookmarks}
-                      selectedId={selectedBookmark?.id || null}
-                      onSelectBookmark={handleSelectBookmark}
+                      highlights={group.highlights}
+                      selectedId={selectedHighlight?.id || null}
+                      onSelectHighlight={handleSelectHighlight}
                       defaultExpanded={index === 0}
                     />
                   ))}
                 </div>
 
                 {/* Desktop Detail Panel */}
-                {!isMobile && selectedBookmark && (
+                {!isMobile && selectedHighlight && (
                   <div className="w-[400px] shrink-0 rounded-xl border border-border bg-card sticky top-0 max-h-[calc(100vh-200px)] flex flex-col overflow-hidden">
-                    <BookmarkDetailPanel 
-                      bookmark={selectedBookmark} 
-                      onClose={() => setSelectedBookmark(null)}
+                    <HighlightDetailPanel 
+                      highlight={selectedHighlight} 
+                      onClose={() => setSelectedHighlight(null)}
                       showCloseButton
                     />
                   </div>
@@ -139,8 +139,8 @@ const Highlights = () => {
       </div>
 
       {/* Mobile Detail Drawer */}
-      <BookmarkDetailDrawer
-        bookmark={selectedBookmark}
+      <HighlightDetailDrawer
+        highlight={selectedHighlight}
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
       />
@@ -150,4 +150,4 @@ const Highlights = () => {
   );
 };
 
-export default Highlights;
+export default HighlightsPage;

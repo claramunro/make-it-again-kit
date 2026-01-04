@@ -8,11 +8,11 @@ import { Label } from '@/components/ui/label';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { BookmarkGroup } from '@/components/BookmarkGroup';
-import { BookmarkDetailPanel } from '@/components/BookmarkDetailPanel';
+import { HighlightGroup } from '@/components/HighlightGroup';
+import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { topics } from '@/data/topics';
-import { bookmarks, Bookmark } from '@/data/bookmarks';
+import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 import {
   Drawer,
@@ -132,9 +132,9 @@ const mockSessions = [
   },
 ];
 
-type TopicTab = 'overview' | 'sessions' | 'bookmarks' | 'appearance';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'appearance';
 type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'appearance';
-type SessionTab = 'details' | 'bookmarks' | 'transcript';
+type SessionTab = 'details' | 'highlights' | 'transcript';
 
 // Wallpaper presets with gradient configurations
 const wallpaperPresets = [
@@ -256,9 +256,9 @@ const TopicDetail = () => {
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
   const [viewOriginal, setViewOriginal] = useState(false);
-  const [bookmarkDropdownOpen, setBookmarkDropdownOpen] = useState(false);
+  const [highlightDropdownOpen, setHighlightDropdownOpen] = useState(false);
   const [promptsModalOpen, setPromptsModalOpen] = useState(false);
-  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   
@@ -267,30 +267,30 @@ const TopicDetail = () => {
   const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
   
-  // Filter bookmarks for this topic
-  const topicBookmarks = useMemo(() => {
-    return bookmarks.filter(b => b.topicId === id || b.topicName === topic?.name);
+  // Filter highlights for this topic
+  const topicHighlights = useMemo(() => {
+    return highlights.filter(h => h.topicId === id || h.topicName === topic?.name);
   }, [id, topic?.name]);
   
-  // Group topic bookmarks by session
-  const groupedTopicBookmarks = useMemo(() => {
-    const groups: Record<string, { title: string; bookmarks: Bookmark[] }> = {};
+  // Group topic highlights by session
+  const groupedTopicHighlights = useMemo(() => {
+    const groups: Record<string, { title: string; highlights: Highlight[] }> = {};
     
-    topicBookmarks.forEach((bookmark) => {
-      const key = bookmark.sessionId;
-      const title = bookmark.sessionTitle;
+    topicHighlights.forEach((highlight) => {
+      const key = highlight.sessionId;
+      const title = highlight.sessionTitle;
       
       if (!groups[key]) {
-        groups[key] = { title, bookmarks: [] };
+        groups[key] = { title, highlights: [] };
       }
-      groups[key].bookmarks.push(bookmark);
+      groups[key].highlights.push(highlight);
     });
     
     return Object.entries(groups).map(([key, group]) => ({
       id: key,
       ...group,
     }));
-  }, [topicBookmarks]);
+  }, [topicHighlights]);
   
   const toggleSessionFavorite = (sessionId: string) => {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
@@ -708,14 +708,14 @@ const TopicDetail = () => {
           {/* Highlights Tab */}
           {mobileActiveTab === 'highlights' && (
             <div className="space-y-3">
-              {topicBookmarks.length > 0 ? (
-                topicBookmarks.map((bookmark) => (
-                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+              {topicHighlights.length > 0 ? (
+                topicHighlights.map((highlight) => (
+                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
                     <div className="flex items-start gap-3">
-                      <BookmarkIcon className="mt-0.5 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Sparkles className="mt-0.5 h-4 w-4 text-primary" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{bookmark.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{bookmark.sessionTitle}</p>
+                        <p className="text-sm font-medium text-foreground">{highlight.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{highlight.sessionTitle}</p>
                       </div>
                     </div>
                   </div>
@@ -1015,42 +1015,42 @@ const TopicDetail = () => {
                         </div>
                       )}
                       
-                      {activeSessionTab === 'bookmarks' && (
+                      {activeSessionTab === 'highlights' && (
                         <div className="space-y-4">
-                          {/* Bookmarks Dropdown */}
+                          {/* Highlights Dropdown */}
                           <div className="relative">
                             <button
-                              onClick={() => setBookmarkDropdownOpen(!bookmarkDropdownOpen)}
+                              onClick={() => setHighlightDropdownOpen(!highlightDropdownOpen)}
                               className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left text-sm transition-smooth hover:bg-muted/50"
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
+                                <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                                 <span className="truncate font-medium">{selectedSessionBookmark?.title}</span>
                               </div>
                               <ChevronRight className={cn(
                                 "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                                bookmarkDropdownOpen && "rotate-90"
+                                highlightDropdownOpen && "rotate-90"
                               )} />
                             </button>
                             
-                            {bookmarkDropdownOpen && (
+                            {highlightDropdownOpen && (
                               <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-lg border border-border bg-card py-1 shadow-lg">
-                                {mockSessionBookmarks.map((bookmark) => (
+                                {mockSessionBookmarks.map((item) => (
                                   <button
-                                    key={bookmark.id}
+                                    key={item.id}
                                     onClick={() => {
-                                      setSelectedBookmarkId(bookmark.id);
-                                      setBookmarkDropdownOpen(false);
+                                      setSelectedBookmarkId(item.id);
+                                      setHighlightDropdownOpen(false);
                                     }}
                                     className={cn(
                                       'flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-smooth',
-                                      selectedBookmarkId === bookmark.id
+                                      selectedBookmarkId === item.id
                                         ? 'bg-muted text-foreground'
                                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                                     )}
                                   >
-                                    <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
-                                    <span className="truncate">{bookmark.title}</span>
+                                    <Sparkles className="h-4 w-4 shrink-0 text-primary" />
+                                    <span className="truncate">{item.title}</span>
                                   </button>
                                 ))}
                               </div>
@@ -1348,13 +1348,13 @@ const TopicDetail = () => {
           
           {activeTopicTab === 'bookmarks' && (
             <div className="flex flex-1 overflow-hidden">
-              {/* Left: Bookmarks List */}
+              {/* Left: Highlights List */}
               <div className="w-[400px] shrink-0 border-r border-border overflow-y-auto p-4">
                 {/* Header */}
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-semibold text-foreground">Bookmarks</h2>
-                    <span className="text-sm text-muted-foreground">({topicBookmarks.length})</span>
+                    <h2 className="text-lg font-semibold text-foreground">Highlights</h2>
+                    <span className="text-sm text-muted-foreground">({topicHighlights.length})</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Sort By</span>
@@ -1362,62 +1362,62 @@ const TopicDetail = () => {
                   </div>
                 </div>
                 
-                {/* Bookmarks Flat List */}
+                {/* Highlights Flat List */}
                 <div className="space-y-1">
-                  {topicBookmarks.length > 0 ? (
-                    topicBookmarks.map((bookmark) => (
+                  {topicHighlights.length > 0 ? (
+                    topicHighlights.map((highlight) => (
                       <button
-                        key={bookmark.id}
-                        onClick={() => setSelectedBookmark(bookmark)}
+                        key={highlight.id}
+                        onClick={() => setSelectedHighlight(highlight)}
                         className={cn(
                           'w-full flex items-center gap-3 rounded-lg p-3 text-left transition-smooth',
-                          selectedBookmark?.id === bookmark.id
+                          selectedHighlight?.id === highlight.id
                             ? 'bg-primary/5 border border-primary/20'
                             : 'hover:bg-muted/50'
                         )}
                       >
-                        <BookmarkIcon className={cn(
+                        <Sparkles className={cn(
                           'h-5 w-5 shrink-0',
-                          bookmark.isFavorite 
-                            ? 'stroke-yellow-500 fill-yellow-400/30' 
+                          selectedHighlight?.id === highlight.id
+                            ? 'text-primary'
                             : 'text-muted-foreground'
                         )} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{bookmark.title}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{highlight.title}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs text-muted-foreground">{bookmark.datetime}</span>
+                            <span className="text-xs text-muted-foreground">{highlight.datetime}</span>
                             <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                              {bookmark.timestamp}
+                              {highlight.timestamp}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-0.5 truncate">{bookmark.sessionTitle}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">{highlight.sessionTitle}</p>
                         </div>
                         <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                       </button>
                     ))
                   ) : (
                     <div className="flex items-center justify-center h-40 text-muted-foreground">
-                      <p>No bookmarks in this topic yet.</p>
+                      <p>No highlights in this topic yet.</p>
                     </div>
                   )}
                 </div>
               </div>
               
-              {/* Middle: Bookmark Detail Panel */}
+              {/* Middle: Highlight Detail Panel */}
               <div className="flex-1 overflow-y-auto p-6">
-                {selectedBookmark ? (
+                {selectedHighlight ? (
                   <div className="max-w-2xl mx-auto">
                     <div className="rounded-xl border border-border bg-card overflow-hidden">
-                      <BookmarkDetailPanel 
-                        bookmark={selectedBookmark} 
-                        onClose={() => setSelectedBookmark(null)}
+                      <HighlightDetailPanel 
+                        highlight={selectedHighlight} 
+                        onClose={() => setSelectedHighlight(null)}
                         showCloseButton
                       />
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <p>Select a bookmark to view details</p>
+                    <p>Select a highlight to view details</p>
                   </div>
                 )}
               </div>
