@@ -22,31 +22,52 @@ interface TopicCardSelectableProps {
   onSelect?: (id: string) => void;
 }
 
-// Colors for emoji container matching SessionBadge style (solid bg, no thick border)
-const topicColors: Record<string, string> = {
-  '🎨': 'bg-pink-500/10 dark:bg-pink-500/20',
-  '📦': 'bg-emerald-500/10 dark:bg-emerald-500/20',
-  '🏋️': 'bg-blue-500/10 dark:bg-blue-500/20',
-  '☕': 'bg-amber-500/10 dark:bg-amber-500/20',
-  '🐶': 'bg-yellow-500/10 dark:bg-yellow-500/20',
-  '📅': 'bg-amber-500/10 dark:bg-amber-500/20',
-  '🚀': 'bg-violet-500/10 dark:bg-violet-500/20',
-  '💻': 'bg-slate-500/10 dark:bg-slate-500/20',
-  '📢': 'bg-orange-500/10 dark:bg-orange-500/20',
-  '🤝': 'bg-teal-500/10 dark:bg-teal-500/20',
-  '💰': 'bg-green-500/10 dark:bg-green-500/20',
-  '👥': 'bg-indigo-500/10 dark:bg-indigo-500/20',
-  '🔬': 'bg-cyan-500/10 dark:bg-cyan-500/20',
-  '⚖️': 'bg-gray-500/10 dark:bg-gray-500/20',
-  '🎉': 'bg-rose-500/10 dark:bg-rose-500/20',
+// Wallpaper presets matching TopicDetail
+const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorder: string; badgeText: string }> = {
+  sand: { 
+    bg: 'bg-gradient-to-br from-amber-200/60 via-yellow-100/60 to-amber-300/60', 
+    badgeBg: 'bg-amber-100', 
+    badgeBorder: 'border-amber-300',
+    badgeText: 'text-amber-700'
+  },
+  peach: { 
+    bg: 'bg-gradient-to-br from-orange-200/60 via-rose-100/60 to-orange-300/60', 
+    badgeBg: 'bg-orange-100', 
+    badgeBorder: 'border-orange-300',
+    badgeText: 'text-orange-700'
+  },
+  mint: { 
+    bg: 'bg-gradient-to-br from-emerald-200/60 via-teal-100/60 to-emerald-300/60', 
+    badgeBg: 'bg-emerald-100', 
+    badgeBorder: 'border-emerald-300',
+    badgeText: 'text-emerald-700'
+  },
+  lavender: { 
+    bg: 'bg-gradient-to-br from-purple-200/60 via-pink-100/60 to-purple-300/60', 
+    badgeBg: 'bg-purple-100', 
+    badgeBorder: 'border-purple-300',
+    badgeText: 'text-purple-700'
+  },
+  ocean: { 
+    bg: 'bg-gradient-to-br from-blue-200/60 via-sky-100/60 to-blue-300/60', 
+    badgeBg: 'bg-blue-100', 
+    badgeBorder: 'border-blue-300',
+    badgeText: 'text-blue-700'
+  },
+  sunset: { 
+    bg: 'bg-gradient-to-br from-orange-300/60 via-rose-200/60 to-yellow-300/60', 
+    badgeBg: 'bg-orange-100', 
+    badgeBorder: 'border-orange-300',
+    badgeText: 'text-orange-700'
+  },
 };
 
-const defaultColor = 'bg-slate-500/10 dark:bg-slate-500/20';
+const defaultWallpaper = wallpaperPresets.mint;
 
 export function TopicCard({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const bgColor = topicColors[topic.icon] || defaultColor;
+  const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const handleCardClick = () => {
@@ -85,7 +106,7 @@ export function TopicCard({ topic }: TopicCardProps) {
           {/* Emoji container */}
           <div className={cn(
             'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
-            bgColor
+            wallpaper.bg
           )}>
             <span className="text-2xl">{topic.icon}</span>
           </div>
@@ -99,7 +120,10 @@ export function TopicCard({ topic }: TopicCardProps) {
               <div className="flex items-center gap-1 shrink-0">
                 {/* Shared badge */}
                 {topic.sharedBy && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary">
+                  <span className={cn(
+                    "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium",
+                    wallpaper.badgeBg, wallpaper.badgeBorder, wallpaper.badgeText
+                  )}>
                     <Users className="h-3 w-3" />
                     Shared
                   </span>
@@ -201,7 +225,7 @@ export function TopicCard({ topic }: TopicCardProps) {
 
 // Selectable version for master-detail layout
 export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSelectableProps) {
-  const bgColor = topicColors[topic.icon] || defaultColor;
+  const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
 
   const handleClick = () => {
     onSelect?.(topic.id);
@@ -216,10 +240,10 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
       )}
     >
       <div className="flex items-center gap-3">
-        {/* Emoji container matching SessionBadge style */}
+        {/* Emoji container matching wallpaper style */}
         <div className={cn(
           'flex h-9 w-9 items-center justify-center rounded-lg',
-          bgColor
+          wallpaper.bg
         )}>
           <span className="text-base">{topic.icon}</span>
         </div>
