@@ -1,4 +1,4 @@
-export interface Bookmark {
+export interface Highlight {
   id: string;
   datetime: string;
   timestamp: string;
@@ -14,7 +14,7 @@ export interface Bookmark {
   isFavorite?: boolean;
 }
 
-export const bookmarks: Bookmark[] = [
+export const highlights: Highlight[] = [
   {
     id: '1',
     datetime: 'Oct 29 7:17 PM',

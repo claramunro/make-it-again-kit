@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BrowserRouter } from 'react-router-dom';
-import { BookmarkCard } from './BookmarkCard';
+import { HighlightCard } from './HighlightCard';
 
 const meta = {
-  title: 'Components/BookmarkCard',
-  component: BookmarkCard,
+  title: 'Components/HighlightCard',
+  component: HighlightCard,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -18,14 +18,14 @@ const meta = {
       </BrowserRouter>
     ),
   ],
-} satisfies Meta<typeof BookmarkCard>;
+} satisfies Meta<typeof HighlightCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    bookmark: {
+    highlight: {
       id: '1',
       datetime: 'Oct 29 7:17 PM',
       timestamp: '00:46',
@@ -43,7 +43,7 @@ export const Default: Story = {
 
 export const Favorited: Story = {
   args: {
-    bookmark: {
+    highlight: {
       id: '2',
       datetime: 'Oct 29 7:16 PM',
       timestamp: '00:39',
@@ -61,7 +61,7 @@ export const Favorited: Story = {
 
 export const LongDescription: Story = {
   args: {
-    bookmark: {
+    highlight: {
       id: '3',
       datetime: 'Oct 22 2:15 PM',
       timestamp: '12:34',
@@ -79,7 +79,7 @@ export const LongDescription: Story = {
 
 export const DifferentTopic: Story = {
   args: {
-    bookmark: {
+    highlight: {
       id: '4',
       datetime: 'Oct 15 9:30 AM',
       timestamp: '28:45',

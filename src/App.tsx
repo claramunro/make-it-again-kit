@@ -12,7 +12,7 @@ import TopicDetailFocus from "./pages/TopicDetailFocus";
 import TopicDetailBannerGradient from "./pages/TopicDetailBannerGradient";
 import TopicDetailBannerSolid from "./pages/TopicDetailBannerSolid";
 import TopicDetailBannerFull from "./pages/TopicDetailBannerFull";
-import Bookmarks from "./pages/Bookmarks";
+import Highlights from "./pages/Highlights";
 import Settings from "./pages/Settings";
 import SessionDetail from "./pages/SessionDetail";
 import SessionDetailLegacy from "./pages/SessionDetailLegacy";
@@ -53,7 +53,7 @@ const App = () => (
           <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
           <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
           <Route path="/topic4/:id" element={<TopicDetailBannerFull />} />
-          <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/highlights" element={<Highlights />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/session/:id" element={<SessionDetail />} />
           <Route path="/session-legacy/:id" element={<SessionDetailLegacy />} />
