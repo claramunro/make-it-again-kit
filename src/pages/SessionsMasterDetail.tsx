@@ -23,26 +23,33 @@ const SessionsMasterDetail = () => {
       <div className="flex flex-1 flex-col">
         <Header />
         
-        <main className="flex flex-1 overflow-hidden rounded-tl-2xl bg-background">
-          {/* Left: Sessions List */}
-          <div className="w-96 shrink-0 overflow-auto border-r border-border p-4">
+        <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
+          {/* Sessions Header - Full Width */}
+          <div className="shrink-0 border-b border-border px-4 pt-4 pb-2">
             <SessionsHeader totalSessions={totalSessions} />
-            <SessionList 
-              groups={sessionGroups} 
-              selectedSessionId={selectedSessionId}
-              onSelectSession={setSelectedSessionId}
-            />
           </div>
           
-          {/* Right: Session Detail */}
-          <div className="flex-1 overflow-hidden">
-            {selectedSessionId ? (
-              <SessionDetailPanel sessionId={selectedSessionId} />
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                Select a session to view details
-              </div>
-            )}
+          {/* Content: List + Detail side by side */}
+          <div className="flex flex-1 overflow-hidden">
+            {/* Left: Sessions List */}
+            <div className="w-96 shrink-0 overflow-auto border-r border-border p-4">
+              <SessionList 
+                groups={sessionGroups} 
+                selectedSessionId={selectedSessionId}
+                onSelectSession={setSelectedSessionId}
+              />
+            </div>
+            
+            {/* Right: Session Detail */}
+            <div className="flex-1 overflow-hidden">
+              {selectedSessionId ? (
+                <SessionDetailPanel sessionId={selectedSessionId} />
+              ) : (
+                <div className="flex h-full items-center justify-center text-muted-foreground">
+                  Select a session to view details
+                </div>
+              )}
+            </div>
           </div>
         </main>
       </div>
