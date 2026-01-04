@@ -70,9 +70,9 @@ const SessionsMasterDetail = () => {
     <div className="flex h-screen bg-card">
       <SidebarV2 />
       
-      <div className="relative flex flex-1 flex-col overflow-hidden">
+      <div className="relative flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
         
-        <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
+        <main className="flex flex-1 flex-col overflow-hidden">
           {/* Sessions Header - Full Width */}
           <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
             <SessionsHeader 
