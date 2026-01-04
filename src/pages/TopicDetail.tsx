@@ -828,8 +828,7 @@ const TopicDetail = () => {
         <main className="flex-1 flex flex-col bg-background overflow-hidden">
           {/* Topic Header with Color Banner */}
           {(() => {
-            const wallpaperIndex = topicIconToWallpaper[topic.icon] ?? 2;
-            const wallpaper = wallpaperPresets[wallpaperIndex];
+            const wallpaper = wallpaperPresets.find(p => p.id === selectedWallpaper) ?? wallpaperPresets[2];
             return (
               <div className="sticky top-0 z-10">
                 {/* Color Banner */}
