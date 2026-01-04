@@ -808,26 +808,23 @@ const TopicDetail = () => {
         
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Topic Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
-            <div className="flex items-center justify-between gap-4">
+          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-2 md:px-6">
+            <div className="flex items-center gap-4">
               {/* Left: Back button + Icon + Title + Meta */}
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex items-center gap-3 min-w-0 shrink-0">
                 <button 
                   onClick={() => navigate('/topics')}
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                <span className="text-xl shrink-0">{topic.icon}</span>
+                <span className="text-2xl shrink-0">{topic.icon}</span>
                 <div className="min-w-0">
-                  <h1 className="truncate text-sm font-medium leading-snug text-foreground">
+                  <h1 className="truncate text-sm font-semibold leading-tight text-foreground">
                     {topic.name}
                   </h1>
                   <p className="text-xs text-muted-foreground">
-                    {mockSessions.length} Sessions
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Last Updated: Oct 17, 2025 10:33 AM
+                    {mockSessions.length} Sessions • Last Updated: Oct 17, 2025 10:33 AM
                   </p>
                 </div>
               </div>
@@ -840,7 +837,7 @@ const TopicDetail = () => {
                       key={tab}
                       onClick={() => setActiveTopicTab(tab)}
                       className={cn(
-                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
+                        'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
                         activeTopicTab === tab
                           ? 'bg-card text-foreground shadow-sm'
                           : 'text-muted-foreground hover:text-foreground'
