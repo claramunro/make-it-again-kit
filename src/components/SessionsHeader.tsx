@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText } from 'lucide-react';
+import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -12,11 +12,38 @@ import { ImportTranscriptDialog } from './ImportTranscriptDialog';
 
 interface SessionsHeaderProps {
   totalSessions: number;
+  selectionMode?: boolean;
+  selectedCount?: number;
+  onToggleSelectionMode?: () => void;
 }
 
-export function SessionsHeader({ totalSessions }: SessionsHeaderProps) {
+export function SessionsHeader({ 
+  totalSessions, 
+  selectionMode, 
+  selectedCount = 0,
+  onToggleSelectionMode 
+}: SessionsHeaderProps) {
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
+
+  if (selectionMode) {
+    return (
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex-1" />
+        <div className="text-lg font-semibold text-foreground">
+          {selectedCount} selected
+        </div>
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <SlidersHorizontal className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleSelectionMode}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -29,7 +56,7 @@ export function SessionsHeader({ totalSessions }: SessionsHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={onToggleSelectionMode}>
             <SlidersHorizontal className="h-4 w-4" />
             Select
           </Button>

@@ -3,6 +3,7 @@ import { FileText, Video, ChevronRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Session } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
+import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
 
 interface SessionCardProps {
@@ -10,9 +11,20 @@ interface SessionCardProps {
   onToggleFavorite?: (id: string) => void;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
+  selectionMode?: boolean;
+  isChecked?: boolean;
+  onCheckChange?: (id: string, checked: boolean) => void;
 }
 
-export function SessionCard({ session, onToggleFavorite, isSelected, onSelect }: SessionCardProps) {
+export function SessionCard({ 
+  session, 
+  onToggleFavorite, 
+  isSelected, 
+  onSelect,
+  selectionMode,
+  isChecked,
+  onCheckChange
+}: SessionCardProps) {
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -23,10 +35,17 @@ export function SessionCard({ session, onToggleFavorite, isSelected, onSelect }:
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    if (onSelect) {
+    if (selectionMode) {
+      e.preventDefault();
+      onCheckChange?.(session.id, !isChecked);
+    } else if (onSelect) {
       e.preventDefault();
       onSelect(session.id);
     }
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    onCheckChange?.(session.id, checked);
   };
 
   // Session id "2" goes to the legacy view
@@ -34,19 +53,31 @@ export function SessionCard({ session, onToggleFavorite, isSelected, onSelect }:
 
   return (
     <Link 
-      to={onSelect ? '#' : sessionUrl}
+      to={selectionMode ? '#' : (onSelect ? '#' : sessionUrl)}
       onClick={handleClick}
       className={cn(
         "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm",
-        isSelected && "border-primary bg-primary/5"
+        isSelected && !selectionMode && "border-primary bg-primary/5",
+        isChecked && selectionMode && "border-primary bg-primary/5"
       )}
     >
-      {/* Icon */}
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground">
-        {session.type === 'video' ? (
-          <Video className="h-5 w-5" />
+      {/* Checkbox or Icon */}
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center">
+        {selectionMode ? (
+          <Checkbox 
+            checked={isChecked}
+            onCheckedChange={handleCheckboxChange}
+            onClick={(e) => e.stopPropagation()}
+            className="h-5 w-5 border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+          />
         ) : (
-          <FileText className="h-5 w-5" />
+          <div className="text-muted-foreground">
+            {session.type === 'video' ? (
+              <Video className="h-5 w-5" />
+            ) : (
+              <FileText className="h-5 w-5" />
+            )}
+          </div>
         )}
       </div>
 
@@ -58,28 +89,35 @@ export function SessionCard({ session, onToggleFavorite, isSelected, onSelect }:
         <div className="flex items-center gap-3">
           <SessionBadge type={session.badge} />
           <span className="text-xs text-muted-foreground">
-            {session.time} • {session.duration}
+            Time: {session.time}
           </span>
+        </div>
+        <div className="text-xs text-muted-foreground">
+          Duration: {session.duration}
         </div>
       </div>
 
-      {/* Star Button */}
-      <button
-        onClick={handleToggleFavorite}
-        className="mt-1 shrink-0 p-1 rounded-md transition-smooth hover:bg-muted"
-      >
-        <Star 
-          className={cn(
-            "h-4 w-4 transition-colors",
-            isFavorite 
-              ? "fill-yellow-400 text-yellow-400" 
-              : "text-muted-foreground/50 group-hover:text-muted-foreground"
-          )} 
-        />
-      </button>
+      {/* Star Button - only show when not in selection mode */}
+      {!selectionMode && (
+        <button
+          onClick={handleToggleFavorite}
+          className="mt-1 shrink-0 p-1 rounded-md transition-smooth hover:bg-muted"
+        >
+          <Star 
+            className={cn(
+              "h-4 w-4 transition-colors",
+              isFavorite 
+                ? "fill-yellow-400 text-yellow-400" 
+                : "text-muted-foreground/50 group-hover:text-muted-foreground"
+            )} 
+          />
+        </button>
+      )}
 
-      {/* Arrow */}
-      <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground/50 transition-smooth group-hover:text-muted-foreground" />
+      {/* Arrow - only show when not in selection mode */}
+      {!selectionMode && (
+        <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground/50 transition-smooth group-hover:text-muted-foreground" />
+      )}
     </Link>
   );
 }
