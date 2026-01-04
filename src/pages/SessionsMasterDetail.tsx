@@ -67,14 +67,14 @@ const SessionsMasterDetail = () => {
   }, [selectedIds]);
 
   return (
-    <div className="flex h-screen bg-card">
+    <div className="flex h-screen bg-card border-2 border-red-500">
       <SidebarV2 />
       
-      <div className="relative flex flex-1 flex-col overflow-hidden">
+      <div className="relative flex flex-1 flex-col overflow-hidden border-2 border-red-500">
         
-        <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
+        <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background border-2 border-red-500">
           {/* Sessions Header - Full Width */}
-          <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
+          <div className="shrink-0 border-b border-border px-6 pt-6 pb-4 border-2 border-red-500">
             <SessionsHeader 
               totalSessions={totalSessions}
               selectionMode={selectionMode}
@@ -86,9 +86,9 @@ const SessionsMasterDetail = () => {
           </div>
           
           {/* Content: List + Detail side by side */}
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 overflow-hidden border-2 border-red-500">
             {/* Left: Sessions List */}
-            <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
+            <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 border-2 border-red-500 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
               <SessionList 
                 groups={sessionGroups} 
                 selectedSessionId={selectionMode ? null : selectedSessionId}
@@ -100,7 +100,7 @@ const SessionsMasterDetail = () => {
             </div>
             
             {/* Right: Session Detail */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden border-2 border-red-500">
               {selectedSessionId && !selectionMode ? (
                 <SessionDetailPanel sessionId={selectedSessionId} />
               ) : (
