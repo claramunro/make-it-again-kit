@@ -83,6 +83,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '25 minutes',
         date: 'Oct 22, 2025',
         type: 'document',
+        topicId: '2', // New
       },
       {
         id: '8',
@@ -92,6 +93,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '55 minutes',
         date: 'Oct 22, 2025',
         type: 'video',
+        topicId: '4', // Working Out
       },
       {
         id: '9',
@@ -101,6 +103,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '32 minutes',
         date: 'Oct 22, 2025',
         type: 'document',
+        topicId: '5', // Coffee
       },
     ],
   },
@@ -115,6 +118,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '90 minutes',
         date: 'Oct 15, 2025',
         type: 'video',
+        topicId: '2', // New
       },
       {
         id: '11',
@@ -133,6 +137,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '45 minutes',
         date: 'Oct 15, 2025',
         type: 'document',
+        topicId: '4', // Working Out
       },
     ],
   },
@@ -147,6 +152,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '35 minutes',
         date: 'Oct 8, 2025',
         type: 'document',
+        topicId: '5', // Coffee
       },
       {
         id: '14',
@@ -156,6 +162,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '60 minutes',
         date: 'Oct 8, 2025',
         type: 'video',
+        topicId: '2', // New
       },
       {
         id: '15',
@@ -174,6 +181,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '28 minutes',
         date: 'Oct 8, 2025',
         type: 'document',
+        topicId: '4', // Working Out
       },
     ],
   },
@@ -188,6 +196,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '75 minutes',
         date: 'Oct 1, 2025',
         type: 'video',
+        topicId: '3', // Product Launch
       },
       {
         id: '18',
@@ -197,6 +206,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '45 minutes',
         date: 'Oct 1, 2025',
         type: 'document',
+        topicId: '5', // Coffee
       },
     ],
   },
