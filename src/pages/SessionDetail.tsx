@@ -73,6 +73,9 @@ const mockBookmarks = [
   },
 ];
 
+// Import session data to check type
+import { sessionGroups } from '@/data/sessions';
+
 const SessionDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -90,6 +93,10 @@ const SessionDetail = () => {
   const [chatMessage, setChatMessage] = useState('');
   const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+
+  // Find the current session to check if it has audio
+  const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
+  const hasAudio = currentSession?.type === 'audio';
 
   const selectedTopicData = topics.find(t => t.id === '2');
   const selectedSessionTypeData = sessionTypes.find(t => t.id === selectedSessionType);
@@ -377,7 +384,7 @@ const SessionDetail = () => {
 
           {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
           {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
-          <div className="flex h-[calc(100vh-208px)] overflow-hidden">
+          <div className={cn("flex overflow-hidden", hasAudio ? "h-[calc(100vh-208px)]" : "h-[calc(100vh-136px)]")}>
             {/* Left Column - Only show for Highlights tab */}
             {activeTab === 'highlights' && (
               <div className="w-64 min-w-0 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4 xl:w-80">
@@ -641,28 +648,30 @@ const SessionDetail = () => {
 
         </main>
         
-        {/* Audio Player - Fixed at bottom */}
-        <div className={cn("fixed bottom-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
-          <div className="mx-auto flex max-w-4xl items-center gap-4">
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
-            >
-              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-            </button>
-            <div className="flex flex-1 items-center gap-3">
-              <div className="h-1 w-2 rounded-full bg-primary" />
-              <div className="h-1 flex-1 rounded-full bg-muted" />
+        {/* Audio Player - Fixed at bottom - Only show for audio sessions */}
+        {hasAudio && (
+          <div className={cn("fixed bottom-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
+            <div className="mx-auto flex max-w-4xl items-center gap-4">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+              >
+                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+              </button>
+              <div className="flex flex-1 items-center gap-3">
+                <div className="h-1 w-2 rounded-full bg-primary" />
+                <div className="h-1 flex-1 rounded-full bg-muted" />
+              </div>
+              <span className="text-sm text-muted-foreground">22:28</span>
+              <button className="rounded-lg border border-border px-2 py-1 text-sm text-muted-foreground hover:bg-muted">
+                1.0×
+              </button>
+              <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
+                <MoreVertical className="h-4 w-4" />
+              </button>
             </div>
-            <span className="text-sm text-muted-foreground">22:28</span>
-            <button className="rounded-lg border border-border px-2 py-1 text-sm text-muted-foreground hover:bg-muted">
-              1.0×
-            </button>
-            <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
-              <MoreVertical className="h-4 w-4" />
-            </button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
