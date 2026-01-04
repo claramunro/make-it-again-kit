@@ -92,7 +92,6 @@ export function SessionCard({
           {session.title}
         </h3>
         <div className="flex items-center gap-3">
-          <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
           <span className="text-xs text-muted-foreground">
             Time: {session.time}
           </span>
@@ -101,6 +100,13 @@ export function SessionCard({
           Duration: {session.duration}
         </div>
       </div>
+
+      {/* Topic Badge - show to the left of star when not in selection mode */}
+      {!selectionMode && effectiveTopicBadge && (
+        <div className="shrink-0">
+          <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+        </div>
+      )}
 
       {/* Star Button - only show when not in selection mode */}
       {!selectionMode && (
