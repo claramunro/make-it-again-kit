@@ -21,6 +21,24 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 
+const topicColorMap: Record<string, string> = {
+  '🎨': 'hsl(160, 40%, 75%)',
+  '📦': 'hsl(199, 89%, 48%)',
+  '🚀': 'hsl(235, 66%, 45%)',
+  '🏋️': 'hsl(142, 71%, 45%)',
+  '☕': 'hsl(25, 38%, 39%)',
+  '🐶': 'hsl(36, 100%, 50%)',
+  '📅': 'hsl(262, 52%, 47%)',
+  '💻': 'hsl(207, 18%, 51%)',
+  '📢': 'hsl(338, 71%, 51%)',
+  '🤝': 'hsl(160, 84%, 39%)',
+  '💰': 'hsl(45, 93%, 47%)',
+  '👥': 'hsl(271, 91%, 65%)',
+  '🔬': 'hsl(181, 100%, 41%)',
+  '⚖️': 'hsl(0, 0%, 62%)',
+  '🎉': 'hsl(0, 84%, 60%)',
+};
+
 const topicColors = [
   'hsl(12, 76%, 61%)',
   'hsl(199, 89%, 48%)',
@@ -303,6 +321,9 @@ const TopicDetail = () => {
       </div>
     );
   }
+
+  // Get topic color based on emoji
+  const topicColor = topicColorMap[topic.icon] || 'hsl(160, 40%, 75%)';
 
   // Chat Panel Component
   const ChatPanel = () => (
@@ -806,34 +827,76 @@ const TopicDetail = () => {
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         
-        <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
-          {/* Topic Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
-            <div className="flex items-center justify-between gap-4">
-              {/* Left: Back button + Icon + Title + Meta */}
-              <div className="flex items-center gap-3 min-w-0">
-                <button 
-                  onClick={() => navigate('/topics')}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Color Banner */}
+          <div 
+            className="h-16 w-full shrink-0 relative rounded-tl-2xl"
+            style={{ backgroundColor: `color-mix(in srgb, ${topicColor} 25%, white 75%)` }}
+          >
+            {/* Back Button */}
+            <div className="absolute top-3 left-4 z-10">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/topics')}
+                className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          {/* Content Container - overlapping the banner */}
+          <div className="flex-1 -mt-4 relative z-10 bg-background rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] overflow-visible flex flex-col">
+          
+            {/* Topic Header */}
+            <div className="sticky top-0 z-10 border-b border-border bg-background rounded-t-3xl px-6 pt-6 pb-4">
+              {/* Row 1: Emoji + Title + Meta + Shared Badge */}
+              <div className="flex items-start gap-4">
+                {/* Topic Icon Container - overlapping into banner */}
+                <div 
+                  className="w-24 h-24 rounded-2xl flex items-center justify-center text-5xl shrink-0 -mt-14 ml-10 shadow-lg"
+                  style={{ 
+                    backgroundColor: `color-mix(in srgb, ${topicColor} 15%, white 85%)`,
+                    boxShadow: 'inset 0 0 0 5px white, 0 4px 12px rgba(0,0,0,0.1)'
+                  }}
                 >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-                <span className="text-xl shrink-0">{topic.icon}</span>
-                <div className="min-w-0">
-                  <h1 className="truncate text-sm font-medium leading-snug text-foreground">
-                    {topic.name}
-                  </h1>
-                  <p className="text-xs text-muted-foreground">
-                    {mockSessions.length} Sessions
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Last Updated: Oct 17, 2025 10:33 AM
-                  </p>
+                  {topic.icon}
+                </div>
+                
+                {/* Title and Meta */}
+                <div className="min-w-0 flex-1 pt-2">
+                  <h1 className="text-2xl font-bold text-foreground">{topic.name}</h1>
+                  <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                    <span>{mockSessions.length} sessions</span>
+                    <span>•</span>
+                    <span>Last updated Dec 1</span>
+                    <span>•</span>
+                  </div>
+                </div>
+
+                {/* Right: Shared badge */}
+                <div className="shrink-0 pt-2">
+                  {topic.sharedBy ? (
+                    <span 
+                      className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium"
+                      style={{ 
+                        borderColor: `color-mix(in srgb, ${topicColor} 40%, transparent 60%)`,
+                        backgroundColor: `color-mix(in srgb, ${topicColor} 8%, transparent 92%)`,
+                        color: topicColor
+                      }}
+                    >
+                      <Users className="h-3 w-3" />
+                      Shared by {topic.sharedBy}
+                    </span>
+                  ) : (
+                    <div className="w-24" /> 
+                  )}
                 </div>
               </div>
 
-              {/* Center: Tabs */}
-              <div className="flex-1 flex justify-center">
+              {/* Row 2: Tabs - left justified, aligned with emoji container */}
+              <div className="mt-4 ml-10">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
                   {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
                     <button
@@ -851,20 +914,7 @@ const TopicDetail = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Right: Shared badge */}
-              <div className="shrink-0">
-                {topic.sharedBy ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
-                    <Users className="h-3 w-3" />
-                    Shared by {topic.sharedBy}
-                  </span>
-                ) : (
-                  <div className="w-24" /> 
-                )}
-              </div>
             </div>
-          </div>
           
           {/* Content Area */}
           {activeTopicTab === 'sessions' && (
@@ -1705,6 +1755,7 @@ const TopicDetail = () => {
               </div>
             </div>
           )}
+          </div>
         </main>
       </div>
       
