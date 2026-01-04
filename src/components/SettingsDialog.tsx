@@ -12,6 +12,8 @@ import { Badge } from './ui/badge';
 import { Switch } from './ui/switch';
 import { Slider } from './ui/slider';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -33,6 +35,7 @@ const settingsTabs: { id: SettingsTab; label: string; icon: React.ReactNode }[] 
 ];
 
 export function SettingsDialog({ open, onClose, defaultTab = 'general' }: SettingsDialogProps) {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<SettingsTab>(defaultTab);
   const [themeMode, setThemeMode] = useState<'system' | 'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
@@ -89,49 +92,53 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
 
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm" onClick={onClose}>
-      <div 
-        className="animate-fade-in relative flex h-[700px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Top Bar - Full Width */}
-        <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
-          <h2 className="text-lg font-semibold text-foreground">Settings</h2>
+  // Mobile tabs navigation (horizontal scrolling)
+  const mobileTabsNav = (
+    <div className="flex overflow-x-auto border-b border-border bg-muted/30 px-2 py-2 gap-1">
+      {settingsTabs.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={cn(
+            'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-smooth whitespace-nowrap',
+            activeTab === tab.id
+              ? 'bg-card text-primary shadow-sm'
+              : 'text-muted-foreground hover:bg-card hover:text-foreground'
+          )}
+        >
+          {tab.icon}
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  // Desktop sidebar navigation
+  const desktopSidebarNav = (
+    <div className="w-48 shrink-0 border-r border-border bg-muted/30 p-4">
+      <nav className="space-y-1">
+        {settingsTabs.map((tab) => (
           <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={cn(
+              'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-smooth',
+              activeTab === tab.id
+                ? 'bg-card text-primary shadow-sm'
+                : 'text-muted-foreground hover:bg-card hover:text-foreground'
+            )}
           >
-            <X className="h-5 w-5" />
+            {tab.icon}
+            {tab.label}
           </button>
-        </div>
+        ))}
+      </nav>
+    </div>
+  );
 
-        {/* Main Content Area */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <div className="w-48 shrink-0 border-r border-border bg-muted/30 p-4">
-            <nav className="space-y-1">
-              {settingsTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-smooth',
-                    activeTab === tab.id
-                      ? 'bg-card text-primary shadow-sm'
-                      : 'text-muted-foreground hover:bg-card hover:text-foreground'
-                  )}
-                >
-                  {tab.icon}
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Scrollable Content */}
-          <div className="flex-1 overflow-auto p-6">
+  // Settings content (shared between mobile and desktop)
+  const settingsContent = (
+    <div className="flex-1 overflow-auto p-4 md:p-6">
           {/* General Tab */}
           {activeTab === 'general' && (
             <div className="space-y-6">
@@ -704,6 +711,48 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
             </div>
           )}
           </div>
+  );
+
+  // Mobile: use drawer that slides up from bottom
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+        <DrawerContent className="max-h-[90vh] flex flex-col">
+          <DrawerHeader className="border-b border-border pb-4 shrink-0">
+            <DrawerTitle>Settings</DrawerTitle>
+          </DrawerHeader>
+          {mobileTabsNav}
+          <div className="flex-1 overflow-auto">
+            {settingsContent}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  // Desktop: use centered modal
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm" onClick={onClose}>
+      <div 
+        className="animate-fade-in relative flex h-[700px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top Bar - Full Width */}
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
+          <h2 className="text-lg font-semibold text-foreground">Settings</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex flex-1 overflow-hidden">
+          {desktopSidebarNav}
+          {settingsContent}
         </div>
       </div>
     </div>
