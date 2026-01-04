@@ -69,7 +69,7 @@ export function SidebarV2() {
 
   return (
     <>
-      <aside className="relative sticky top-0 flex h-screen w-20 flex-col bg-background">
+      <aside className="relative sticky top-0 flex h-screen w-20 flex-col bg-background border-r border-border">
         {/* Logo */}
         <div className="flex h-14 items-center justify-center px-4">
           <Link to="/" className="flex items-center">
