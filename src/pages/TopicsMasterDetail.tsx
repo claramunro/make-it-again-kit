@@ -17,25 +17,32 @@ const TopicsMasterDetail = () => {
       <div className="flex flex-1 flex-col">
         <Header />
         
-        <main className="flex flex-1 overflow-hidden rounded-tl-2xl bg-background">
-          {/* Left: Topics List */}
-          <div className="w-80 shrink-0 overflow-auto border-r border-border p-4">
+        <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
+          {/* Topics Header - Full Width */}
+          <div className="shrink-0 border-b border-border px-4 pt-4 pb-2">
             <TopicsHeader />
-            <TopicsListSelectable 
-              selectedTopicId={selectedTopicId}
-              onSelectTopic={setSelectedTopicId}
-            />
           </div>
           
-          {/* Right: Topic Detail */}
-          <div className="flex-1 overflow-hidden">
-            {selectedTopicId ? (
-              <TopicDetailPanel topicId={selectedTopicId} />
-            ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground">
-                Select a topic to view details
-              </div>
-            )}
+          {/* Content: List + Detail side by side */}
+          <div className="flex flex-1 overflow-hidden">
+            {/* Left: Topics List */}
+            <div className="w-80 shrink-0 overflow-auto border-r border-border p-4">
+              <TopicsListSelectable 
+                selectedTopicId={selectedTopicId}
+                onSelectTopic={setSelectedTopicId}
+              />
+            </div>
+            
+            {/* Right: Topic Detail */}
+            <div className="flex-1 overflow-hidden">
+              {selectedTopicId ? (
+                <TopicDetailPanel topicId={selectedTopicId} />
+              ) : (
+                <div className="flex h-full items-center justify-center text-muted-foreground">
+                  Select a topic to view details
+                </div>
+              )}
+            </div>
           </div>
         </main>
       </div>
