@@ -146,7 +146,7 @@ export function InviteToTopicDialog({ open, onOpenChange, topicName }: InviteToT
   // Desktop: Use Dialog (centered modal)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg" onClick={(e) => e.stopPropagation()}>
         <DialogHeader className="border-b border-border pb-4">
           <DialogTitle className="text-xl font-semibold">Invite to View Topic</DialogTitle>
           <p className="text-sm font-medium text-foreground mt-1">{topicName}</p>
