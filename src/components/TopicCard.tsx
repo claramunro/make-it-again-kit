@@ -102,7 +102,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             {topic.sharedBy && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
                 <Users className="h-3 w-3" />
-                Shared by {topic.sharedBy}
+                Shared
               </span>
             )}
             
