@@ -1,8 +1,10 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from './ui/drawer';
 import { Button } from './ui/button';
 import { FolderX } from 'lucide-react';
 import { topics } from '@/data/topics';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SelectTopicDialogProps {
   open: boolean;
@@ -32,11 +34,81 @@ const topicColors: Record<string, string> = {
 
 const defaultColor = 'bg-slate-500/10 dark:bg-slate-500/20';
 
-export function SelectTopicDialog({ open, onClose, onSelect, selectedCount }: SelectTopicDialogProps) {
+function SelectTopicContent({ onSelect, onClose }: { onSelect: (topicId: string | null) => void; onClose: () => void }) {
   const handleSelect = (topicId: string | null) => {
     onSelect(topicId);
     onClose();
   };
+
+  return (
+    <>
+      <div className="max-h-80 space-y-1 overflow-y-auto py-2">
+        {/* No topic option */}
+        <button
+          onClick={() => handleSelect(null)}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted transition-colors"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
+            <FolderX className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <div>
+            <div className="text-sm font-medium">No topic</div>
+            <div className="text-xs text-muted-foreground">Clear topic assignment</div>
+          </div>
+        </button>
+        
+        {/* Topic list */}
+        {topics.map((topic) => {
+          const bgColor = topicColors[topic.icon] || defaultColor;
+          return (
+            <button
+              key={topic.id}
+              onClick={() => handleSelect(topic.id)}
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted transition-colors"
+            >
+              <div className={cn(
+                'flex h-9 w-9 items-center justify-center rounded-lg',
+                bgColor
+              )}>
+                <span className="text-base">{topic.icon}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium truncate">{topic.name}</div>
+                {topic.description && (
+                  <div className="text-xs text-muted-foreground truncate">{topic.description}</div>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      
+      <div className="flex justify-end pt-2">
+        <Button variant="ghost" onClick={onClose} className="text-primary">
+          Cancel
+        </Button>
+      </div>
+    </>
+  );
+}
+
+export function SelectTopicDialog({ open, onClose, onSelect, selectedCount }: SelectTopicDialogProps) {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader className="border-b border-border pb-4">
+            <DrawerTitle className="text-center">Select Topic</DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-6">
+            <SelectTopicContent onSelect={onSelect} onClose={onClose} />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -44,53 +116,7 @@ export function SelectTopicDialog({ open, onClose, onSelect, selectedCount }: Se
         <DialogHeader>
           <DialogTitle className="text-center">Select Topic</DialogTitle>
         </DialogHeader>
-        
-        <div className="max-h-80 space-y-1 overflow-y-auto py-2">
-          {/* No topic option */}
-          <button
-            onClick={() => handleSelect(null)}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted transition-colors"
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted">
-              <FolderX className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div>
-              <div className="text-sm font-medium">No topic</div>
-              <div className="text-xs text-muted-foreground">Clear topic assignment</div>
-            </div>
-          </button>
-          
-          {/* Topic list */}
-          {topics.map((topic) => {
-            const bgColor = topicColors[topic.icon] || defaultColor;
-            return (
-              <button
-                key={topic.id}
-                onClick={() => handleSelect(topic.id)}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted transition-colors"
-              >
-                <div className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-lg',
-                  bgColor
-                )}>
-                  <span className="text-base">{topic.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{topic.name}</div>
-                  {topic.description && (
-                    <div className="text-xs text-muted-foreground truncate">{topic.description}</div>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-        
-        <div className="flex justify-end pt-2">
-          <Button variant="ghost" onClick={onClose} className="text-primary">
-            Cancel
-          </Button>
-        </div>
+        <SelectTopicContent onSelect={onSelect} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );

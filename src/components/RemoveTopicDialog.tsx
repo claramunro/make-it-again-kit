@@ -8,6 +8,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from './ui/alert-dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from './ui/drawer';
+import { Button } from './ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface RemoveTopicDialogProps {
   open: boolean;
@@ -17,10 +20,35 @@ interface RemoveTopicDialogProps {
 }
 
 export function RemoveTopicDialog({ open, onClose, onConfirm, selectedCount }: RemoveTopicDialogProps) {
+  const isMobile = useIsMobile();
+
   const handleConfirm = () => {
     onConfirm();
     onClose();
   };
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+        <DrawerContent>
+          <DrawerHeader className="text-center">
+            <DrawerTitle>Remove Topic Assignment</DrawerTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Remove topic assignment from {selectedCount} session{selectedCount !== 1 ? 's' : ''}?
+            </p>
+          </DrawerHeader>
+          <DrawerFooter className="flex-row gap-3">
+            <Button variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirm} className="flex-1">
+              Remove
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
 
   return (
     <AlertDialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
