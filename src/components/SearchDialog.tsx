@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, X, Mic, Folder, Star } from 'lucide-react';
+import { Search, X, Mic, Folder, Star, Sparkles } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 
@@ -7,6 +7,15 @@ interface SearchDialogProps {
   open: boolean;
   onClose: () => void;
 }
+
+// Filter tags for quick search
+const searchFilters = [
+  { id: 'all', label: 'All' },
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'topics', label: 'Topics' },
+  { id: 'highlights', label: 'Highlights' },
+  { id: 'recent', label: 'Recent' },
+];
 
 // Mock search results data
 const mockSessions = [
@@ -24,6 +33,28 @@ const mockTopics = [
 const mockHighlights = [
   { id: '1', title: 'Increase marketing budget by 20%', source: 'From Team Meeting' },
 ];
+
+interface FilterTagProps {
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function FilterTag({ label, isActive, onClick }: FilterTagProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-smooth ${
+        isActive 
+          ? 'border-primary bg-primary/10 text-primary' 
+          : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground'
+      }`}
+    >
+      {label}
+      {isActive && <Sparkles className="h-3 w-3" />}
+    </button>
+  );
+}
 
 function SearchContent({ searchValue, setSearchValue, onClose }: { 
   searchValue: string; 
@@ -145,6 +176,7 @@ function SearchContent({ searchValue, setSearchValue, onClose }: {
 
 export function SearchDialog({ open, onClose }: SearchDialogProps) {
   const [searchValue, setSearchValue] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
   const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -196,6 +228,18 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
                   <X className="h-5 w-5" />
                 </button>
               )}
+            </div>
+
+            {/* Filter Tags */}
+            <div className="flex shrink-0 flex-wrap gap-2 pt-3">
+              {searchFilters.map((filter) => (
+                <FilterTag
+                  key={filter.id}
+                  label={filter.label}
+                  isActive={activeFilter === filter.id}
+                  onClick={() => setActiveFilter(filter.id)}
+                />
+              ))}
             </div>
 
             {/* Results - Scrollable area below */}
@@ -319,6 +363,20 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
               <X className="h-5 w-5" />
             </button>
           )}
+        </div>
+
+        {/* Filter Tags */}
+        <div className={`flex flex-wrap gap-2 bg-card px-4 py-3 ${
+          hasResults ? 'border-x border-border' : 'mt-3'
+        }`}>
+          {searchFilters.map((filter) => (
+            <FilterTag
+              key={filter.id}
+              label={filter.label}
+              isActive={activeFilter === filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+            />
+          ))}
         </div>
 
         {/* Search Results */}
