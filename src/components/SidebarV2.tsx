@@ -3,11 +3,14 @@ import { useLocation, Link } from 'react-router-dom';
 import { FileText, Folder, Bookmark, Settings, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
+import { StartSessionDialog } from './StartSessionDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from './ui/button';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark-new.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
 import hedyGlassesLogoDark from '@/assets/hedy-glasses-logo-dark.svg';
+import glassesIcon from '@/assets/glasses-icon.svg';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -49,6 +52,7 @@ export function useSidebarCollapsed() {
 export function SidebarV2() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [startSessionOpen, setStartSessionOpen] = useState(false);
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
@@ -166,9 +170,24 @@ export function SidebarV2() {
           </ul>
         </nav>
 
+        {/* Bottom - Start Session Button */}
+        <div className="px-2 py-4">
+          <Button 
+            variant="action" 
+            className={cn(
+              "w-full gap-2",
+              collapsed ? "px-2" : ""
+            )}
+            onClick={() => setStartSessionOpen(true)}
+          >
+            <img src={glassesIcon} alt="" className="h-6 w-6" />
+            {!collapsed && <span>Start Session</span>}
+          </Button>
+        </div>
       </aside>
 
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
     </>
   );
 }
