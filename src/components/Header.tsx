@@ -51,12 +51,12 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6 border border-red-500">
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
         {/* Expand button when sidebar collapsed */}
         {collapsed && (
           <button
             onClick={() => setCollapsed(false)}
-            className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground border border-red-500"
+            className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
