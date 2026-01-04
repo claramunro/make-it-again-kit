@@ -87,7 +87,7 @@ export function SidebarV2() {
                   className={cn(
                     'flex w-full flex-col items-center justify-center rounded-lg px-2 py-3 gap-1 transition-smooth',
                     isActive(item.path)
-                      ? 'bg-card text-sidebar-accent-foreground'
+                      ? 'bg-card text-sidebar-accent-foreground border border-border'
                       : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                   )}
                 >
