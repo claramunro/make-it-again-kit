@@ -551,8 +551,8 @@ const SessionDetail = () => {
                       </div>
                     </div>
 
-                    {/* Floating Actions */}
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 space-y-2">
+                    {/* Floating Actions - Fixed Bottom Right */}
+                    <div className="absolute bottom-4 right-4 space-y-2">
                       <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
                         <Pencil className="h-4 w-4" />
                       </button>
