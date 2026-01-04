@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { SelectTopicDialog } from './SelectTopicDialog';
 import { RemoveTopicDialog } from './RemoveTopicDialog';
 import { DeleteSessionsDialog } from './DeleteSessionsDialog';
+import { useSidebarCollapsed } from './SidebarV2';
 
 interface SessionSelectionBarProps {
   selectedCount: number;
@@ -21,10 +22,14 @@ export function SessionSelectionBar({
   const [selectTopicOpen, setSelectTopicOpen] = useState(false);
   const [removeTopicOpen, setRemoveTopicOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const { collapsed } = useSidebarCollapsed();
 
   return (
     <>
-      <div className="absolute bottom-0 left-0 right-0 z-50 border-t border-border bg-background">
+      <div 
+        className="fixed bottom-0 right-0 z-50 border-t border-border bg-background"
+        style={{ left: collapsed ? '80px' : '256px' }}
+      >
         <div className="flex items-center justify-center gap-16 px-6 py-4">
           <Button 
             variant="ghost" 
