@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Folder, Sparkles, Search } from 'lucide-react';
+import { FileText, Folder, Sparkles, Search, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
 import { SearchDialog } from './SearchDialog';
@@ -22,25 +22,25 @@ export function MobileBottomNav() {
         <Link
           to="/"
           className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
+            'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             (location.pathname === '/' || isSessionRoute)
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          <FileText className="h-6 w-6" />
+          <FileText className="h-5 w-5" />
         </Link>
 
         <Link
           to="/topics"
           className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
+            'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             (location.pathname === '/topics' || isTopicRoute)
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          <Folder className="h-6 w-6" />
+          <Folder className="h-5 w-5" />
         </Link>
 
         {/* Center Start Session button */}
@@ -54,21 +54,33 @@ export function MobileBottomNav() {
         <Link
           to="/highlights"
           className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
+            'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             location.pathname === '/highlights'
               ? 'text-primary'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          <Sparkles className="h-6 w-6" />
+          <Sparkles className="h-5 w-5" />
         </Link>
 
         <button
           onClick={() => setSearchOpen(true)}
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted-foreground transition-smooth hover:text-foreground"
+          className="flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-smooth hover:text-foreground"
         >
-          <Search className="h-6 w-6" />
+          <Search className="h-5 w-5" />
         </button>
+
+        <Link
+          to="/settings"
+          className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
+            location.pathname === '/settings'
+              ? 'text-primary'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <Settings className="h-5 w-5" />
+        </Link>
       </nav>
 
       <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
