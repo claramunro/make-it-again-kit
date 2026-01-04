@@ -32,7 +32,7 @@ export function SelectTopicDialog({ open, onClose, onSelect, selectedCount }: Se
           <DialogTitle className="text-center">Select Topic</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-1 py-2">
+        <div className="max-h-80 space-y-1 overflow-y-auto py-2">
           {/* No topic option */}
           <button
             onClick={() => handleSelect(null)}
