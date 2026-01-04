@@ -2,7 +2,7 @@ import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { TopicsHeader, TopicsList } from '@/components/TopicsList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { topics } from '@/data/topics';
+import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { ArrowDownUp, Plus, RefreshCw } from 'lucide-react';
@@ -12,6 +12,7 @@ import TopicsMasterDetail from './TopicsMasterDetail';
 const Topics = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
+  const { topics } = useTopics();
 
   // Use master-detail layout on large screens
   if (isLargeScreen) {

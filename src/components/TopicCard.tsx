@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Star, ChevronRight, FileText, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
+import { useTopics } from '@/contexts/TopicContext';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { InviteToTopicDialog } from './InviteToTopicDialog';

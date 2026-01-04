@@ -1,7 +1,7 @@
 import { ArrowDownUp, Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TopicCard, TopicCardSelectable } from '@/components/TopicCard';
-import { topics } from '@/data/topics';
+import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export function TopicsHeader() {
@@ -48,6 +48,8 @@ export function TopicsHeader() {
 }
 
 export function TopicsList() {
+  const { topics } = useTopics();
+  
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {topics.map((topic) => (
@@ -63,6 +65,8 @@ interface TopicsListSelectableProps {
 }
 
 export function TopicsListSelectable({ selectedTopicId, onSelectTopic }: TopicsListSelectableProps) {
+  const { topics } = useTopics();
+  
   return (
     <div className="space-y-3">
       {topics.map((topic) => (

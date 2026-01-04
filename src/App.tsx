@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TopicProvider } from "@/contexts/TopicContext";
 import Index from "./pages/Index";
 import Topics from "./pages/Topics";
 import Welcome from "./pages/Welcome";
@@ -40,29 +41,31 @@ initializeTheme();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/" element={<Index />} />
-          <Route path="/topics" element={<Topics />} />
-          <Route path="/topic/:id" element={<TopicDetail />} />
-          <Route path="/topic/:id/focus" element={<TopicDetailFocus />} />
-          <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
-          <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
-          <Route path="/topic4/:id" element={<TopicDetailBannerFull />} />
-          <Route path="/highlights" element={<Highlights />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/session/:id" element={<SessionDetail />} />
-          <Route path="/session-legacy/:id" element={<SessionDetailLegacy />} />
-          <Route path="/design-system" element={<DesignSystem />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <TopicProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/topics" element={<Topics />} />
+            <Route path="/topic/:id" element={<TopicDetail />} />
+            <Route path="/topic/:id/focus" element={<TopicDetailFocus />} />
+            <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
+            <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
+            <Route path="/topic4/:id" element={<TopicDetailBannerFull />} />
+            <Route path="/highlights" element={<Highlights />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/session/:id" element={<SessionDetail />} />
+            <Route path="/session-legacy/:id" element={<SessionDetailLegacy />} />
+            <Route path="/design-system" element={<DesignSystem />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </TopicProvider>
   </QueryClientProvider>
 );
 
