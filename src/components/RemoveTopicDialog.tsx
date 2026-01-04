@@ -32,8 +32,8 @@ export function RemoveTopicDialog({ open, onClose, onConfirm, selectedCount }: R
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-muted-foreground">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} className="bg-transparent text-primary hover:bg-primary/10">
+          <AlertDialogCancel className="border-none bg-transparent text-muted-foreground hover:bg-muted">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm} className="border-none bg-primary/10 text-primary hover:bg-primary/20">
             Remove
           </AlertDialogAction>
         </AlertDialogFooter>

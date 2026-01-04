@@ -32,8 +32,8 @@ export function DeleteSessionsDialog({ open, onClose, onConfirm, selectedCount }
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-muted-foreground">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} className="bg-transparent text-destructive hover:bg-destructive/10">
+          <AlertDialogCancel className="border-none bg-transparent text-muted-foreground hover:bg-muted">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm} className="border-none bg-destructive/10 text-destructive hover:bg-destructive/20">
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
