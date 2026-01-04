@@ -3,7 +3,6 @@ import { useLocation, Link } from 'react-router-dom';
 import { FileText, Folder, Bookmark, Settings, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
-import { StartSessionDialog } from './StartSessionDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark-new.svg';
@@ -50,7 +49,6 @@ export function useSidebarCollapsed() {
 export function SidebarV2() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [startSessionOpen, setStartSessionOpen] = useState(false);
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
@@ -168,35 +166,9 @@ export function SidebarV2() {
           </ul>
         </nav>
 
-        {/* Bottom Navigation */}
-        <div className="px-2 py-2">
-          <ul className="space-y-1">
-            {/* Start Session */}
-            <li>
-              <button 
-                onClick={() => setStartSessionOpen(true)}
-                className={cn(
-                  'flex w-full rounded-lg bg-primary text-primary-foreground transition-smooth hover:bg-primary/90',
-                  collapsed 
-                    ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                    : 'flex-row items-center justify-center gap-2 px-3 py-2.5'
-                )}
-              >
-                <span className="text-lg">◯◯</span>
-                <span className={cn(
-                  "font-medium",
-                  collapsed ? "text-[10px]" : "text-sm"
-                )}>
-                  Start Session
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
       </aside>
 
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-      <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
     </>
   );
 }
