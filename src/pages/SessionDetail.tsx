@@ -572,7 +572,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="w-64 min-w-0 shrink-0 flex flex-col border-l border-border bg-card xl:w-80">
+            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-foreground">Chat</h2>
