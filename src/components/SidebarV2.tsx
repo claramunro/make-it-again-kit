@@ -126,9 +126,9 @@ export function SidebarV2() {
         {collapsed && (
           <button
             onClick={() => setCollapsed(false)}
-            className="absolute top-3 -right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-card border border-border shadow-sm text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+            className="absolute top-4 -right-8 z-20 p-1 text-muted-foreground transition-smooth hover:text-foreground"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5" />
           </button>
         )}
 
