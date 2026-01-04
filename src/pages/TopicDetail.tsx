@@ -270,7 +270,8 @@ const TopicDetail = () => {
   const [topicName, setTopicName] = useState('');
   const [topicDescription, setTopicDescription] = useState('');
   const [aiContext, setAiContext] = useState('Clara is working on design updates to the Hedy app.');
-  const [selectedWallpaper, setSelectedWallpaper] = useState('mint');
+  const topicData = topics.find(t => t.id === id);
+  const [selectedWallpaper, setSelectedWallpaper] = useState(topicData?.wallpaper || 'mint');
   const [blurAmount, setBlurAmount] = useState([50]);
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
@@ -757,7 +758,7 @@ const TopicDetail = () => {
                   {wallpaperPresets.map((preset) => (
                     <button
                       key={preset.id}
-                      onClick={() => setSelectedWallpaper(preset.id)}
+                      onClick={() => setSelectedWallpaper(preset.id as typeof selectedWallpaper)}
                       className={cn(
                         'aspect-video rounded-lg overflow-hidden border-2 transition-all',
                         selectedWallpaper === preset.id ? 'border-primary' : 'border-transparent'
@@ -1514,7 +1515,7 @@ const TopicDetail = () => {
                         {wallpaperPresets.map((preset) => (
                           <button
                             key={preset.id}
-                            onClick={() => setSelectedWallpaper(preset.id)}
+                            onClick={() => setSelectedWallpaper(preset.id as typeof selectedWallpaper)}
                             disabled={!!topic.sharedBy}
                             className={cn(
                               'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
