@@ -88,7 +88,7 @@ const SessionsMasterDetail = () => {
           {/* Content: List + Detail side by side */}
           <div className="flex flex-1 overflow-hidden">
             {/* Left: Sessions List */}
-            <div className="w-96 shrink-0 overflow-auto border-r border-border p-4">
+            <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
               <SessionList 
                 groups={sessionGroups} 
                 selectedSessionId={selectionMode ? null : selectedSessionId}
@@ -112,7 +112,7 @@ const SessionsMasterDetail = () => {
           </div>
         </main>
 
-        {/* Selection Action Bar - fixed at bottom of content area */}
+        {/* Selection Action Bar */}
         {selectionMode && selectedIds.size > 0 && (
           <SessionSelectionBar
             selectedCount={selectedIds.size}
