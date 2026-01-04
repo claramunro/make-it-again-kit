@@ -1,7 +1,8 @@
-import { SessionGroup } from '@/types/session';
+import { SessionGroup, TopicBadgeInfo } from '@/types/session';
 import { SessionCard } from './SessionCard';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { useTopics } from '@/contexts/TopicContext';
 
 interface SessionListProps {
   groups: SessionGroup[];
@@ -20,6 +21,7 @@ export function SessionList({
   selectedIds,
   onCheckChange
 }: SessionListProps) {
+  const { getTopicById } = useTopics();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (date: string) => {
@@ -53,17 +55,33 @@ export function SessionList({
             </button>
             {!isCollapsed && (
               <div className="space-y-3">
-                {group.sessions.map((session) => (
-                  <SessionCard 
-                    key={session.id} 
-                    session={session} 
-                    isSelected={selectedSessionId === session.id}
-                    onSelect={onSelectSession}
-                    selectionMode={selectionMode}
-                    isChecked={selectedIds?.has(session.id)}
-                    onCheckChange={onCheckChange}
-                  />
-                ))}
+                {group.sessions.map((session) => {
+                  // Get topic badge info if session is linked to a topic
+                  let topicBadge: TopicBadgeInfo | undefined;
+                  if (session.topicId) {
+                    const topic = getTopicById(session.topicId);
+                    if (topic) {
+                      topicBadge = {
+                        icon: topic.icon,
+                        label: topic.name,
+                        wallpaper: topic.wallpaper,
+                      };
+                    }
+                  }
+                  
+                  return (
+                    <SessionCard 
+                      key={session.id} 
+                      session={session} 
+                      isSelected={selectedSessionId === session.id}
+                      onSelect={onSelectSession}
+                      selectionMode={selectionMode}
+                      isChecked={selectedIds?.has(session.id)}
+                      onCheckChange={onCheckChange}
+                      topicBadge={topicBadge}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>

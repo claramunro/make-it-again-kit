@@ -13,6 +13,7 @@ export const sessionGroups: SessionGroup[] = [
         date: 'Nov 4, 2025',
         type: 'video',
         isFavorite: true,
+        topicId: '1', // Building Dreams
       },
       {
         id: '2',
@@ -23,6 +24,7 @@ export const sessionGroups: SessionGroup[] = [
         date: 'Nov 4, 2025',
         type: 'document',
         isFavorite: true,
+        topicId: '2', // Product Strategy
       },
     ],
   },
@@ -37,6 +39,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '1 minutes',
         date: 'Oct 29, 2025',
         type: 'document',
+        topicId: '3', // Coffee Chats
       },
       {
         id: '4',
@@ -46,6 +49,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '1 minutes',
         date: 'Oct 29, 2025',
         type: 'document',
+        topicId: '3', // Coffee Chats
       },
       {
         id: '5',
@@ -55,6 +59,7 @@ export const sessionGroups: SessionGroup[] = [
         duration: '1 minutes',
         date: 'Oct 29, 2025',
         type: 'document',
+        topicId: '4', // Fitness Goals
       },
       {
         id: '6',
