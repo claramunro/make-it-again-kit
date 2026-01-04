@@ -92,43 +92,42 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm" onClick={onClose}>
       <div 
-        className="animate-fade-in relative flex h-[700px] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
+        className="animate-fade-in relative flex h-[700px] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Sidebar */}
-        <div className="w-48 shrink-0 border-r border-border bg-muted/30 p-4">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Settings</h2>
-          <nav className="space-y-1">
-            {settingsTabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-smooth',
-                  activeTab === tab.id
-                    ? 'bg-card text-primary shadow-sm'
-                    : 'text-muted-foreground hover:bg-card hover:text-foreground'
-                )}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+        {/* Top Bar - Full Width */}
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
+          <h2 className="text-lg font-semibold text-foreground">Settings</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
-        {/* Content Area */}
-        <div className="flex flex-1 flex-col">
-          {/* Top Bar */}
-          <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
-            <h2 className="text-lg font-semibold text-foreground">Settings</h2>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-            >
-              <X className="h-5 w-5" />
-            </button>
+        {/* Main Content Area */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar */}
+          <div className="w-48 shrink-0 border-r border-border bg-muted/30 p-4">
+            <nav className="space-y-1">
+              {settingsTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-smooth',
+                    activeTab === tab.id
+                      ? 'bg-card text-primary shadow-sm'
+                      : 'text-muted-foreground hover:bg-card hover:text-foreground'
+                  )}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
           </div>
 
           {/* Scrollable Content */}
