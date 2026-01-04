@@ -35,6 +35,9 @@ export function TopicsHeader() {
     <div className="mb-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
         <h1 className="text-xl font-semibold text-foreground">Topics</h1>
+        <span className="rounded-md bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
+          PRO
+        </span>
       </div>
 
       <div className="flex items-center gap-4">

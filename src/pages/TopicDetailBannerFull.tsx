@@ -104,9 +104,9 @@ const mockSessions = [
   },
 ];
 
-type TopicTab = 'overview' | 'sessions' | 'bookmarks' | 'appearance';
-type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'appearance';
-type SessionTab = 'details' | 'bookmarks' | 'transcript';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
+type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'edit';
+type SessionTab = 'details' | 'highlights' | 'transcript';
 
 const wallpaperPresets = [
   { id: 'sand', gradient: 'bg-gradient-to-br from-amber-200 via-yellow-100 to-amber-300', name: 'Sand', color: 'hsl(45, 93%, 60%)' },
@@ -295,10 +295,10 @@ const TopicDetailBannerFull = () => {
             {(['details', 'highlights', 'transcript'] as const).map(tab => (
               <button
                 key={tab}
-                onClick={() => setActiveSessionTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                onClick={() => setActiveSessionTab(tab)}
                 className={cn(
                   'flex-1 py-3 text-sm font-medium transition-smooth border-b-2',
-                  (tab === 'highlights' ? activeSessionTab === 'bookmarks' : activeSessionTab === tab)
+                  activeSessionTab === tab
                     ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground'
                 )}
@@ -320,15 +320,15 @@ const TopicDetailBannerFull = () => {
               </div>
             )}
 
-            {activeSessionTab === 'bookmarks' && (
+            {activeSessionTab === 'highlights' && (
               <div className="space-y-3">
-                {mockSessionBookmarks.map((bookmark) => (
-                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+                {mockSessionBookmarks.map((highlight) => (
+                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
                     <div className="flex items-start gap-3 mb-2">
-                      <BookmarkIcon className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+                      <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <span className="text-sm font-medium text-foreground">{highlight.title}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">{bookmark.mainIdea}</p>
+                    <p className="text-xs text-muted-foreground">{highlight.mainIdea}</p>
                   </div>
                 ))}
               </div>
@@ -546,14 +546,14 @@ const TopicDetailBannerFull = () => {
 
           {mobileActiveTab === 'highlights' && (
             <div className="space-y-3">
-              {topicBookmarks.length > 0 ? (
-                topicBookmarks.map((bookmark) => (
-                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+              {topicHighlights.length > 0 ? (
+                topicHighlights.map((highlight) => (
+                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
                     <div className="flex items-start gap-3">
-                      <BookmarkIcon className="mt-0.5 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Sparkles className="mt-0.5 h-4 w-4 text-primary" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{bookmark.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{bookmark.sessionTitle}</p>
+                        <p className="text-sm font-medium text-foreground">{highlight.title}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{highlight.sessionTitle}</p>
                       </div>
                     </div>
                   </div>
@@ -566,7 +566,7 @@ const TopicDetailBannerFull = () => {
             </div>
           )}
 
-          {mobileActiveTab === 'appearance' && (
+          {mobileActiveTab === 'edit' && (
             <div className="space-y-6">
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-foreground">Wallpaper</h3>
@@ -711,13 +711,13 @@ const TopicDetailBannerFull = () => {
               {/* Row 2: Tabs - left justified, aligned with emoji container */}
               <div className="mt-4 ml-10">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
+                  {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
                     <button
                       key={tab}
-                      onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                      onClick={() => setActiveTopicTab(tab)}
                       className={cn(
                         'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
+                        activeTopicTab === tab
                           ? 'bg-card text-foreground shadow-sm'
                           : 'text-muted-foreground hover:text-foreground'
                       )}
@@ -804,7 +804,7 @@ const TopicDetailBannerFull = () => {
                       
                       <div className="flex justify-center">
                         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                          {(['details', 'bookmarks', 'transcript'] as SessionTab[]).map((tab) => (
+                          {(['details', 'highlights', 'transcript'] as SessionTab[]).map((tab) => (
                             <button
                               key={tab}
                               onClick={() => setActiveSessionTab(tab)}
@@ -815,7 +815,7 @@ const TopicDetailBannerFull = () => {
                                   : 'text-muted-foreground hover:text-foreground'
                               )}
                             >
-                              {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                              {tab.charAt(0).toUpperCase() + tab.slice(1)}
                             </button>
                           ))}
                         </div>
@@ -861,41 +861,41 @@ const TopicDetailBannerFull = () => {
                         </div>
                       )}
                       
-                      {activeSessionTab === 'bookmarks' && (
+                      {activeSessionTab === 'highlights' && (
                         <div className="space-y-4">
                           <div className="relative">
                             <button
-                              onClick={() => setBookmarkDropdownOpen(!bookmarkDropdownOpen)}
+                              onClick={() => setHighlightDropdownOpen(!highlightDropdownOpen)}
                               className="flex w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-4 py-3 text-left text-sm transition-smooth hover:bg-muted/50"
                             >
                               <div className="flex items-center gap-2 min-w-0">
-                                <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
+                                <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                                 <span className="truncate font-medium">{selectedSessionBookmark?.title}</span>
                               </div>
                               <ChevronRight className={cn(
                                 "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                                bookmarkDropdownOpen && "rotate-90"
+                                highlightDropdownOpen && "rotate-90"
                               )} />
                             </button>
                             
-                            {bookmarkDropdownOpen && (
+                            {highlightDropdownOpen && (
                               <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-lg border border-border bg-card py-1 shadow-lg">
-                                {mockSessionBookmarks.map((bookmark) => (
+                                {mockSessionBookmarks.map((highlight) => (
                                   <button
-                                    key={bookmark.id}
+                                    key={highlight.id}
                                     onClick={() => {
-                                      setSelectedBookmarkId(bookmark.id);
-                                      setBookmarkDropdownOpen(false);
+                                      setSelectedBookmarkId(highlight.id);
+                                      setHighlightDropdownOpen(false);
                                     }}
                                     className={cn(
                                       'flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-smooth',
-                                      selectedBookmarkId === bookmark.id
+                                      selectedBookmarkId === highlight.id
                                         ? 'bg-muted text-foreground'
                                         : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                                     )}
                                   >
-                                    <BookmarkIcon className="h-4 w-4 shrink-0 text-primary" />
-                                    <span className="truncate">{bookmark.title}</span>
+                                    <Sparkles className="h-4 w-4 shrink-0 text-primary" />
+                                    <span className="truncate">{highlight.title}</span>
                                   </button>
                                 ))}
                               </div>
@@ -1050,14 +1050,14 @@ const TopicDetailBannerFull = () => {
             </div>
           )}
           
-          {activeTopicTab === 'bookmarks' && (
+          {activeTopicTab === 'highlights' && (
             <div className="flex flex-1 overflow-hidden">
-              {/* Left: Bookmarks List */}
+              {/* Left: Highlights List */}
               <div className="w-[400px] shrink-0 border-r border-border overflow-y-auto p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-semibold text-foreground">Bookmarks</h2>
-                    <span className="text-sm text-muted-foreground">({topicBookmarks.length})</span>
+                    <h2 className="text-lg font-semibold text-foreground">Highlights</h2>
+                    <span className="text-sm text-muted-foreground">({topicHighlights.length})</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-muted-foreground">Sort By</span>
@@ -1066,40 +1066,40 @@ const TopicDetailBannerFull = () => {
                 </div>
                 
                 <div className="space-y-1">
-                  {topicBookmarks.length > 0 ? (
-                    topicBookmarks.map((bookmark) => (
+                  {topicHighlights.length > 0 ? (
+                    topicHighlights.map((highlight) => (
                       <button
-                        key={bookmark.id}
-                        onClick={() => setSelectedBookmark(bookmark)}
+                        key={highlight.id}
+                        onClick={() => setSelectedHighlight(highlight)}
                         className={cn(
                           'w-full flex items-center gap-3 rounded-lg p-3 text-left transition-smooth',
-                          selectedBookmark?.id === bookmark.id
+                          selectedHighlight?.id === highlight.id
                             ? 'bg-primary/5 border border-primary/20'
                             : 'hover:bg-muted/50'
                         )}
                       >
-                        <BookmarkIcon className={cn(
+                        <Sparkles className={cn(
                           'h-5 w-5 shrink-0',
-                          bookmark.isFavorite 
-                            ? 'stroke-yellow-500 fill-yellow-400/30' 
+                          selectedHighlight?.id === highlight.id
+                            ? 'text-primary'
                             : 'text-muted-foreground'
                         )} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{bookmark.title}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{highlight.title}</p>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-xs text-muted-foreground">{bookmark.datetime}</span>
+                            <span className="text-xs text-muted-foreground">{highlight.datetime}</span>
                             <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                              {bookmark.timestamp}
+                              {highlight.timestamp}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-0.5 truncate">{bookmark.sessionTitle}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">{highlight.sessionTitle}</p>
                         </div>
                         <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                       </button>
                     ))
                   ) : (
                     <div className="flex items-center justify-center h-40 text-muted-foreground">
-                      <p>No bookmarks in this topic yet.</p>
+                      <p>No highlights in this topic yet.</p>
                     </div>
                   )}
                 </div>
@@ -1119,7 +1119,7 @@ const TopicDetailBannerFull = () => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-muted-foreground">
-                    <p>Select a bookmark to view details</p>
+                    <p>Select a highlight to view details</p>
                   </div>
                 )}
               </div>
@@ -1129,7 +1129,7 @@ const TopicDetailBannerFull = () => {
             </div>
           )}
           
-          {activeTopicTab === 'appearance' && (
+          {activeTopicTab === 'edit' && (
             <div className="flex-1 overflow-y-auto p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="space-y-8">
@@ -1221,6 +1221,24 @@ const TopicDetailBannerFull = () => {
                         ))}
                       </div>
                     </div>
+                    
+                    {/* Danger Zone - Only show if user is owner */}
+                    {!topic.sharedBy && (
+                      <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 space-y-3">
+                        <h3 className="font-semibold text-destructive">Danger zone</h3>
+                        <p className="text-sm text-destructive/80">
+                          Delete this topic and remove it from all sessions.
+                        </p>
+                        <Button
+                          variant="outline"
+                          className="gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => console.log('Delete topic:', topic.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete Topic
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
