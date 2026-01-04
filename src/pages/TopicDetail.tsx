@@ -848,7 +848,7 @@ const TopicDetail = () => {
                   {/* Row with emoji, title/meta, and shared badge */}
                   <div className="flex items-center gap-4">
                     {/* Emoji container - positioned to overlap banner */}
-                    <div className="relative -mt-16">
+                    <div className="relative -mt-16 ml-8">
                       <div 
                         className="w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-4xl shadow-lg"
                         style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
