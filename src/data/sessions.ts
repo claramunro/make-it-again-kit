@@ -11,7 +11,7 @@ export const sessionGroups: SessionGroup[] = [
         time: '4:58 PM',
         duration: '12 minutes',
         date: 'Nov 4, 2025',
-        type: 'video',
+        type: 'audio',
         isFavorite: true,
         topicId: '1', // Building Dreams
       },
@@ -92,7 +92,7 @@ export const sessionGroups: SessionGroup[] = [
         time: '2:00 PM',
         duration: '55 minutes',
         date: 'Oct 22, 2025',
-        type: 'video',
+        type: 'audio',
         topicId: '4', // Working Out
       },
       {
@@ -117,7 +117,7 @@ export const sessionGroups: SessionGroup[] = [
         time: '9:00 AM',
         duration: '90 minutes',
         date: 'Oct 15, 2025',
-        type: 'video',
+        type: 'audio',
         topicId: '2', // New
       },
       {
@@ -161,7 +161,7 @@ export const sessionGroups: SessionGroup[] = [
         time: '2:00 PM',
         duration: '60 minutes',
         date: 'Oct 8, 2025',
-        type: 'video',
+        type: 'audio',
         topicId: '2', // New
       },
       {
@@ -195,7 +195,7 @@ export const sessionGroups: SessionGroup[] = [
         time: '10:00 AM',
         duration: '75 minutes',
         date: 'Oct 1, 2025',
-        type: 'video',
+        type: 'audio',
         topicId: '3', // Product Launch
       },
       {

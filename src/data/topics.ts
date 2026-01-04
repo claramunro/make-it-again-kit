@@ -3,6 +3,7 @@ export interface TopicSession {
   title: string;
   date: string;
   duration: string;
+  type?: 'audio' | 'document';
 }
 
 export interface Topic {
@@ -29,8 +30,8 @@ export const topics: Topic[] = [
     isFavorite: true,
     wallpaper: 'mint',
     sessions: [
-      { id: 's1', title: 'Design Review: Mobile App Refresh', date: 'Oct 22', duration: '45 min' },
-      { id: 's2', title: 'UI Component Library Planning', date: 'Oct 20', duration: '30 min' },
+      { id: 's1', title: 'Design Review: Mobile App Refresh', date: 'Oct 22', duration: '45 min', type: 'document' },
+      { id: 's2', title: 'UI Component Library Planning', date: 'Oct 20', duration: '30 min', type: 'document' },
     ],
   },
   {
@@ -42,8 +43,8 @@ export const topics: Topic[] = [
     isFavorite: true,
     wallpaper: 'sand',
     sessions: [
-      { id: 's3', title: 'Product Roadmap Planning', date: 'Nov 4', duration: '60 min' },
-      { id: 's4', title: 'Feature Prioritization', date: 'Nov 2', duration: '45 min' },
+      { id: 's3', title: 'Product Roadmap Planning', date: 'Nov 4', duration: '60 min', type: 'audio' },
+      { id: 's4', title: 'Feature Prioritization', date: 'Nov 2', duration: '45 min', type: 'document' },
     ],
   },
   {
@@ -56,8 +57,8 @@ export const topics: Topic[] = [
     isFavorite: true,
     wallpaper: 'lavender',
     sessions: [
-      { id: 's12', title: 'Launch Timeline Review', date: 'Oct 10', duration: '55 min' },
-      { id: 's13', title: 'Marketing Coordination', date: 'Oct 8', duration: '40 min' },
+      { id: 's12', title: 'Launch Timeline Review', date: 'Oct 10', duration: '55 min', type: 'audio' },
+      { id: 's13', title: 'Marketing Coordination', date: 'Oct 8', duration: '40 min', type: 'document' },
     ],
   },
   {
@@ -69,8 +70,8 @@ export const topics: Topic[] = [
     isFavorite: false,
     wallpaper: 'ocean',
     sessions: [
-      { id: 's5', title: 'Morning Workout Routine', date: 'Oct 29', duration: '35 min' },
-      { id: 's6', title: 'Gym Equipment Review', date: 'Oct 25', duration: '20 min' },
+      { id: 's5', title: 'Morning Workout Routine', date: 'Oct 29', duration: '35 min', type: 'audio' },
+      { id: 's6', title: 'Gym Equipment Review', date: 'Oct 25', duration: '20 min', type: 'document' },
     ],
   },
   {
