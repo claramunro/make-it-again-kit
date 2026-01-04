@@ -95,15 +95,6 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
         className="animate-fade-in relative flex h-[700px] w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-4 top-4 z-10 rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
         {/* Sidebar */}
         <div className="w-48 shrink-0 border-r border-border bg-muted/30 p-4">
           <h2 className="mb-4 text-lg font-semibold text-foreground">Settings</h2>
@@ -126,8 +117,22 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
           </nav>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-auto p-6 pt-12">
+        {/* Content Area */}
+        <div className="flex flex-1 flex-col">
+          {/* Top Bar */}
+          <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-6">
+            <h2 className="text-lg font-semibold text-foreground">Settings</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-auto p-6">
           {/* General Tab */}
           {activeTab === 'general' && (
             <div className="space-y-6">
@@ -699,6 +704,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
