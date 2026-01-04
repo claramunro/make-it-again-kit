@@ -1,5 +1,5 @@
 import { SidebarV2 } from '@/components/SidebarV2';
-import { Header, MobileHeader } from '@/components/Header';
+import { MobileHeader } from '@/components/Header';
 import { TopicsHeader, TopicsList } from '@/components/TopicsList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { topics } from '@/data/topics';
@@ -44,7 +44,6 @@ const Topics = () => {
       
       <div className="flex flex-1 flex-col">
         <MobileHeader title="Topics" count={topics.length} actions={mobileActions} />
-        <Header />
         
         <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-5xl">

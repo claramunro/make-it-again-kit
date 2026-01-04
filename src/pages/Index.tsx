@@ -30,8 +30,8 @@ const Index = () => {
         {/* Mobile Header */}
         <MobileHeader title="Sessions" count={totalSessions} />
         
-        <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
-          <div className="mx-auto max-w-4xl">
+        <main className="flex-1 rounded-tl-2xl bg-background p-6">
+          <div className="mx-auto max-w-5xl">
             {/* Desktop Sessions Header */}
             {!isMobile && <SessionsHeader totalSessions={totalSessions} />}
             <SessionList groups={sessionGroups} />

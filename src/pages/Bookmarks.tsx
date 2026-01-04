@@ -59,8 +59,8 @@ const Highlights = () => {
         <MobileHeader title="Highlights" count={bookmarks.length} />
         
         <main className="flex-1 rounded-tl-2xl bg-background overflow-hidden flex flex-col">
-          <div className="flex-1 overflow-y-auto p-4 pb-24 md:p-6 md:pb-6">
-            <div className="mx-auto max-w-6xl w-full">
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="mx-auto max-w-5xl w-full">
               {/* Desktop Header */}
               {!isMobile && (
                 <div className="mb-6 flex items-center justify-between">

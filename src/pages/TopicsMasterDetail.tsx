@@ -17,7 +17,7 @@ const TopicsMasterDetail = () => {
         
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Topics Header - Full Width */}
-          <div className="shrink-0 border-b border-border px-4 pt-4 pb-2">
+          <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
             <TopicsHeader />
           </div>
           
