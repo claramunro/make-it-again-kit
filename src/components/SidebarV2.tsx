@@ -145,12 +145,6 @@ export function SidebarV2() {
                 </Link>
               </li>
             ))}
-          </ul>
-        </nav>
-
-        {/* Bottom Navigation */}
-        <div className="px-2 py-2">
-          <ul className="space-y-1">
             {/* Settings */}
             <li>
               <button
@@ -171,7 +165,12 @@ export function SidebarV2() {
                 </span>
               </button>
             </li>
-            
+          </ul>
+        </nav>
+
+        {/* Bottom Navigation */}
+        <div className="px-2 py-2">
+          <ul className="space-y-1">
             {/* Start Session */}
             <li>
               <button 
