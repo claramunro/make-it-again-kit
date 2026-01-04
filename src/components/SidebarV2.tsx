@@ -77,8 +77,8 @@ export function SidebarV2() {
           </Link>
         </div>
 
-        {/* Main Navigation */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2">
+        {/* Main Navigation - Vertically Centered */}
+        <nav className="flex-1 flex items-center justify-center px-2 py-2">
           <ul className="space-y-1">
             {mainNavItems.map((item) => (
               <li key={item.label}>
