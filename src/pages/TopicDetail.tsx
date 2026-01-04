@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,13 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Loader2 } from 'lucide-react';
 
 const topicColors = [
   'hsl(12, 76%, 61%)',
@@ -283,6 +290,13 @@ const TopicDetail = () => {
   const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
+  const [showCopiedTooltip, setShowCopiedTooltip] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
+  const [insightsContent, setInsightsContent] = useState({
+    intro1: `The topic of ${topic?.name || 'this topic'} has not been directly addressed in any of the three sessions provided. Instead, all sessions focused on demonstrating workflows within an AI-assisted development environment, particularly the use of Plan Mode for feature planning in a personal website project.`,
+    intro2: `Despite the stated topic, no academic content related to ${topic?.name?.toLowerCase() || 'this topic'}—such as its history, chemistry, cultivation, or cultural significance—was presented. The sessions served as technical walkthroughs of software tools and interface navigation, with repeated emphasis on highlight activation, keyboard shortcuts, and structured planning before coding.`,
+    lastGenerated: 'Dec 11, 2025 10:25 PM',
+  });
   
   // Sync selectedWallpaper when topic changes
   useEffect(() => {
@@ -1242,26 +1256,77 @@ const TopicDetail = () => {
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">Topic Insights</h2>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <RefreshCw className="h-4 w-4" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip open={showCopiedTooltip ? true : undefined}>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => {
+                                navigator.clipboard.writeText(`${insightsContent.intro1}\n\n${insightsContent.intro2}`);
+                                setShowCopiedTooltip(true);
+                                setTimeout(() => setShowCopiedTooltip(false), 2000);
+                              }}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {showCopiedTooltip ? 'Copied!' : 'Copy Insights'}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              disabled={isRegenerating}
+                              onClick={() => {
+                                setIsRegenerating(true);
+                                setTimeout(() => {
+                                  setInsightsContent({
+                                    intro1: `The sessions associated with ${topic?.name || 'this topic'} primarily focused on practical demonstrations within an AI-driven development environment. Key activities included using Plan Mode for structured feature planning and workflow optimization.`,
+                                    intro2: `While the topic name suggests specific subject matter, the recorded sessions emphasized technical processes, interface navigation, and development best practices. Future sessions may incorporate more domain-specific content related to ${topic?.name?.toLowerCase() || 'this topic'}.`,
+                                    lastGenerated: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }),
+                                  });
+                                  setIsRegenerating(false);
+                                }, 2500);
+                              }}
+                            >
+                              {isRegenerating ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <RefreshCw className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Regenerate Insights</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                   
                   {/* Intro Card */}
                   <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      The topic of {topic.name} has not been directly addressed in any of the three sessions provided. Instead, all sessions focused on demonstrating workflows within an AI-assisted development environment, particularly the use of Plan Mode for feature planning in a personal website project.
-                    </p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Despite the stated topic, no academic content related to {topic.name.toLowerCase()}—such as its history, chemistry, cultivation, or cultural significance—was presented. The sessions served as technical walkthroughs of software tools and interface navigation, with repeated emphasis on highlight activation, keyboard shortcuts, and structured planning before coding.
-                    </p>
-                    <p className="text-xs text-muted-foreground text-right">
-                      Last Generated: Dec 11, 2025 10:25 PM
-                    </p>
+                    {isRegenerating ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {insightsContent.intro1}
+                        </p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {insightsContent.intro2}
+                        </p>
+                        <p className="text-xs text-muted-foreground text-right">
+                          Last Generated: {insightsContent.lastGenerated}
+                        </p>
+                      </>
+                    )}
                   </div>
                   
                   {/* Core Concepts */}
