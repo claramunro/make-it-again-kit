@@ -57,8 +57,8 @@ export function SessionCard({
       onClick={handleClick}
       className={cn(
         "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm",
-        isSelected && !selectionMode && "border-primary bg-primary/5",
-        isChecked && selectionMode && "border-primary bg-primary/5"
+        isSelected && !selectionMode && "border-primary bg-primary/[0.03]",
+        isChecked && selectionMode && "border-primary bg-primary/[0.03]"
       )}
     >
       {/* Checkbox or Icon */}
