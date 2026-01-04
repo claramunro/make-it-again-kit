@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
-import { Header } from '@/components/Header';
 import { TopicsHeader, TopicsListSelectable } from '@/components/TopicsList';
 import { topics } from '@/data/topics';
 import { TopicDetailPanel } from '@/components/TopicDetailPanel';
@@ -15,7 +14,6 @@ const TopicsMasterDetail = () => {
       <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
-        <Header />
         
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Topics Header - Full Width */}

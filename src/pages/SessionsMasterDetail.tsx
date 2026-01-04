@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
-import { Header } from '@/components/Header';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
 import { sessionGroups } from '@/data/sessions';
@@ -21,7 +20,6 @@ const SessionsMasterDetail = () => {
       <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
-        <Header />
         
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Sessions Header - Full Width */}

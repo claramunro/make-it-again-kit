@@ -9,7 +9,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
-import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -309,7 +308,6 @@ const SessionDetail = () => {
       <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
-        <Header />
         
         <main className="flex-1 overflow-hidden rounded-tl-2xl bg-background">
           {/* Session Header */}
