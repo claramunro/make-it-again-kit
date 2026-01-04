@@ -805,7 +805,6 @@ const TopicDetail = () => {
       )}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <Header />
         
         <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
           {/* Topic Header */}
