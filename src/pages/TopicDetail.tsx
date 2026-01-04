@@ -806,59 +806,77 @@ const TopicDetail = () => {
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         
-        <main className="flex-1 flex flex-col rounded-tl-2xl bg-background overflow-hidden">
-          {/* Topic Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-2 md:px-6">
-            <div className="flex items-center gap-4">
-              {/* Left: Back button + Icon + Title + Meta */}
-              <div className="flex items-center gap-3 min-w-0 shrink-0">
-                <button 
-                  onClick={() => navigate('/topics')}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-                <span className="text-2xl shrink-0">{topic.icon}</span>
-                <div className="min-w-0">
-                  <h1 className="truncate text-sm font-semibold leading-tight text-foreground">
-                    {topic.name}
-                  </h1>
-                  <p className="text-xs text-muted-foreground">
-                    {mockSessions.length} Sessions • Last Updated: Oct 17, 2025 10:33 AM
-                  </p>
-                </div>
-              </div>
-
-              {/* Center: Tabs */}
-              <div className="flex-1 flex justify-center">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTopicTab(tab)}
-                      className={cn(
-                        'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                        activeTopicTab === tab
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: Shared badge */}
-              <div className="shrink-0">
-                {topic.sharedBy ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary">
+        <main className="flex-1 flex flex-col bg-background overflow-hidden">
+          {/* Topic Header with Color Banner */}
+          <div className="sticky top-0 z-10">
+            {/* Color Banner */}
+            <div className={cn(
+              "h-14",
+              wallpaperPresets[2].gradient // Default to mint, could be dynamic based on topic
+            )}>
+              {/* Back button positioned on the banner */}
+              <button 
+                onClick={() => navigate('/topics')}
+                className="absolute top-4 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              
+              {/* Shared badge positioned on banner right */}
+              {topic.sharedBy && (
+                <div className="absolute top-4 right-6">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-xs font-medium text-primary">
                     <Users className="h-3 w-3" />
                     Shared by {topic.sharedBy}
                   </span>
-                ) : (
-                  <div className="w-24" /> 
-                )}
+                </div>
+              )}
+            </div>
+            
+            {/* White content area with rounded top */}
+            <div className="bg-background rounded-t-3xl -mt-4 relative border-b border-border">
+              {/* Emoji container - overlaps banner */}
+              <div className="absolute -top-16 left-16">
+                <div className={cn(
+                  "w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-5xl shadow-lg",
+                  wallpaperPresets[2].gradient.replace('bg-gradient-to-br', 'bg-gradient-to-br').replace(/from-(\w+)-(\d+)/, 'from-$1-100').replace(/to-(\w+)-(\d+)/, 'to-$1-200')
+                )} style={{ background: 'linear-gradient(135deg, hsl(160, 60%, 90%), hsl(160, 60%, 85%))' }}>
+                  {topic.icon}
+                </div>
+              </div>
+              
+              {/* Title and metadata row */}
+              <div className="pt-4 pb-3 px-6 pl-44">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h1 className="text-xl font-semibold text-foreground">
+                      {topic.name}
+                    </h1>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {mockSessions.length} sessions • Last updated Dec 1 •
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Tabs row */}
+                <div className="mt-3">
+                  <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                    {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTopicTab(tab)}
+                        className={cn(
+                          'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                          activeTopicTab === tab
+                            ? 'bg-card text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                        )}
+                      >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
