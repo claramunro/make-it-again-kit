@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, Send, Sparkles, ChevronRight, Star, Mic, BookmarkIcon, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -64,7 +64,7 @@ const TopicDetailBannerSolid = () => {
 
   return (
     <div className="flex h-screen bg-card overflow-hidden">
-      {!isMobile && <Sidebar />}
+      {!isMobile && <SidebarV2 />}
       
       <div className="flex-1 flex flex-col overflow-hidden">
         {!isMobile && <Header />}

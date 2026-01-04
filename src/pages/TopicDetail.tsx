@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { BookmarkGroup } from '@/components/BookmarkGroup';
@@ -794,7 +794,7 @@ const TopicDetail = () => {
   // Desktop Layout
   return (
     <div className="flex h-screen bg-card overflow-hidden">
-      <Sidebar />
+      <SidebarV2 />
       
       {/* Backdrop overlay when prompts modal is open */}
       {promptsModalOpen && (

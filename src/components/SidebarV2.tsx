@@ -28,7 +28,7 @@ interface FavoriteItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/home2' },
+  { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
   { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
   { icon: <Bookmark className="h-5 w-5" />, label: 'Bookmarks', path: '/bookmarks' },
 ];
@@ -115,8 +115,8 @@ export function SidebarV2() {
   };
 
   const isActive = (path: string) => {
-    if (path === '/home2') {
-      return location.pathname === '/home2';
+    if (path === '/') {
+      return location.pathname === '/';
     }
     if (path === '/topics') {
       return location.pathname === '/topics';
@@ -144,7 +144,7 @@ export function SidebarV2() {
       >
         {/* Logo & Collapse Toggle */}
         <div className="flex h-14 items-center justify-between px-4">
-          <Link to="/home2" className="flex items-center">
+          <Link to="/" className="flex items-center">
             {collapsed ? (
               <img src={isDark ? hedyGlassesLogoDark : hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
             ) : (
