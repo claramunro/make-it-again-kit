@@ -1,5 +1,5 @@
 import { SidebarV2 } from '@/components/SidebarV2';
-import { Header, MobileHeader } from '@/components/Header';
+import { MobileHeader } from '@/components/Header';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
@@ -29,9 +29,6 @@ const Index = () => {
       <div className="flex flex-1 flex-col">
         {/* Mobile Header */}
         <MobileHeader title="Sessions" count={totalSessions} />
-        
-        {/* Desktop Header - Fixed */}
-        <Header />
         
         <main className="flex-1 rounded-tl-2xl bg-background p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-4xl">
