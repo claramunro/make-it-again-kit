@@ -70,7 +70,7 @@ const SessionsMasterDetail = () => {
     <div className="flex min-h-screen bg-card">
       <SidebarV2 />
       
-      <div className="flex flex-1 flex-col">
+      <div className="relative flex flex-1 flex-col">
         
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Sessions Header - Full Width */}
@@ -111,17 +111,17 @@ const SessionsMasterDetail = () => {
             </div>
           </div>
         </main>
-      </div>
 
-      {/* Selection Action Bar */}
-      {selectionMode && selectedIds.size > 0 && (
-        <SessionSelectionBar
-          selectedCount={selectedIds.size}
-          onAssignTopic={handleAssignTopic}
-          onRemoveTopic={handleRemoveTopic}
-          onDelete={handleDelete}
-        />
-      )}
+        {/* Selection Action Bar */}
+        {selectionMode && selectedIds.size > 0 && (
+          <SessionSelectionBar
+            selectedCount={selectedIds.size}
+            onAssignTopic={handleAssignTopic}
+            onRemoveTopic={handleRemoveTopic}
+            onDelete={handleDelete}
+          />
+        )}
+      </div>
     </div>
   );
 };

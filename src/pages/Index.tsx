@@ -72,7 +72,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-card">
+    <div className="relative flex min-h-screen bg-card">
       {/* Desktop Sidebar */}
       {!isMobile && <SidebarV2 />}
       
