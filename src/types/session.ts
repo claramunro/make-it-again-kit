@@ -15,7 +15,7 @@ export interface Session {
   time: string;
   duration: string;
   date: string;
-  type: 'video' | 'document';
+  type: 'audio' | 'document';
   isFavorite?: boolean;
   topicId?: string;
   topicBadge?: TopicBadgeInfo;

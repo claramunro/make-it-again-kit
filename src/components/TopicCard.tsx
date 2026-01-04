@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, ChevronRight, FileText, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
+import { Star, ChevronRight, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { useTopics } from '@/contexts/TopicContext';
@@ -191,7 +191,11 @@ export function TopicCard({ topic }: TopicCardProps) {
             >
               {/* Session icon */}
               <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
-                <FileText className="h-5 w-5" />
+                {session.type === 'audio' ? (
+                  <AudioLines className="h-5 w-5" />
+                ) : (
+                  <FileText className="h-5 w-5" />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground">{session.title}</p>

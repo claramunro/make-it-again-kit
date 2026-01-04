@@ -51,7 +51,7 @@ export const Favorited: Story = {
       time: '2:00 PM',
       duration: '55 minutes',
       date: 'Oct 22, 2025',
-      type: 'video',
+      type: 'audio',
       isFavorite: true,
     },
   },
@@ -74,7 +74,7 @@ export const Selected: Story = {
   },
 };
 
-export const VideoType: Story = {
+export const AudioType: Story = {
   args: {
     session: {
       id: '4',
@@ -83,7 +83,7 @@ export const VideoType: Story = {
       time: '9:00 AM',
       duration: '90 minutes',
       date: 'Oct 15, 2025',
-      type: 'video',
+      type: 'audio',
       isFavorite: false,
     },
   },
@@ -128,7 +128,7 @@ export const LongTitle: Story = {
       time: '4:58 PM',
       duration: '12 minutes',
       date: 'Nov 4, 2025',
-      type: 'video',
+      type: 'audio',
       isFavorite: true,
     },
   },
