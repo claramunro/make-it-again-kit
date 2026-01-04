@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X } from 'lucide-react';
+import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X, CheckSquare } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -15,13 +15,17 @@ interface SessionsHeaderProps {
   selectionMode?: boolean;
   selectedCount?: number;
   onToggleSelectionMode?: () => void;
+  onSelectAll?: () => void;
+  allSelected?: boolean;
 }
 
 export function SessionsHeader({ 
   totalSessions, 
   selectionMode, 
   selectedCount = 0,
-  onToggleSelectionMode 
+  onToggleSelectionMode,
+  onSelectAll,
+  allSelected
 }: SessionsHeaderProps) {
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
@@ -29,7 +33,17 @@ export function SessionsHeader({
   if (selectionMode) {
     return (
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex-1" />
+        <div className="flex flex-1 items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="gap-2"
+            onClick={onSelectAll}
+          >
+            <CheckSquare className="h-4 w-4" />
+            {allSelected ? 'Deselect All' : 'Select All'}
+          </Button>
+        </div>
         <div className="text-lg font-semibold text-foreground">
           {selectedCount} selected
         </div>
