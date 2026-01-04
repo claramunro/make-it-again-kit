@@ -1,10 +1,11 @@
 import { useState, useCallback, useMemo } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
-import { SessionsHeader } from '@/components/SessionsHeader';
+import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
 import { sessionGroups } from '@/data/sessions';
 import { SessionDetailPanel } from '@/components/SessionDetailPanel';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
+import { sortSessions } from '@/utils/sessionSorting';
 
 const SessionsMasterDetail = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string>(
@@ -12,6 +13,9 @@ const SessionsMasterDetail = () => {
   );
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
+
+  const sortedGroups = useMemo(() => sortSessions(sessionGroups, sortBy), [sortBy]);
 
   const totalSessions = sessionGroups.reduce(
     (acc, group) => acc + group.sessions.length,
@@ -82,6 +86,8 @@ const SessionsMasterDetail = () => {
               onToggleSelectionMode={handleToggleSelectionMode}
               onSelectAll={handleSelectAll}
               allSelected={selectedIds.size === allSessionIds.length}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
           </div>
           
@@ -90,7 +96,7 @@ const SessionsMasterDetail = () => {
             {/* Left: Sessions List */}
             <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
               <SessionList 
-                groups={sessionGroups} 
+                groups={sortedGroups} 
                 selectedSessionId={selectionMode ? null : selectedSessionId}
                 onSelectSession={selectionMode ? undefined : setSelectedSessionId}
                 selectionMode={selectionMode}

@@ -10,9 +10,9 @@ import {
 import { ImportYouTubeDialog } from './ImportYouTubeDialog';
 import { ImportTranscriptDialog } from './ImportTranscriptDialog';
 
-type SessionSortOption = 'most-recent' | 'oldest' | 'longest' | 'shortest' | 'starred';
+export type SessionSortOption = 'most-recent' | 'oldest' | 'longest' | 'shortest' | 'starred';
 
-const SESSION_SORT_OPTIONS: { value: SessionSortOption; label: string }[] = [
+export const SESSION_SORT_OPTIONS: { value: SessionSortOption; label: string }[] = [
   { value: 'most-recent', label: 'Most Recent' },
   { value: 'oldest', label: 'Oldest' },
   { value: 'longest', label: 'Longest' },
@@ -27,6 +27,8 @@ interface SessionsHeaderProps {
   onToggleSelectionMode?: () => void;
   onSelectAll?: () => void;
   allSelected?: boolean;
+  sortBy: SessionSortOption;
+  onSortChange: (sort: SessionSortOption) => void;
 }
 
 export function SessionsHeader({ 
@@ -35,11 +37,12 @@ export function SessionsHeader({
   selectedCount = 0,
   onToggleSelectionMode,
   onSelectAll,
-  allSelected
+  allSelected,
+  sortBy,
+  onSortChange,
 }: SessionsHeaderProps) {
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
 
   const currentSortLabel = SESSION_SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Most Recent';
 
@@ -90,9 +93,9 @@ export function SessionsHeader({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               {SESSION_SORT_OPTIONS.map((option) => (
-                <DropdownMenuItem
+              <DropdownMenuItem
                   key={option.value}
-                  onClick={() => setSortBy(option.value)}
+                  onClick={() => onSortChange(option.value)}
                   className="flex items-center justify-between cursor-pointer"
                 >
                   <span>{option.label}</span>
