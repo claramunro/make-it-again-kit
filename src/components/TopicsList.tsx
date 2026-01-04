@@ -12,13 +12,14 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-type SortOption = 'last-activity' | 'name' | 'most-active' | 'recently-created';
+type SortOption = 'last-activity' | 'name' | 'most-active' | 'recently-created' | 'starred';
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'last-activity', label: 'Last Activity' },
   { value: 'name', label: 'Name (A-Z)' },
   { value: 'most-active', label: 'Most Active' },
   { value: 'recently-created', label: 'Recently Created' },
+  { value: 'starred', label: 'Starred' },
 ];
 
 export function TopicsHeader() {
