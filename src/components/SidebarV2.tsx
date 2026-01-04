@@ -123,10 +123,11 @@ export function SidebarV2() {
         <div className="px-2 py-4">
           <Button 
             variant="action" 
-            className="w-full px-2"
+            className="w-full px-2 flex-col h-auto py-2 gap-1"
             onClick={() => setStartSessionOpen(true)}
           >
             <img src={glassesIcon} alt="" className="h-6 w-6" />
+            <span className="text-[10px] font-medium">Start Session</span>
           </Button>
         </div>
       </aside>
