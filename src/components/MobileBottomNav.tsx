@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { FileText, Folder, Sparkles, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
+import glassesIcon from '@/assets/glasses-icon.svg';
 
 export function MobileBottomNav() {
   const location = useLocation();
@@ -43,9 +44,9 @@ export function MobileBottomNav() {
         {/* Center Start Session button */}
         <button 
           onClick={() => setStartSessionOpen(true)}
-          className="flex h-14 w-14 -translate-y-2 items-center justify-center rounded-2xl bg-primary text-2xl text-primary-foreground shadow-lg transition-smooth hover:scale-105 active:scale-95"
+          className="flex h-14 w-14 -translate-y-2 items-center justify-center rounded-2xl bg-primary shadow-lg transition-smooth hover:scale-105 active:scale-95"
         >
-          ◯◯
+          <img src={glassesIcon} alt="Start Session" className="h-7 w-7" />
         </button>
 
         <Link

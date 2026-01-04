@@ -25,29 +25,9 @@ const mainNavItems: NavItem[] = [
   { icon: <Sparkles className="h-5 w-5" />, label: 'Highlights', path: '/highlights' },
 ];
 
+// Sidebar is always collapsed now - keeping hook for compatibility
 export function useSidebarCollapsed() {
-  const [collapsed, setCollapsed] = useState(() => {
-    const saved = localStorage.getItem('sidebar-collapsed');
-    return saved ? JSON.parse(saved) : false;
-  });
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const saved = localStorage.getItem('sidebar-collapsed');
-      setCollapsed(saved ? JSON.parse(saved) : false);
-    };
-    
-    window.addEventListener('sidebar-collapsed-change', handleStorageChange);
-    return () => window.removeEventListener('sidebar-collapsed-change', handleStorageChange);
-  }, []);
-
-  const updateCollapsed = (value: boolean) => {
-    setCollapsed(value);
-    localStorage.setItem('sidebar-collapsed', JSON.stringify(value));
-    window.dispatchEvent(new Event('sidebar-collapsed-change'));
-  };
-
-  return { collapsed, setCollapsed: updateCollapsed };
+  return { collapsed: true, setCollapsed: () => {} };
 }
 
 export function SidebarV2() {
@@ -55,7 +35,6 @@ export function SidebarV2() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
 
@@ -85,52 +64,18 @@ export function SidebarV2() {
     return location.pathname === path;
   };
 
-  const isSubItemActive = (path: string) => {
-    if (path.includes('#')) {
-      return location.pathname === '/bookmarks';
-    }
-    return location.pathname === path;
-  };
-
   // Don't render sidebar on mobile
   if (isMobile) return null;
 
   return (
     <>
-      <aside 
-        className={cn(
-          "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
-          collapsed ? "w-20" : "w-48"
-        )}
-      >
-        {/* Logo & Collapse Toggle */}
-        <div className="flex h-14 items-center justify-between px-4">
+      <aside className="relative sticky top-0 flex h-screen w-20 flex-col bg-sidebar">
+        {/* Logo */}
+        <div className="flex h-14 items-center justify-center px-4">
           <Link to="/" className="flex items-center">
-            {collapsed ? (
-              <img src={isDark ? hedyGlassesLogoDark : hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
-            ) : (
-              <img src={isDark ? hedyLogoDark : hedyLogo} alt="Hedy" className="h-6" />
-            )}
+            <img src={isDark ? hedyGlassesLogoDark : hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
           </Link>
-          {!collapsed && (
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-sidebar-accent hover:text-foreground"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          )}
         </div>
-
-        {/* Expand button - positioned outside sidebar when collapsed */}
-        {collapsed && (
-          <button
-            onClick={() => setCollapsed(false)}
-            className="absolute top-4 -right-8 z-20 p-1 text-muted-foreground transition-smooth hover:text-foreground"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        )}
 
         {/* Main Navigation */}
         <nav className="flex-1 overflow-y-auto px-2 py-2">
@@ -140,22 +85,14 @@ export function SidebarV2() {
                 <Link
                   to={item.path}
                   className={cn(
-                    'flex w-full rounded-lg transition-smooth',
-                    collapsed 
-                      ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                      : 'flex-row items-center gap-3 px-3 py-2',
+                    'flex w-full flex-col items-center justify-center rounded-lg px-2 py-3 gap-1 transition-smooth',
                     isActive(item.path)
                       ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                       : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                   )}
                 >
                   {item.icon}
-                  <span className={cn(
-                    "font-medium",
-                    collapsed ? "text-[10px]" : "text-sm"
-                  )}>
-                    {item.label}
-                  </span>
+                  <span className="text-[10px] font-medium">{item.label}</span>
                 </Link>
               </li>
             ))}
@@ -163,40 +100,20 @@ export function SidebarV2() {
             <li>
               <button
                 onClick={openSettings}
-                className={cn(
-                  'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  collapsed 
-                    ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                    : 'flex-row items-center gap-3 px-3 py-2'
-                )}
+                className="flex w-full flex-col items-center justify-center rounded-lg px-2 py-3 gap-1 text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <Settings className="h-5 w-5" />
-                <span className={cn(
-                  "font-medium",
-                  collapsed ? "text-[10px]" : "text-sm"
-                )}>
-                  Settings
-                </span>
+                <span className="text-[10px] font-medium">Settings</span>
               </button>
             </li>
             {/* Search */}
             <li>
               <button
                 onClick={() => setSearchOpen(true)}
-                className={cn(
-                  'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  collapsed 
-                    ? 'flex-col items-center justify-center px-2 py-3 gap-1'
-                    : 'flex-row items-center gap-3 px-3 py-2'
-                )}
+                className="flex w-full flex-col items-center justify-center rounded-lg px-2 py-3 gap-1 text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <Search className="h-5 w-5" />
-                <span className={cn(
-                  "font-medium",
-                  collapsed ? "text-[10px]" : "text-sm"
-                )}>
-                  Search
-                </span>
+                <span className="text-[10px] font-medium">Search</span>
               </button>
             </li>
           </ul>
@@ -206,14 +123,10 @@ export function SidebarV2() {
         <div className="px-2 py-4">
           <Button 
             variant="action" 
-            className={cn(
-              "w-full gap-2",
-              collapsed ? "px-2" : ""
-            )}
+            className="w-full px-2"
             onClick={() => setStartSessionOpen(true)}
           >
             <img src={glassesIcon} alt="" className="h-6 w-6" />
-            {!collapsed && <span>Start Session</span>}
           </Button>
         </div>
       </aside>

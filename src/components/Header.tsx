@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, X, Mic, Folder, Star, ChevronRight } from 'lucide-react';
+import { Search, X, Mic, Folder, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StartSessionDialog } from './StartSessionDialog';
-import { useSidebarCollapsed } from './SidebarV2';
 import glassesIcon from '@/assets/glasses-icon.svg';
 import { cn } from '@/lib/utils';
 
@@ -26,8 +25,6 @@ const mockHighlights = [
 
 export function Header() {
   const isMobile = useIsMobile();
-  const { collapsed, setCollapsed } = useSidebarCollapsed();
-  const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -52,16 +49,6 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
-        {/* Expand button when sidebar collapsed */}
-        {collapsed && (
-          <button
-            onClick={() => setCollapsed(false)}
-            className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        )}
-        
         {/* Spacer to push content */}
         <div className="flex-1" />
       </header>

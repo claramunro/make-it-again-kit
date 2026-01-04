@@ -14,7 +14,12 @@ function parseDuration(durationStr: string): number {
 
 export function sortSessions(groups: SessionGroup[], sortBy: SessionSortOption): SessionGroup[] {
   // Flatten all sessions
-  const allSessions = groups.flatMap(group => group.sessions);
+  let allSessions = groups.flatMap(group => group.sessions);
+  
+  // For starred sorting, filter to only show starred items
+  if (sortBy === 'starred') {
+    allSessions = allSessions.filter(session => session.isFavorite);
+  }
   
   // Sort sessions based on the selected option
   const sortedSessions = [...allSessions].sort((a, b) => {
@@ -26,8 +31,7 @@ export function sortSessions(groups: SessionGroup[], sortBy: SessionSortOption):
       case 'shortest':
         return parseDuration(a.duration) - parseDuration(b.duration);
       case 'starred':
-        if (a.isFavorite && !b.isFavorite) return -1;
-        if (!a.isFavorite && b.isFavorite) return 1;
+        // Already filtered, just sort by date
         return parseSessionDate(b.date).getTime() - parseSessionDate(a.date).getTime();
       case 'most-recent':
       default:
@@ -47,15 +51,13 @@ export function sortSessions(groups: SessionGroup[], sortBy: SessionSortOption):
   }
   
   // Convert map to array, maintaining order based on sort
-  // For most-recent/oldest, we sort groups by date
-  // For longest/shortest/starred, we use the first session's position
   const groupEntries = Array.from(groupMap.entries());
   
-  if (sortBy === 'most-recent' || sortBy === 'oldest') {
+  if (sortBy === 'most-recent' || sortBy === 'oldest' || sortBy === 'starred') {
     groupEntries.sort((a, b) => {
       const dateA = parseSessionDate(a[0]).getTime();
       const dateB = parseSessionDate(b[0]).getTime();
-      return sortBy === 'most-recent' ? dateB - dateA : dateA - dateB;
+      return sortBy === 'oldest' ? dateA - dateB : dateB - dateA;
     });
   }
   
