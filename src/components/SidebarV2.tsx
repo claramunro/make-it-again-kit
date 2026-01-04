@@ -97,12 +97,12 @@ export function SidebarV2() {
     <>
       <aside 
         className={cn(
-          "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300",
+          "relative sticky top-0 flex h-screen flex-col bg-sidebar transition-all duration-300 border border-red-500",
           collapsed ? "w-20" : "w-64"
         )}
       >
         {/* Logo & Collapse Toggle */}
-        <div className="flex h-14 items-center justify-between px-4">
+        <div className="flex h-14 items-center justify-between px-4 border border-red-500">
           <Link to="/" className="flex items-center">
             {collapsed ? (
               <img src={isDark ? hedyGlassesLogoDark : hedyGlassesLogo} alt="Hedy" className="h-12 w-14" />
@@ -121,8 +121,8 @@ export function SidebarV2() {
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 overflow-y-auto px-2 py-2">
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-2 py-2 border border-red-500">
+          <ul className="space-y-1 border border-red-500">
             {mainNavItems.map((item) => (
               <li key={item.label}>
                 <Link
@@ -171,7 +171,7 @@ export function SidebarV2() {
         </nav>
 
         {/* Bottom - Start Session Button */}
-        <div className="px-2 py-4">
+        <div className="px-2 py-4 border border-red-500">
           <Button 
             variant="action" 
             className={cn(

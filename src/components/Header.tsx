@@ -51,20 +51,20 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6">
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-card px-6 border border-red-500">
         {/* Expand button when sidebar collapsed */}
         {collapsed && (
           <button
             onClick={() => setCollapsed(false)}
-            className="mr-4 rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+            className="mr-4 rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground border border-red-500"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
         )}
         
         {/* Search */}
-        <div className={cn("flex flex-1", collapsed && "justify-center")} ref={searchRef}>
-          <div className="relative w-full max-w-md">
+        <div className={cn("flex flex-1 border border-red-500", collapsed && "justify-center")} ref={searchRef}>
+          <div className="relative w-full max-w-md border border-red-500">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
@@ -168,7 +168,7 @@ export function Header() {
         </div>
 
         {/* Start Session Button */}
-        <Button variant="action" className="ml-4 gap-2" onClick={() => setStartSessionOpen(true)}>
+        <Button variant="action" className="ml-4 gap-2 border border-red-500" onClick={() => setStartSessionOpen(true)}>
           <img src={glassesIcon} alt="" className="h-7 w-7" />
           Start Session
         </Button>
