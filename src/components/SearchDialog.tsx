@@ -180,10 +180,22 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
   const isMobile = useIsMobile();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Determine what to show: search results override filter results
+  const hasSearchText = searchValue.length > 0;
+  const showFilterResults = !hasSearchText && activeFilter !== 'all';
+  const showSearchResults = hasSearchText;
+  const showResults = showFilterResults || showSearchResults;
+
+  // Filter results based on active filter (when no search text)
+  const shouldShowSessions = hasSearchText || activeFilter === 'all' || activeFilter === 'sessions' || activeFilter === 'recent';
+  const shouldShowTopics = hasSearchText || activeFilter === 'all' || activeFilter === 'topics';
+  const shouldShowHighlights = hasSearchText || activeFilter === 'all' || activeFilter === 'highlights';
+
   // Clear search when closing
   useEffect(() => {
     if (!open) {
       setSearchValue('');
+      setActiveFilter('all');
     }
   }, [open]);
 
@@ -244,82 +256,100 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
 
             {/* Results - Scrollable area below */}
             <div className="flex-1 overflow-auto pt-4">
-              {searchValue.length > 0 && (
+              {showResults && (
                 <>
                   {/* Sessions Section */}
-                  <div className="mb-3">
-                    <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Sessions</h3>
-                    {mockSessions.map((session) => (
-                      <button
-                        key={session.id}
-                        className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
-                        onClick={onClose}
-                      >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                          <Mic className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                              part.toLowerCase() === searchValue.toLowerCase() ? 
-                                <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                            )}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{session.time}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  {shouldShowSessions && (
+                    <div className="mb-3">
+                      <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Sessions</h3>
+                      {mockSessions.map((session) => (
+                        <button
+                          key={session.id}
+                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
+                          onClick={onClose}
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                            <Mic className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {hasSearchText 
+                                ? session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                    part.toLowerCase() === searchValue.toLowerCase() 
+                                      ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                      : part
+                                  )
+                                : session.title
+                              }
+                            </p>
+                            <p className="text-xs text-muted-foreground">{session.time}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Topics Section */}
-                  <div className="mb-3">
-                    <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Topics</h3>
-                    {mockTopics.map((topic) => (
-                      <button
-                        key={topic.id}
-                        className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
-                        onClick={onClose}
-                      >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                          <Folder className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                              part.toLowerCase() === searchValue.toLowerCase() ? 
-                                <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                            )}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  {shouldShowTopics && (
+                    <div className="mb-3">
+                      <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Topics</h3>
+                      {mockTopics.map((topic) => (
+                        <button
+                          key={topic.id}
+                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
+                          onClick={onClose}
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                            <Folder className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {hasSearchText 
+                                ? topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                    part.toLowerCase() === searchValue.toLowerCase() 
+                                      ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                      : part
+                                  )
+                                : topic.name
+                              }
+                            </p>
+                            <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Highlights Section */}
-                  <div>
-                    <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Highlights</h3>
-                    {mockHighlights.map((highlight) => (
-                      <button
-                        key={highlight.id}
-                        className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
-                        onClick={onClose}
-                      >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                          <Star className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                              part.toLowerCase() === searchValue.toLowerCase() ? 
-                                <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                            )}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{highlight.source}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                  {shouldShowHighlights && (
+                    <div>
+                      <h3 className="px-1 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Highlights</h3>
+                      {mockHighlights.map((highlight) => (
+                        <button
+                          key={highlight.id}
+                          className="flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left hover:bg-muted transition-smooth"
+                          onClick={onClose}
+                        >
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                            <Star className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {hasSearchText 
+                                ? highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                    part.toLowerCase() === searchValue.toLowerCase() 
+                                      ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                      : part
+                                  )
+                                : highlight.title
+                              }
+                            </p>
+                            <p className="text-xs text-muted-foreground">{highlight.source}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -330,7 +360,6 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
   }
 
   // Desktop: use floating search box
-  const hasResults = searchValue.length > 0;
 
   return (
     <div 
@@ -352,7 +381,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
             onChange={(e) => setSearchValue(e.target.value)}
             autoFocus
             className={`h-14 w-full bg-card pl-14 pr-14 text-lg placeholder:text-muted-foreground focus:outline-none ${
-              hasResults ? 'rounded-t-2xl border border-b-0 border-border' : 'rounded-2xl border border-border shadow-lg'
+              showResults ? 'rounded-t-2xl border border-b-0 border-border' : 'rounded-2xl border border-border shadow-lg'
             }`}
           />
           {searchValue && (
@@ -367,7 +396,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
 
         {/* Filter Tags */}
         <div className={`flex flex-wrap gap-2 bg-card px-4 py-3 ${
-          hasResults ? 'border-x border-border' : 'mt-3'
+          showResults ? 'border-x border-border' : 'mt-3'
         }`}>
           {searchFilters.map((filter) => (
             <FilterTag
@@ -380,83 +409,101 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
         </div>
 
         {/* Search Results */}
-        {hasResults && (
+        {showResults && (
           <div className="rounded-b-2xl border border-t-0 border-border bg-card shadow-lg">
             <div className="max-h-[50vh] overflow-auto p-3">
               {/* Sessions Section */}
-              <div className="mb-3">
-                <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Sessions</h3>
-                {mockSessions.map((session) => (
-                  <button
-                    key={session.id}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
-                    onClick={onClose}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <Mic className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">
-                        {session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                          part.toLowerCase() === searchValue.toLowerCase() ? 
-                            <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                        )}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{session.time}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {shouldShowSessions && (
+                <div className="mb-3">
+                  <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Sessions</h3>
+                  {mockSessions.map((session) => (
+                    <button
+                      key={session.id}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
+                      onClick={onClose}
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <Mic className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {hasSearchText 
+                            ? session.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                part.toLowerCase() === searchValue.toLowerCase() 
+                                  ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                  : part
+                              )
+                            : session.title
+                          }
+                        </p>
+                        <p className="text-xs text-muted-foreground">{session.time}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Topics Section */}
-              <div className="mb-3">
-                <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Topics</h3>
-                {mockTopics.map((topic) => (
-                  <button
-                    key={topic.id}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
-                    onClick={onClose}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <Folder className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">
-                        {topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                          part.toLowerCase() === searchValue.toLowerCase() ? 
-                            <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                        )}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {shouldShowTopics && (
+                <div className="mb-3">
+                  <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Topics</h3>
+                  {mockTopics.map((topic) => (
+                    <button
+                      key={topic.id}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
+                      onClick={onClose}
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <Folder className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {hasSearchText 
+                            ? topic.name.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                part.toLowerCase() === searchValue.toLowerCase() 
+                                  ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                  : part
+                              )
+                            : topic.name
+                          }
+                        </p>
+                        <p className="text-xs text-muted-foreground">{topic.sessions} sessions</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Highlights Section */}
-              <div>
-                <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Highlights</h3>
-                {mockHighlights.map((highlight) => (
-                  <button
-                    key={highlight.id}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
-                    onClick={onClose}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <Star className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">
-                        {highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
-                          part.toLowerCase() === searchValue.toLowerCase() ? 
-                            <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> : part
-                        )}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{highlight.source}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              {shouldShowHighlights && (
+                <div>
+                  <h3 className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Highlights</h3>
+                  {mockHighlights.map((highlight) => (
+                    <button
+                      key={highlight.id}
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-muted transition-smooth"
+                      onClick={onClose}
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <Star className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {hasSearchText 
+                            ? highlight.title.split(new RegExp(`(${searchValue})`, 'gi')).map((part, i) => 
+                                part.toLowerCase() === searchValue.toLowerCase() 
+                                  ? <mark key={i} className="bg-primary/20 text-foreground rounded">{part}</mark> 
+                                  : part
+                              )
+                            : highlight.title
+                          }
+                        </p>
+                        <p className="text-xs text-muted-foreground">{highlight.source}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Footer hint */}
