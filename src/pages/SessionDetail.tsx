@@ -309,7 +309,7 @@ const SessionDetail = () => {
       
       <div className="flex flex-1 flex-col">
         
-        <main className="flex-1 overflow-hidden rounded-tl-2xl bg-background">
+        <main className="flex-1 overflow-hidden bg-background">
           {/* Session Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
             <div className="flex items-center justify-between gap-4">

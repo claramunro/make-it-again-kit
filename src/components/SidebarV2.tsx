@@ -127,7 +127,7 @@ export function SidebarV2() {
             onClick={() => setStartSessionOpen(true)}
           >
             <img src={glassesIcon} alt="" className="h-6 w-6" />
-            <span className="text-[10px] font-medium">Start Session</span>
+            <span className="text-[10px] font-medium leading-tight text-center">Start<br/>Session</span>
           </Button>
         </div>
       </aside>
