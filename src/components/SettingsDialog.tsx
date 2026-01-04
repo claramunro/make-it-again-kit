@@ -127,7 +127,7 @@ export function SettingsDialog({ open, onClose, defaultTab = 'general' }: Settin
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-6 pt-12">
           {/* General Tab */}
           {activeTab === 'general' && (
             <div className="space-y-6">
