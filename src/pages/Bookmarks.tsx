@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header, MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { BookmarkGroup } from '@/components/BookmarkGroup';
@@ -53,7 +53,7 @@ const Highlights = () => {
 
   return (
     <div className="flex h-screen bg-card overflow-hidden">
-      {!isMobile && <Sidebar />}
+      {!isMobile && <SidebarV2 />}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader title="Highlights" count={bookmarks.length} />

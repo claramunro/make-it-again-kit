@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header, MobileHeader } from '@/components/Header';
 import { TopicsHeader, TopicsList } from '@/components/TopicsList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
@@ -40,7 +40,7 @@ const Topics = () => {
 
   return (
     <div className="flex min-h-screen bg-card">
-      {!isMobile && <Sidebar />}
+      {!isMobile && <SidebarV2 />}
       
       <div className="flex flex-1 flex-col">
         <MobileHeader title="Topics" count={topics.length} actions={mobileActions} />

@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Sidebar, useSidebarCollapsed } from '@/components/Sidebar';
+import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -306,7 +306,7 @@ const SessionDetail = () => {
   // Desktop Layout
   return (
     <div className="flex min-h-screen bg-card">
-      <Sidebar />
+      <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
         <Header />

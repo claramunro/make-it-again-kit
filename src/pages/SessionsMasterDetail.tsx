@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
@@ -18,7 +18,7 @@ const SessionsMasterDetail = () => {
 
   return (
     <div className="flex min-h-screen bg-card">
-      <Sidebar />
+      <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
         <Header />

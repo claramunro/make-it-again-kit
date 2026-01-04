@@ -3,7 +3,7 @@ import { Search, X, Mic, Folder, Star, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { StartSessionDialog } from './StartSessionDialog';
-import { useSidebarCollapsed } from './Sidebar';
+import { useSidebarCollapsed } from './SidebarV2';
 import glassesIcon from '@/assets/glasses-icon.svg';
 import { cn } from '@/lib/utils';
 

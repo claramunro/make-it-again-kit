@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/Sidebar';
+import { SidebarV2 } from '@/components/SidebarV2';
 import { Header, MobileHeader } from '@/components/Header';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
@@ -24,7 +24,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen bg-card">
       {/* Desktop Sidebar */}
-      {!isMobile && <Sidebar />}
+      {!isMobile && <SidebarV2 />}
       
       <div className="flex flex-1 flex-col">
         {/* Mobile Header */}
