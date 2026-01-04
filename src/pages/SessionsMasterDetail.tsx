@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
@@ -18,6 +18,11 @@ const SessionsMasterDetail = () => {
     0
   );
 
+  const allSessionIds = useMemo(() => 
+    sessionGroups.flatMap(group => group.sessions.map(s => s.id)),
+    []
+  );
+
   const handleToggleSelectionMode = useCallback(() => {
     setSelectionMode(prev => !prev);
     setSelectedIds(new Set());
@@ -35,23 +40,28 @@ const SessionsMasterDetail = () => {
     });
   }, []);
 
+  const handleSelectAll = useCallback(() => {
+    if (selectedIds.size === allSessionIds.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(allSessionIds));
+    }
+  }, [selectedIds.size, allSessionIds]);
+
   const handleAssignTopic = useCallback((topicId: string | null) => {
     console.log('Assign topic:', topicId, 'to sessions:', Array.from(selectedIds));
-    // Handle assignment logic here
     setSelectionMode(false);
     setSelectedIds(new Set());
   }, [selectedIds]);
 
   const handleRemoveTopic = useCallback(() => {
     console.log('Remove topic from sessions:', Array.from(selectedIds));
-    // Handle removal logic here
     setSelectionMode(false);
     setSelectedIds(new Set());
   }, [selectedIds]);
 
   const handleDelete = useCallback(() => {
     console.log('Delete sessions:', Array.from(selectedIds));
-    // Handle delete logic here
     setSelectionMode(false);
     setSelectedIds(new Set());
   }, [selectedIds]);
@@ -70,13 +80,15 @@ const SessionsMasterDetail = () => {
               selectionMode={selectionMode}
               selectedCount={selectedIds.size}
               onToggleSelectionMode={handleToggleSelectionMode}
+              onSelectAll={handleSelectAll}
+              allSelected={selectedIds.size === allSessionIds.length}
             />
           </div>
           
           {/* Content: List + Detail side by side */}
           <div className="flex flex-1 overflow-hidden">
             {/* Left: Sessions List */}
-            <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 ${selectionMode ? 'pb-24' : ''}`}>
+            <div className={`w-96 shrink-0 overflow-auto border-r border-border p-4 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
               <SessionList 
                 groups={sessionGroups} 
                 selectedSessionId={selectionMode ? null : selectedSessionId}
