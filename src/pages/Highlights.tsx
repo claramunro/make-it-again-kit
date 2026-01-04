@@ -58,7 +58,7 @@ const HighlightsPage = () => {
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader title="Highlights" count={highlights.length} />
         
-        <main className="flex-1 rounded-tl-2xl bg-background overflow-hidden flex flex-col">
+        <main className="flex-1 bg-background overflow-hidden flex flex-col">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="mx-auto max-w-5xl w-full">
               {/* Desktop Header */}

@@ -84,7 +84,7 @@ const Index = () => {
         {/* Mobile Header */}
         <MobileHeader title="Sessions" count={totalSessions} />
         
-        <main className={`flex-1 rounded-tl-2xl bg-background p-6 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
+        <main className={`flex-1 bg-background p-6 ${selectionMode && selectedIds.size > 0 ? 'pb-24' : ''}`}>
           <div className="mx-auto max-w-5xl">
             {/* Desktop Sessions Header */}
             {!isMobile && (
