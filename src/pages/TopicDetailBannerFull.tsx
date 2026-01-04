@@ -638,7 +638,6 @@ const TopicDetailBannerFull = () => {
       )}
       
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <Header />
         
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Color Banner - Light tinted */}
