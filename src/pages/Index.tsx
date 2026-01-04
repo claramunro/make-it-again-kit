@@ -1,4 +1,4 @@
-import { SidebarV2 as Sidebar } from '@/components/SidebarV2';
+import { Sidebar } from '@/components/Sidebar';
 import { Header, MobileHeader } from '@/components/Header';
 import { SessionsHeader } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
