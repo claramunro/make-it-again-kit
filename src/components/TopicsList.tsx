@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ArrowDownUp, Plus, RefreshCw, Check, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TopicCard, TopicCardSelectable } from '@/components/TopicCard';
 import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { AddTopicDialog } from './AddTopicDialog';
+import { Topic } from '@/data/topics';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +13,9 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-type SortOption = 'last-activity' | 'name' | 'most-active' | 'recently-created' | 'starred';
+export type TopicSortOption = 'last-activity' | 'name' | 'most-active' | 'recently-created' | 'starred';
 
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+const SORT_OPTIONS: { value: TopicSortOption; label: string }[] = [
   { value: 'last-activity', label: 'Last Activity' },
   { value: 'name', label: 'Name (A-Z)' },
   { value: 'most-active', label: 'Most Active' },
@@ -22,9 +23,45 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'starred', label: 'Starred' },
 ];
 
-export function TopicsHeader() {
+function parseDate(dateStr: string): Date {
+  // Parse dates like "Dec 1", "Nov 4", "Oct 29"
+  const months: Record<string, number> = {
+    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+  };
+  const [month, day] = dateStr.split(' ');
+  return new Date(2025, months[month] || 0, parseInt(day) || 1);
+}
+
+export function sortTopics(topics: Topic[], sortBy: TopicSortOption): Topic[] {
+  const sorted = [...topics];
+  
+  switch (sortBy) {
+    case 'name':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name));
+    case 'most-active':
+      return sorted.sort((a, b) => b.sessionCount - a.sessionCount);
+    case 'recently-created':
+      return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
+    case 'starred':
+      return sorted.sort((a, b) => {
+        if (a.isFavorite && !b.isFavorite) return -1;
+        if (!a.isFavorite && b.isFavorite) return 1;
+        return parseDate(b.date).getTime() - parseDate(a.date).getTime();
+      });
+    case 'last-activity':
+    default:
+      return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
+  }
+}
+
+interface TopicsHeaderProps {
+  sortBy: TopicSortOption;
+  onSortChange: (sort: TopicSortOption) => void;
+}
+
+export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
   const isMobile = useIsMobile();
-  const [sortBy, setSortBy] = useState<SortOption>('last-activity');
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const currentSortLabel = SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Last Activity';
@@ -48,7 +85,7 @@ export function TopicsHeader() {
                 {SORT_OPTIONS.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
-                    onClick={() => setSortBy(option.value)}
+                    onClick={() => onSortChange(option.value)}
                     className="flex items-center justify-between cursor-pointer"
                   >
                     <span>{option.label}</span>
@@ -95,7 +132,7 @@ export function TopicsHeader() {
               {SORT_OPTIONS.map((option) => (
                 <DropdownMenuItem
                   key={option.value}
-                  onClick={() => setSortBy(option.value)}
+                  onClick={() => onSortChange(option.value)}
                   className="flex items-center justify-between cursor-pointer"
                 >
                   <span>{option.label}</span>
@@ -119,12 +156,18 @@ export function TopicsHeader() {
   );
 }
 
-export function TopicsList() {
+interface TopicsListProps {
+  sortBy: TopicSortOption;
+}
+
+export function TopicsList({ sortBy }: TopicsListProps) {
   const { topics } = useTopics();
+  
+  const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
   
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      {topics.map((topic) => (
+      {sortedTopics.map((topic) => (
         <TopicCard key={topic.id} topic={topic} />
       ))}
     </div>
@@ -134,14 +177,17 @@ export function TopicsList() {
 interface TopicsListSelectableProps {
   selectedTopicId?: string;
   onSelectTopic?: (id: string) => void;
+  sortBy?: TopicSortOption;
 }
 
-export function TopicsListSelectable({ selectedTopicId, onSelectTopic }: TopicsListSelectableProps) {
+export function TopicsListSelectable({ selectedTopicId, onSelectTopic, sortBy = 'last-activity' }: TopicsListSelectableProps) {
   const { topics } = useTopics();
+  
+  const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
   
   return (
     <div className="space-y-3">
-      {topics.map((topic) => (
+      {sortedTopics.map((topic) => (
         <TopicCardSelectable 
           key={topic.id} 
           topic={topic} 

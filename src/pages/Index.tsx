@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
-import { SessionsHeader } from '@/components/SessionsHeader';
+import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
@@ -9,12 +9,16 @@ import { sessionGroups } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import SessionsMasterDetail from './SessionsMasterDetail';
+import { sortSessions } from '@/utils/sessionSorting';
 
 const Index = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
+
+  const sortedGroups = useMemo(() => sortSessions(sessionGroups, sortBy), [sortBy]);
 
   const totalSessions = sessionGroups.reduce(
     (acc, group) => acc + group.sessions.length,
@@ -91,10 +95,12 @@ const Index = () => {
                 onToggleSelectionMode={handleToggleSelectionMode}
                 onSelectAll={handleSelectAll}
                 allSelected={selectedIds.size === allSessionIds.length}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
               />
             )}
             <SessionList 
-              groups={sessionGroups}
+              groups={sortedGroups}
               selectionMode={selectionMode}
               selectedIds={selectedIds}
               onCheckChange={handleCheckChange}
