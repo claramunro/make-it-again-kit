@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Folder, Sparkles, Settings } from 'lucide-react';
+import { FileText, Folder, Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
+import { SearchDialog } from './SearchDialog';
 import glassesIcon from '@/assets/glasses-icon.svg';
 
 export function MobileBottomNav() {
   const location = useLocation();
   const [startSessionOpen, setStartSessionOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Check if current route is a session or topic detail page
   const isSessionRoute = location.pathname.startsWith('/session');
@@ -61,20 +63,16 @@ export function MobileBottomNav() {
           <Sparkles className="h-6 w-6" />
         </Link>
 
-        <Link
-          to="/settings"
-          className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-xl transition-smooth',
-            location.pathname === '/settings'
-              ? 'text-primary'
-              : 'text-muted-foreground hover:text-foreground'
-          )}
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted-foreground transition-smooth hover:text-foreground"
         >
-          <Settings className="h-6 w-6" />
-        </Link>
+          <Search className="h-6 w-6" />
+        </button>
       </nav>
 
       <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
