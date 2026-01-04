@@ -267,7 +267,11 @@ const TopicDetail = () => {
   
   const topic = getTopicById(id || '');
   
-  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(initialTab === 'sessions' ? 'sessions' : 'overview');
+  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(
+    initialTab === 'sessions' ? 'sessions' : 
+    initialTab === 'edit' ? 'edit' : 
+    initialTab === 'highlights' ? 'highlights' : 'overview'
+  );
   const [mobileActiveTab, setMobileActiveTab] = useState<MobileTopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
