@@ -1,8 +1,16 @@
-import { Star, ChevronRight, FileText, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Star, ChevronRight, FileText, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { InviteToTopicDialog } from './InviteToTopicDialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface TopicCardProps {
   topic: Topic;
@@ -39,9 +47,26 @@ export function TopicCard({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const bgColor = topicColors[topic.icon] || defaultColor;
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/topic/${topic.id}?tab=edit`);
+  };
+
+  const handleInviteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setInviteDialogOpen(true);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Placeholder for delete logic
+    console.log('Delete topic:', topic.id);
   };
 
   // On mobile, show only 1 session
@@ -95,6 +120,31 @@ export function TopicCard({ topic }: TopicCardProps) {
                 )} 
               />
             </button>
+            {/* Menu button */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button 
+                  className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={handleEditClick} className="gap-2">
+                  <Pencil className="h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
+                  <UserPlus className="h-4 w-4" />
+                  Invite to Topic
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
+                  <Trash2 className="h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -129,6 +179,13 @@ export function TopicCard({ topic }: TopicCardProps) {
           )}
         </div>
       </div>
+
+      {/* Invite Dialog */}
+      <InviteToTopicDialog
+        open={inviteDialogOpen}
+        onOpenChange={setInviteDialogOpen}
+        topicName={topic.name}
+      />
     </div>
   );
 }

@@ -10,7 +10,7 @@ import { topics } from '@/data/topics';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'appearance';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
 type SessionTab = 'details' | 'highlights' | 'transcript';
 
 const mockSessions = [
@@ -124,7 +124,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {/* Center: Tabs */}
           <div className="flex-1 flex justify-center">
             <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              {(['overview', 'sessions', 'highlights'] as const).map(tab => (
+              {(['overview', 'sessions', 'highlights', 'edit'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTopicTab(tab)}
@@ -334,8 +334,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           )}
         </div>
 
-        {/* Right Column - Chat (not on appearance tab) */}
-        {activeTopicTab !== 'appearance' && (
+        {/* Right Column - Chat (not on edit tab) */}
+        {activeTopicTab !== 'edit' && (
           <div className="w-72 shrink-0 flex flex-col border-l border-border bg-muted/30">
             <div className="border-b border-border p-4">
               <h2 className="text-sm font-semibold text-primary">Chat in Topic</h2>

@@ -132,8 +132,8 @@ const mockSessions = [
   },
 ];
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'appearance';
-type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'appearance';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
+type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'edit';
 type SessionTab = 'details' | 'highlights' | 'transcript';
 
 // Wallpaper presets with gradient configurations
@@ -486,10 +486,10 @@ const TopicDetail = () => {
             {(['details', 'highlights', 'transcript'] as const).map(tab => (
               <button
                 key={tab}
-                onClick={() => setActiveSessionTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                onClick={() => setActiveSessionTab(tab)}
                 className={cn(
                   'flex-1 py-3 text-sm font-medium transition-smooth border-b-2',
-                  (tab === 'highlights' ? activeSessionTab === 'bookmarks' : activeSessionTab === tab)
+                  activeSessionTab === tab
                     ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground'
                 )}
@@ -512,15 +512,15 @@ const TopicDetail = () => {
               </div>
             )}
 
-            {activeSessionTab === 'bookmarks' && (
+            {activeSessionTab === 'highlights' && (
               <div className="space-y-3">
-                {mockSessionBookmarks.map((bookmark) => (
-                  <div key={bookmark.id} className="rounded-xl border border-border bg-card p-4">
+                {mockSessionBookmarks.map((highlight) => (
+                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
                     <div className="flex items-start gap-3 mb-2">
-                      <BookmarkIcon className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+                      <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <span className="text-sm font-medium text-foreground">{highlight.title}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">{bookmark.mainIdea}</p>
+                    <p className="text-xs text-muted-foreground">{highlight.mainIdea}</p>
                   </div>
                 ))}
               </div>
@@ -728,8 +728,8 @@ const TopicDetail = () => {
             </div>
           )}
 
-          {/* Appearance Tab */}
-          {mobileActiveTab === 'appearance' && (
+          {/* Edit Tab */}
+          {mobileActiveTab === 'edit' && (
             <div className="space-y-6">
               {/* Wallpaper Selection */}
               <div className="space-y-3">
@@ -836,13 +836,13 @@ const TopicDetail = () => {
               {/* Center: Tabs */}
               <div className="flex-1 flex justify-center">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['overview', 'sessions', 'highlights', 'appearance'] as const).map((tab) => (
+                  {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
                     <button
                       key={tab}
-                      onClick={() => setActiveTopicTab(tab === 'highlights' ? 'bookmarks' : tab)}
+                      onClick={() => setActiveTopicTab(tab)}
                       className={cn(
                         'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        (tab === 'highlights' ? activeTopicTab === 'bookmarks' : activeTopicTab === tab)
+                        activeTopicTab === tab
                           ? 'bg-card text-foreground shadow-sm'
                           : 'text-muted-foreground hover:text-foreground'
                       )}
@@ -942,10 +942,9 @@ const TopicDetail = () => {
                         </button>
                       </div>
                       
-                      {/* Session Tabs - matching pill style */}
                       <div className="flex justify-center">
                         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                          {(['details', 'bookmarks', 'transcript'] as SessionTab[]).map((tab) => (
+                          {(['details', 'highlights', 'transcript'] as SessionTab[]).map((tab) => (
                             <button
                               key={tab}
                               onClick={() => setActiveSessionTab(tab)}
@@ -956,7 +955,7 @@ const TopicDetail = () => {
                                   : 'text-muted-foreground hover:text-foreground'
                               )}
                             >
-                              {tab === 'bookmarks' ? 'Bookmarks' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                              {tab.charAt(0).toUpperCase() + tab.slice(1)}
                             </button>
                           ))}
                         </div>
@@ -1346,7 +1345,7 @@ const TopicDetail = () => {
             </div>
           )}
           
-          {activeTopicTab === 'bookmarks' && (
+          {activeTopicTab === 'highlights' && (
             <div className="flex flex-1 overflow-hidden">
               {/* Left: Highlights List */}
               <div className="w-[400px] shrink-0 border-r border-border overflow-y-auto p-4">
@@ -1427,7 +1426,7 @@ const TopicDetail = () => {
             </div>
           )}
           
-          {activeTopicTab === 'appearance' && (
+          {activeTopicTab === 'edit' && (
             <div className="flex-1 overflow-y-auto p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="space-y-8">
@@ -1685,6 +1684,24 @@ const TopicDetail = () => {
                       </span>
                     </div>
                   </div>
+
+                  {/* Danger Zone - Only show if user is owner */}
+                  {!topic.sharedBy && (
+                    <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 space-y-3">
+                      <h3 className="font-semibold text-destructive">Danger zone</h3>
+                      <p className="text-sm text-destructive/80">
+                        Delete this topic and remove it from all sessions.
+                      </p>
+                      <Button
+                        variant="outline"
+                        className="gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        onClick={() => console.log('Delete topic:', topic.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete Topic
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
