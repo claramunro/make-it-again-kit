@@ -34,24 +34,26 @@ function parseDate(dateStr: string): Date {
 }
 
 export function sortTopics(topics: Topic[], sortBy: TopicSortOption): Topic[] {
-  const sorted = [...topics];
+  let filtered = [...topics];
+  
+  // For starred sorting, filter to only show starred items
+  if (sortBy === 'starred') {
+    filtered = filtered.filter(t => t.isFavorite);
+  }
   
   switch (sortBy) {
     case 'name':
-      return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      return filtered.sort((a, b) => a.name.localeCompare(b.name));
     case 'most-active':
-      return sorted.sort((a, b) => b.sessionCount - a.sessionCount);
+      return filtered.sort((a, b) => b.sessionCount - a.sessionCount);
     case 'recently-created':
-      return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
+      return filtered.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
     case 'starred':
-      return sorted.sort((a, b) => {
-        if (a.isFavorite && !b.isFavorite) return -1;
-        if (!a.isFavorite && b.isFavorite) return 1;
-        return parseDate(b.date).getTime() - parseDate(a.date).getTime();
-      });
+      // Already filtered, just sort by date
+      return filtered.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
     case 'last-activity':
     default:
-      return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
+      return filtered.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
   }
 }
 
