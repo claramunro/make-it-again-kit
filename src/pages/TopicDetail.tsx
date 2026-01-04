@@ -1238,14 +1238,6 @@ const TopicDetail = () => {
               {/* Main Content */}
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="max-w-4xl mx-auto space-y-6">
-                  {/* Shared by indicator */}
-                  {topic.sharedBy && (
-                    <div className="flex items-center gap-2 text-sm text-primary">
-                      <Users className="h-4 w-4" />
-                      <span>Shared by {topic.sharedBy} • View only</span>
-                    </div>
-                  )}
-                  
                   {/* Topic Insights Header */}
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">Topic Insights</h2>
