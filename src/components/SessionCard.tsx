@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FileText, Video, ChevronRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Session } from '@/types/session';
+import { Session, TopicBadgeInfo } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
 import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
@@ -14,6 +14,7 @@ interface SessionCardProps {
   selectionMode?: boolean;
   isChecked?: boolean;
   onCheckChange?: (id: string, checked: boolean) => void;
+  topicBadge?: TopicBadgeInfo;
 }
 
 export function SessionCard({ 
@@ -23,7 +24,8 @@ export function SessionCard({
   onSelect,
   selectionMode,
   isChecked,
-  onCheckChange
+  onCheckChange,
+  topicBadge
 }: SessionCardProps) {
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
 
@@ -50,6 +52,9 @@ export function SessionCard({
 
   // Session id "2" goes to the legacy view
   const sessionUrl = session.id === '2' ? `/session-legacy/${session.id}` : `/session/${session.id}`;
+
+  // Use topicBadge prop, fall back to session.topicBadge, then use session.badge
+  const effectiveTopicBadge = topicBadge || session.topicBadge;
 
   return (
     <Link 
@@ -87,7 +92,7 @@ export function SessionCard({
           {session.title}
         </h3>
         <div className="flex items-center gap-3">
-          <SessionBadge type={session.badge} />
+          <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
           <span className="text-xs text-muted-foreground">
             Time: {session.time}
           </span>

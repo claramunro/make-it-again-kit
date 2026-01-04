@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { HighlightGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { topics } from '@/data/topics';
+import { useTopics } from '@/contexts/TopicContext';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 import {
@@ -252,10 +252,13 @@ const TopicDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
+  const { topics, updateTopicWallpaper, getTopicById } = useTopics();
   
   // Read initial state from URL params
   const initialSessionId = searchParams.get('session') || mockSessions[0].id;
   const initialTab = searchParams.get('tab') as TopicTab | null;
+  
+  const topic = getTopicById(id || '');
   
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(initialTab === 'sessions' ? 'sessions' : 'overview');
   const [mobileActiveTab, setMobileActiveTab] = useState<MobileTopicTab>('overview');
@@ -270,8 +273,7 @@ const TopicDetail = () => {
   const [topicName, setTopicName] = useState('');
   const [topicDescription, setTopicDescription] = useState('');
   const [aiContext, setAiContext] = useState('Clara is working on design updates to the Hedy app.');
-  const topicData = topics.find(t => t.id === id);
-  const [selectedWallpaper, setSelectedWallpaper] = useState(topicData?.wallpaper || 'mint');
+  const [selectedWallpaper, setSelectedWallpaper] = useState(topic?.wallpaper || 'mint');
   const [blurAmount, setBlurAmount] = useState([50]);
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
@@ -282,9 +284,23 @@ const TopicDetail = () => {
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   
+  // Sync selectedWallpaper when topic changes
+  useEffect(() => {
+    if (topic?.wallpaper) {
+      setSelectedWallpaper(topic.wallpaper);
+    }
+  }, [topic?.wallpaper]);
+  
+  // Save wallpaper changes
+  const handleWallpaperChange = (wallpaper: typeof selectedWallpaper) => {
+    setSelectedWallpaper(wallpaper);
+    if (id) {
+      updateTopicWallpaper(id, wallpaper);
+    }
+  };
+  
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
-  const topic = topics.find(t => t.id === id);
   const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
   
   // Filter highlights for this topic
@@ -1515,7 +1531,7 @@ const TopicDetail = () => {
                         {wallpaperPresets.map((preset) => (
                           <button
                             key={preset.id}
-                            onClick={() => setSelectedWallpaper(preset.id as typeof selectedWallpaper)}
+                            onClick={() => handleWallpaperChange(preset.id as typeof selectedWallpaper)}
                             disabled={!!topic.sharedBy}
                             className={cn(
                               'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
