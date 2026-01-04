@@ -56,10 +56,10 @@ export function SidebarV2() {
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return location.pathname === '/';
+      return location.pathname === '/' || location.pathname.startsWith('/session');
     }
     if (path === '/topics') {
-      return location.pathname === '/topics';
+      return location.pathname === '/topics' || location.pathname.startsWith('/topic/');
     }
     return location.pathname === path;
   };
