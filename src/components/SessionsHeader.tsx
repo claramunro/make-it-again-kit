@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X, CheckSquare } from 'lucide-react';
+import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X, CheckSquare, ArrowDownUp, Check } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -9,6 +9,16 @@ import {
 } from './ui/dropdown-menu';
 import { ImportYouTubeDialog } from './ImportYouTubeDialog';
 import { ImportTranscriptDialog } from './ImportTranscriptDialog';
+
+type SessionSortOption = 'most-recent' | 'oldest' | 'longest' | 'shortest' | 'starred';
+
+const SESSION_SORT_OPTIONS: { value: SessionSortOption; label: string }[] = [
+  { value: 'most-recent', label: 'Most Recent' },
+  { value: 'oldest', label: 'Oldest' },
+  { value: 'longest', label: 'Longest' },
+  { value: 'shortest', label: 'Shortest' },
+  { value: 'starred', label: 'Starred' },
+];
 
 interface SessionsHeaderProps {
   totalSessions: number;
@@ -29,6 +39,9 @@ export function SessionsHeader({
 }: SessionsHeaderProps) {
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
+
+  const currentSortLabel = SESSION_SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Most Recent';
 
   if (selectionMode) {
     return (
@@ -67,6 +80,27 @@ export function SessionsHeader({
         </div>
 
         <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <ArrowDownUp className="h-4 w-4" />
+                {currentSortLabel}
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {SESSION_SORT_OPTIONS.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setSortBy(option.value)}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <span>{option.label}</span>
+                  {sortBy === option.value && <Check className="h-4 w-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="outline" size="sm" className="gap-2" onClick={onToggleSelectionMode}>
             <SlidersHorizontal className="h-4 w-4" />
             Select
