@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings, ChevronLeft, Search } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { StartSessionDialog } from './StartSessionDialog';
@@ -121,6 +121,16 @@ export function SidebarV2() {
             </button>
           )}
         </div>
+
+        {/* Expand button - positioned outside sidebar when collapsed */}
+        {collapsed && (
+          <button
+            onClick={() => setCollapsed(false)}
+            className="absolute top-3 -right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-card border border-border shadow-sm text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        )}
 
         {/* Main Navigation */}
         <nav className="flex-1 overflow-y-auto px-2 py-2 border border-red-500">
