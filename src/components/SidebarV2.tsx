@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Bookmark, Settings, ChevronLeft } from 'lucide-react';
+import { FileText, Folder, Bookmark, Settings, ChevronLeft, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { StartSessionDialog } from './StartSessionDialog';
+import { SearchDialog } from './SearchDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
 import hedyLogo from '@/assets/hedy-logo.svg';
@@ -53,6 +54,7 @@ export function SidebarV2() {
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [startSessionOpen, setStartSessionOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { collapsed, setCollapsed } = useSidebarCollapsed();
   const [isDark, setIsDark] = useState(false);
   const isMobile = useIsMobile();
@@ -167,6 +169,26 @@ export function SidebarV2() {
                 </span>
               </button>
             </li>
+            {/* Search */}
+            <li>
+              <button
+                onClick={() => setSearchOpen(true)}
+                className={cn(
+                  'flex w-full rounded-lg text-sidebar-foreground transition-smooth hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                  collapsed 
+                    ? 'flex-col items-center justify-center px-2 py-3 gap-1'
+                    : 'flex-row items-center gap-3 px-3 py-2'
+                )}
+              >
+                <Search className="h-5 w-5" />
+                <span className={cn(
+                  "font-medium",
+                  collapsed ? "text-[10px]" : "text-sm"
+                )}>
+                  Search
+                </span>
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -188,6 +210,7 @@ export function SidebarV2() {
 
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <StartSessionDialog open={startSessionOpen} onClose={() => setStartSessionOpen(false)} />
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
