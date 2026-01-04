@@ -1,4 +1,4 @@
-import { Star, ChevronRight, FileText } from 'lucide-react';
+import { Star, ChevronRight, FileText, Users } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { cn } from '@/lib/utils';
@@ -74,19 +74,28 @@ export function TopicCard({ topic }: TopicCardProps) {
               </div>
             </div>
           </div>
-          <button 
-            className="p-1.5 rounded-full hover:bg-muted transition-smooth"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Star 
-              className={cn(
-                'h-4 w-4 transition-smooth',
-                topic.isFavorite 
-                  ? 'fill-yellow-400 text-yellow-400' 
-                  : 'text-muted-foreground hover:text-yellow-400'
-              )} 
-            />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Shared badge */}
+            {topic.sharedBy && (
+              <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2 py-0.5 text-xs font-medium text-primary">
+                <Users className="h-3 w-3" />
+                Shared
+              </span>
+            )}
+            <button 
+              className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Star 
+                className={cn(
+                  'h-4 w-4 transition-smooth',
+                  topic.isFavorite 
+                    ? 'fill-yellow-400 text-yellow-400' 
+                    : 'text-muted-foreground hover:text-yellow-400'
+                )} 
+              />
+            </button>
+          </div>
         </div>
 
         {/* Sessions */}
