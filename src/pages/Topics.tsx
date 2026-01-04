@@ -42,7 +42,7 @@ const Topics = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-card">
+    <div className="flex min-h-screen overflow-x-hidden bg-card">
       {!isMobile && <SidebarV2 />}
       
       <div className="flex flex-1 flex-col">
