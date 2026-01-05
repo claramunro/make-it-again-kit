@@ -132,7 +132,7 @@ export function SessionCard({
 
       {/* Topic Badge - show to the left of star when not in selection mode */}
       {!selectionMode && (
-        <div className="shrink-0" onClick={handleBadgeClick}>
+        <div className="shrink-0 ml-auto" onClick={handleBadgeClick}>
           {effectiveTopicBadge ? (
             <div className="cursor-pointer hover:opacity-80 transition-opacity">
               <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
