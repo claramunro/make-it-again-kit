@@ -4,7 +4,7 @@ import {
   ArrowLeft, ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
-  Lightbulb, Quote, BarChart3, Clock, Upload, Star, AudioLines
+  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -179,7 +179,7 @@ const SessionDetail = () => {
                           onClick={(e) => { e.stopPropagation(); }}
                           className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
                         >
-                          <Upload className="h-3.5 w-3.5" />
+                          <CloudUpload className="h-3.5 w-3.5" />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); }}
@@ -598,7 +598,7 @@ const SessionDetail = () => {
                               onClick={(e) => { e.stopPropagation(); }}
                               className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
                             >
-                              <Upload className="h-3.5 w-3.5" />
+                              <CloudUpload className="h-3.5 w-3.5" />
                             </button>
                             <button 
                               onClick={(e) => { e.stopPropagation(); }}
