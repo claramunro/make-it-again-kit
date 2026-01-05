@@ -2,8 +2,16 @@ import { useState } from 'react';
 import { ChevronDown, ChevronUp, LucideIcon } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { HighlightItem } from './HighlightItem';
+import { SessionSubGroup } from './SessionSubGroup';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+
+export interface SessionGroup {
+  sessionId: string;
+  sessionTitle: string;
+  sessionMeta?: { time: string; duration: string };
+  highlights: Highlight[];
+}
 
 interface HighlightGroupProps {
   title: string;
@@ -12,6 +20,7 @@ interface HighlightGroupProps {
   sessionMeta?: { time: string; duration: string };
   sessionId?: string;
   highlights: Highlight[];
+  sessionGroups?: SessionGroup[];
   selectedId: string | null;
   onSelectHighlight: (highlight: Highlight) => void;
   defaultExpanded?: boolean;
@@ -24,11 +33,16 @@ export function HighlightGroup({
   sessionMeta,
   sessionId,
   highlights, 
+  sessionGroups,
   selectedId, 
   onSelectHighlight,
   defaultExpanded = false 
 }: HighlightGroupProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+
+  const totalHighlights = sessionGroups 
+    ? sessionGroups.reduce((sum, g) => sum + g.highlights.length, 0)
+    : highlights.length;
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
@@ -66,7 +80,7 @@ export function HighlightGroup({
         )}
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">
-            {highlights.length} highlight{highlights.length !== 1 ? 's' : ''}
+            {totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}
           </span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -84,17 +98,33 @@ export function HighlightGroup({
       {/* Group Content */}
       <div className={cn(
         'overflow-hidden transition-all duration-300',
-        isExpanded ? 'max-h-[2000px]' : 'max-h-0'
+        isExpanded ? 'max-h-[5000px]' : 'max-h-0'
       )}>
-        <div className="space-y-2 p-4 pt-0">
-          {highlights.map((highlight) => (
-            <HighlightItem
-              key={highlight.id}
-              highlight={highlight}
-              isSelected={selectedId === highlight.id}
-              onSelect={() => onSelectHighlight(highlight)}
-            />
-          ))}
+        <div className="space-y-3 p-4 pt-0">
+          {sessionGroups ? (
+            // Render nested session groups (for topic view)
+            sessionGroups.map((group) => (
+              <SessionSubGroup
+                key={group.sessionId}
+                sessionId={group.sessionId}
+                sessionTitle={group.sessionTitle}
+                sessionMeta={group.sessionMeta}
+                highlights={group.highlights}
+                selectedId={selectedId}
+                onSelectHighlight={onSelectHighlight}
+              />
+            ))
+          ) : (
+            // Render highlights directly (for session view)
+            highlights.map((highlight) => (
+              <HighlightItem
+                key={highlight.id}
+                highlight={highlight}
+                isSelected={selectedId === highlight.id}
+                onSelect={() => onSelectHighlight(highlight)}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

@@ -3,17 +3,17 @@ import { AudioLines } from 'lucide-react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
-import { HighlightGroup } from '@/components/HighlightGroup';
+import { HighlightGroup, SessionGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { HighlightDetailDrawer } from '@/components/HighlightDetailDrawer';
 import { highlights, Highlight } from '@/data/highlights';
-import { sessionGroups } from '@/data/sessions';
+import { sessionGroups as sessionGroupsData } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
 // Create a map of session metadata by title for quick lookup
 const sessionMetaMap = new Map<string, { time: string; duration: string }>();
-sessionGroups.forEach(group => {
+sessionGroupsData.forEach(group => {
   group.sessions.forEach(session => {
     sessionMetaMap.set(session.title, { time: session.time, duration: session.duration });
   });
@@ -22,6 +22,14 @@ sessionGroups.forEach(group => {
 type GroupBy = 'sessions' | 'topics';
 
 const HIGHLIGHTS_GROUP_BY_KEY = 'highlights-group-by';
+
+interface HighlightGroupData {
+  id: string;
+  title: string;
+  icon?: string;
+  highlights: Highlight[];
+  sessionGroups?: SessionGroup[];
+}
 
 const HighlightsPage = () => {
   const isMobile = useIsMobile();
@@ -40,30 +48,65 @@ const HighlightsPage = () => {
   }, [isMobile, selectedHighlight]);
 
   // Group highlights by topic or session
-  const groupedHighlights = useMemo(() => {
-    const groups: Record<string, { title: string; icon?: string; highlights: Highlight[] }> = {};
+  const groupedHighlights = useMemo((): HighlightGroupData[] => {
+    if (groupBy === 'sessions') {
+      // Group by session (flat structure)
+      const groups: Record<string, { title: string; highlights: Highlight[] }> = {};
 
-    highlights.forEach((highlight) => {
-      const key = groupBy === 'topics' 
-        ? highlight.topicId || 'uncategorized'
-        : highlight.sessionId;
-      
-      const title = groupBy === 'topics'
-        ? highlight.topicName || 'Uncategorized'
-        : highlight.sessionTitle;
-      
-      const icon = groupBy === 'topics' ? highlight.topicIcon : undefined;
+      highlights.forEach((highlight) => {
+        const key = highlight.sessionId;
+        const title = highlight.sessionTitle;
 
-      if (!groups[key]) {
-        groups[key] = { title, icon, highlights: [] };
-      }
-      groups[key].highlights.push(highlight);
-    });
+        if (!groups[key]) {
+          groups[key] = { title, highlights: [] };
+        }
+        groups[key].highlights.push(highlight);
+      });
 
-    return Object.entries(groups).map(([key, group]) => ({
-      id: key,
-      ...group,
-    }));
+      return Object.entries(groups).map(([key, group]) => ({
+        id: key,
+        title: group.title,
+        highlights: group.highlights,
+      }));
+    } else {
+      // Group by topic with nested session groups
+      const topicGroups: Record<string, {
+        title: string;
+        icon?: string;
+        sessions: Record<string, { sessionId: string; sessionTitle: string; highlights: Highlight[] }>;
+      }> = {};
+
+      highlights.forEach((highlight) => {
+        const topicKey = highlight.topicId || 'uncategorized';
+        const topicTitle = highlight.topicName || 'Uncategorized';
+        const topicIcon = highlight.topicIcon;
+
+        if (!topicGroups[topicKey]) {
+          topicGroups[topicKey] = { title: topicTitle, icon: topicIcon, sessions: {} };
+        }
+
+        const sessionKey = highlight.sessionId;
+        if (!topicGroups[topicKey].sessions[sessionKey]) {
+          topicGroups[topicKey].sessions[sessionKey] = {
+            sessionId: highlight.sessionId,
+            sessionTitle: highlight.sessionTitle,
+            highlights: [],
+          };
+        }
+        topicGroups[topicKey].sessions[sessionKey].highlights.push(highlight);
+      });
+
+      return Object.entries(topicGroups).map(([key, group]) => ({
+        id: key,
+        title: group.title,
+        icon: group.icon,
+        highlights: [], // Empty for topic view, we use sessionGroups instead
+        sessionGroups: Object.values(group.sessions).map((session) => ({
+          ...session,
+          sessionMeta: sessionMetaMap.get(session.sessionTitle),
+        })),
+      }));
+    }
   }, [groupBy]);
 
   const handleSelectHighlight = (highlight: Highlight) => {
@@ -146,6 +189,7 @@ const HighlightsPage = () => {
                       sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
                       sessionId={groupBy === 'sessions' ? group.id : undefined}
                       highlights={group.highlights}
+                      sessionGroups={group.sessionGroups}
                       selectedId={selectedHighlight?.id || null}
                       onSelectHighlight={handleSelectHighlight}
                       defaultExpanded={index === 0}
