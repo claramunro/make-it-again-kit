@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
+import { Star, ChevronRight, ChevronDown, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { useTopics } from '@/contexts/TopicContext';
@@ -228,11 +228,12 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
   );
 }
 
-// List view item - includes all card elements in horizontal layout
+// List view item - includes all card elements in horizontal layout with accordion
 export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
@@ -252,6 +253,12 @@ export function TopicListItem({ topic }: TopicCardProps) {
     e.stopPropagation();
     console.log('Delete topic:', topic.id);
   };
+
+  const handleToggleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <>
       <div 
@@ -327,15 +334,54 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 </div>
               </div>
               
-              {/* Row 2: Description + session count */}
+              {/* Row 2: Description + session count with expand toggle */}
               <div className="flex items-center justify-between gap-2 mt-1">
                 <p className="text-sm text-muted-foreground">Topic Description</p>
-                <span className="text-sm text-muted-foreground shrink-0">
+                <button 
+                  onClick={handleToggleExpand}
+                  className="flex items-center gap-1 text-sm text-muted-foreground shrink-0 hover:text-foreground transition-smooth"
+                >
                   {topic.sessionCount} Sessions
-                </span>
+                  {topic.sessions && topic.sessions.length > 0 && (
+                    isExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )
+                  )}
+                </button>
               </div>
             </div>
           </div>
+
+          {/* Sessions list - accordion style, collapsed by default */}
+          {isExpanded && topic.sessions && topic.sessions.length > 0 && (
+            <div className="mt-4 flex flex-col gap-2">
+              {topic.sessions.map((session) => (
+                <Link
+                  key={session.id}
+                  to={`/topic/${topic.id}?tab=sessions`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
+                >
+                  {/* Session icon */}
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
+                    {session.type === 'audio' ? (
+                      <AudioLines className="h-5 w-5" />
+                    ) : (
+                      <FileText className="h-5 w-5" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {session.date} · {session.duration}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
