@@ -170,10 +170,31 @@ const SessionDetail = () => {
                     'Research legal implications',
                     'Draft case study outline',
                   ].map((todo, i) => (
-                    <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
+                    <div key={i} className="group flex items-start gap-3 rounded-lg border border-border bg-background p-3">
                       <Checkbox className="mt-0.5" />
-                      <span className="text-sm text-foreground">{todo}</span>
-                    </label>
+                      <span className="flex-1 text-sm text-foreground">{todo}</span>
+                      {/* Hover actions */}
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); }}
+                          className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
+                        >
+                          <Upload className="h-3.5 w-3.5" />
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); }}
+                          className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); }}
+                          className="p-1.5 text-muted-foreground hover:text-destructive transition-smooth"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -565,13 +586,34 @@ const SessionDetail = () => {
                         'Identify a list of potential enlightened investors for a test project',
                         'Schedule a follow-up call with Kevin Cavanaugh to clarify financial models'
                       ].map((todo, i) => (
-                        <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
+                        <div key={i} className="group flex items-start gap-3 rounded-lg border border-border bg-background p-3">
                           <Checkbox className="mt-0.5" />
-                          <div>
+                          <div className="flex-1 min-w-0">
                             <p className="text-sm text-foreground">{todo}</p>
                             <p className="text-xs text-muted-foreground">Due: Not set</p>
                           </div>
-                        </label>
+                          {/* Hover actions */}
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); }}
+                              className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
+                            >
+                              <Upload className="h-3.5 w-3.5" />
+                            </button>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); }}
+                              className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); }}
+                              className="p-1.5 text-muted-foreground hover:text-destructive transition-smooth"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>
