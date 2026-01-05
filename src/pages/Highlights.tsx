@@ -144,6 +144,7 @@ const HighlightsPage = () => {
                       icon={group.icon}
                       SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
                       sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
+                      sessionId={groupBy === 'sessions' ? group.id : undefined}
                       highlights={group.highlights}
                       selectedId={selectedHighlight?.id || null}
                       onSelectHighlight={handleSelectHighlight}

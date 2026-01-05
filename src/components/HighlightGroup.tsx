@@ -3,12 +3,14 @@ import { ChevronDown, ChevronUp, LucideIcon } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { HighlightItem } from './HighlightItem';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 interface HighlightGroupProps {
   title: string;
   icon?: string;
   SessionIcon?: LucideIcon;
   sessionMeta?: { time: string; duration: string };
+  sessionId?: string;
   highlights: Highlight[];
   selectedId: string | null;
   onSelectHighlight: (highlight: Highlight) => void;
@@ -20,6 +22,7 @@ export function HighlightGroup({
   icon,
   SessionIcon,
   sessionMeta,
+  sessionId,
   highlights, 
   selectedId, 
   onSelectHighlight,
@@ -30,15 +33,21 @@ export function HighlightGroup({
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
       {/* Group Header */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-smooth"
-      >
+      <div className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-smooth">
         <div className="flex items-center gap-3">
           {icon && <span className="text-xl">{icon}</span>}
           {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground" />}
           <div className="flex flex-col items-start">
-            <span className="font-medium text-foreground">{title}</span>
+            {sessionId ? (
+              <Link 
+                to={`/session/${sessionId}`}
+                className="font-medium text-foreground hover:text-primary transition-smooth"
+              >
+                {title}
+              </Link>
+            ) : (
+              <span className="font-medium text-foreground">{title}</span>
+            )}
             {sessionMeta && (
               <span className="text-xs text-muted-foreground">
                 {sessionMeta.time}  ·  {sessionMeta.duration}
@@ -50,13 +59,18 @@ export function HighlightGroup({
           <span className="text-sm text-muted-foreground">
             {highlights.length} highlight{highlights.length !== 1 ? 's' : ''}
           </span>
-          {isExpanded ? (
-            <ChevronUp className="h-5 w-5 text-muted-foreground" />
-          ) : (
-            <ChevronDown className="h-5 w-5 text-muted-foreground" />
-          )}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1 hover:bg-muted rounded transition-smooth"
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            )}
+          </button>
         </div>
-      </button>
+      </div>
 
       {/* Group Content */}
       <div className={cn(
