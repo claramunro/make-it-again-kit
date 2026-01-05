@@ -3,12 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Trash2, 
-  FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload
+  FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, FolderOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { topics } from '@/data/topics';
+import { topics, Topic } from '@/data/topics';
+import { useSessions } from '@/contexts/SessionContext';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+type WallpaperType = NonNullable<Topic['wallpaper']>;
+
+const wallpaperBadgeColors: Record<WallpaperType | 'none', { bg: string; text: string }> = {
+  none: { bg: 'bg-muted', text: 'text-foreground' },
+  sand: { bg: 'bg-amber-500/10 dark:bg-amber-500/20', text: 'text-amber-700 dark:text-amber-400' },
+  peach: { bg: 'bg-orange-500/10 dark:bg-orange-500/20', text: 'text-orange-700 dark:text-orange-400' },
+  mint: { bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-400' },
+  lavender: { bg: 'bg-purple-500/10 dark:bg-purple-500/20', text: 'text-purple-700 dark:text-purple-400' },
+  ocean: { bg: 'bg-blue-500/10 dark:bg-blue-500/20', text: 'text-blue-700 dark:text-blue-400' },
+  sunset: { bg: 'bg-pink-500/10 dark:bg-pink-500/20', text: 'text-pink-700 dark:text-pink-400' },
+};
 
 type SessionTab = 'details' | 'highlights' | 'transcript';
 
@@ -52,13 +72,20 @@ interface SessionDetailPanelProps {
 
 export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const navigate = useNavigate();
+  const { getSessionById, assignTopicToSession } = useSessions();
   const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
 
-  const selectedTopicData = topics.find(t => t.id === '2');
+  const session = getSessionById(sessionId);
+  const assignedTopicId = session?.topicId;
+  const selectedTopicData = assignedTopicId ? topics.find(t => t.id === assignedTopicId) : null;
+
+  const handleAssignTopic = (topicId: string) => {
+    assignTopicToSession(sessionId, topicId);
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -100,14 +127,41 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
 
           {/* Right: Topic Tag */}
           <div className="shrink-0">
-            {selectedTopicData && (
+            {selectedTopicData ? (
               <button
                 onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
-                className="inline-flex items-center gap-2 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 px-3 py-1.5 text-sm font-medium text-foreground hover:bg-violet-500/20 dark:hover:bg-violet-500/30 transition-smooth"
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth",
+                  wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].bg,
+                  wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].text
+                )}
               >
                 <span>{selectedTopicData.icon}</span>
                 <span>{selectedTopicData.name}</span>
+                <ChevronDown className="h-4 w-4" />
               </button>
+            ) : (
+              <Select onValueChange={handleAssignTopic}>
+                <SelectTrigger className="h-auto gap-2 rounded-lg border-dashed border-muted-foreground/30 bg-transparent px-3 py-1.5 text-sm text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-smooth w-auto">
+                  <FolderOpen className="h-4 w-4" />
+                  <SelectValue placeholder="Select topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  {topics.map((topic) => {
+                    const colors = wallpaperBadgeColors[topic.wallpaper || 'none'];
+                    return (
+                      <SelectItem key={topic.id} value={topic.id}>
+                        <div className="flex items-center gap-2">
+                          <span className={cn("flex h-5 w-5 items-center justify-center rounded text-xs", colors.bg)}>
+                            {topic.icon}
+                          </span>
+                          <span>{topic.name}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             )}
           </div>
         </div>
