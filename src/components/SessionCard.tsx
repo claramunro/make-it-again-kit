@@ -67,12 +67,11 @@ export function SessionCard({
     >
       {/* Checkbox (only in selection mode) */}
       {selectionMode && (
-        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center">
+        <div className="mt-0.5 flex shrink-0 items-center justify-center">
           <Checkbox 
             checked={isChecked}
             onCheckedChange={handleCheckboxChange}
             onClick={(e) => e.stopPropagation()}
-            className="h-5 w-5 border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
           />
         </div>
       )}
