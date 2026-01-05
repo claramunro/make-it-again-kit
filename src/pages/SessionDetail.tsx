@@ -318,56 +318,42 @@ const SessionDetail = () => {
         
         <main className="flex-1 overflow-hidden bg-background">
           {/* Session Header */}
-          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-4 md:px-6">
-            <div className="flex items-center justify-between gap-4">
+          <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-3 md:px-6">
+            {/* Top Row: Back + Title + Meta | Topic + Star */}
+            <div className="flex items-start justify-between gap-4 mb-3">
               {/* Left: Back button + Icon + Title + Meta */}
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex items-start gap-3 min-w-0">
                 <button 
                   onClick={() => navigate('/')}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90 mt-0.5"
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                {currentSession?.type === 'audio' ? (
-                  <Video className="h-5 w-5 shrink-0 text-muted-foreground" />
-                ) : (
-                  <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
-                )}
-                <div className="min-w-0 max-w-md">
-                  <h1 className="line-clamp-2 text-sm font-medium leading-snug text-foreground">
+                <div className="min-w-0">
+                  <h1 className="line-clamp-2 text-base font-medium leading-snug text-foreground mb-1">
                     {currentSession?.title || 'Untitled Session'}
                   </h1>
-                  <p className="text-xs text-muted-foreground">
-                    {currentSession?.date || 'Unknown date'} {currentSession?.time || ''}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {currentSession?.duration || 'Unknown duration'}
-                  </p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {currentSession?.type === 'audio' ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="inline-block">📊</span>
+                        Audio
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5">
+                        <FileText className="h-3.5 w-3.5" />
+                        Text
+                      </span>
+                    )}
+                    <span>{currentSession?.date || 'Unknown date'}</span>
+                    <span>{currentSession?.time || ''}</span>
+                    <span>{currentSession?.duration || ''}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Center: Tabs */}
-              <div className="flex-1 flex justify-center">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  {(['details', 'highlights', 'transcript'] as const).map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={cn(
-                        'rounded-md px-6 py-2 text-sm font-medium transition-smooth',
-                        activeTab === tab
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: Topic Tag + Session Type Dropdown */}
-              <div className="shrink-0 flex items-center gap-2">
+              {/* Right: Topic Tag + Star */}
+              <div className="shrink-0 flex items-center gap-3">
                 {selectedTopicData ? (
                   <button
                     onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
@@ -382,35 +368,61 @@ const SessionDetail = () => {
                     No Topic
                   </span>
                 )}
+                <button className="text-yellow-500 hover:text-yellow-400 transition-smooth">
+                  <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-                {/* Session Type Dropdown */}
-                <div className="relative">
+            {/* Second Row: Tabs (left) | Session Type Dropdown (right) */}
+            <div className="flex items-center justify-between">
+              {/* Tabs - Left aligned */}
+              <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                {(['details', 'highlights', 'transcript'] as const).map(tab => (
                   <button
-                    onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
-                    className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-smooth hover:bg-muted"
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      'rounded-md px-5 py-1.5 text-sm font-medium transition-smooth',
+                      activeTab === tab
+                        ? 'bg-card text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
                   >
-                    <span>{selectedSessionTypeData?.icon}</span>
-                    <span>{selectedSessionTypeData?.label}</span>
-                    <ChevronDown className="h-3.5 w-3.5" />
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </button>
-                  {sessionTypeDropdownOpen && (
-                    <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
-                      {sessionTypes.map(type => (
-                        <button 
-                          key={type.id}
-                          onClick={() => {
-                            setSelectedSessionType(type.id);
-                            setSessionTypeDropdownOpen(false);
-                          }}
-                          className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
-                        >
-                          <span>{type.icon}</span>
-                          {type.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                ))}
+              </div>
+
+              {/* Session Type Dropdown - Right aligned */}
+              <div className="relative">
+                <button
+                  onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-smooth hover:bg-muted"
+                >
+                  <span>{selectedSessionTypeData?.icon}</span>
+                  <span>{selectedSessionTypeData?.label}</span>
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </button>
+                {sessionTypeDropdownOpen && (
+                  <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
+                    {sessionTypes.map(type => (
+                      <button 
+                        key={type.id}
+                        onClick={() => {
+                          setSelectedSessionType(type.id);
+                          setSessionTypeDropdownOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
+                      >
+                        <span>{type.icon}</span>
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
