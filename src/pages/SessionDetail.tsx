@@ -4,7 +4,7 @@ import {
   ArrowLeft, ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
-  Lightbulb, Quote, BarChart3, Clock, Upload, Star
+  Lightbulb, Quote, BarChart3, Clock, Upload, Star, AudioLines
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -13,6 +13,8 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
+import { SessionBadge } from '@/components/SessionBadge';
+import { TopicBadgeInfo } from '@/types/session';
 
 type SessionTab = 'details' | 'highlights' | 'transcript';
 type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript';
@@ -336,17 +338,14 @@ const SessionDetail = () => {
                     {currentSession?.title || 'Untitled Session'}
                   </h1>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    {currentSession?.type === 'audio' ? (
-                      <span className="flex items-center gap-1.5">
-                        <span className="inline-block">📊</span>
-                        Audio
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5">
+                    <span className="flex items-center gap-1">
+                      {currentSession?.type === 'audio' ? (
+                        <AudioLines className="h-3.5 w-3.5" />
+                      ) : (
                         <FileText className="h-3.5 w-3.5" />
-                        Text
-                      </span>
-                    )}
+                      )}
+                      {currentSession?.type === 'audio' ? 'Audio' : 'Text'}
+                    </span>
                     <span>{currentSession?.date || 'Unknown date'}</span>
                     <span>{currentSession?.time || ''}</span>
                     <span>{currentSession?.duration || ''}</span>
@@ -359,17 +358,17 @@ const SessionDetail = () => {
                 {selectedTopicData ? (
                   <button
                     onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-violet-500/10 dark:bg-violet-500/20 px-3 py-1.5 text-sm font-medium text-foreground hover:bg-violet-500/20 dark:hover:bg-violet-500/30 transition-smooth"
+                    className="transition-smooth hover:opacity-80"
                   >
-                    <span>{selectedTopicData.icon}</span>
-                    <span>{selectedTopicData.name}</span>
+                    <SessionBadge 
+                      topicBadge={{
+                        icon: selectedTopicData.icon,
+                        label: selectedTopicData.name,
+                        wallpaper: selectedTopicData.wallpaper,
+                      } as TopicBadgeInfo}
+                    />
                   </button>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                    No Topic
-                  </span>
-                )}
+                ) : null}
                 <button 
                   onClick={() => setIsFavorite(!isFavorite)}
                   className="p-1 rounded-md transition-smooth hover:bg-muted"
