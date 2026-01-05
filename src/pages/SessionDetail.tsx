@@ -505,7 +505,7 @@ const SessionDetail = () => {
               {activeTab === 'highlights' && (
                 <div className="rounded-xl border border-border bg-card flex overflow-hidden">
                   {/* Left: Bookmark List */}
-                  <div className="w-56 shrink-0 border-r border-border p-4 overflow-auto">
+                  <div className="w-48 shrink-0 border-r border-border p-3 overflow-auto">
                     <div className="space-y-2">
                       {mockBookmarks.map((bookmark) => (
                         <button
@@ -735,7 +735,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="w-96 shrink-0 flex flex-col border-l border-border bg-card">
+            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
