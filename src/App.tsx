@@ -16,7 +16,6 @@ import TopicDetailBannerFull from "./pages/TopicDetailBannerFull";
 import Highlights from "./pages/Highlights";
 import Settings from "./pages/Settings";
 import SessionDetail from "./pages/SessionDetail";
-import SessionDetailLegacy from "./pages/SessionDetailLegacy";
 import DesignSystem from "./pages/DesignSystem";
 import NotFound from "./pages/NotFound";
 
@@ -58,7 +57,6 @@ const App = () => (
             <Route path="/highlights" element={<Highlights />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/session/:id" element={<SessionDetail />} />
-            <Route path="/session-legacy/:id" element={<SessionDetailLegacy />} />
             <Route path="/design-system" element={<DesignSystem />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
