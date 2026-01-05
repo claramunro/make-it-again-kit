@@ -16,6 +16,7 @@ const Topics = () => {
   const { topics } = useTopics();
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
   const [viewMode, setViewMode] = useState<TopicViewMode>('card');
+  const [showSessions, setShowSessions] = useState(true);
 
   // Use master-detail layout on large screens
   if (isLargeScreen) {
@@ -57,9 +58,11 @@ const Topics = () => {
                 onSortChange={setSortBy} 
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
+                showSessions={showSessions}
+                onShowSessionsChange={setShowSessions}
               />
             )}
-            <TopicsList sortBy={sortBy} viewMode={viewMode} />
+            <TopicsList sortBy={sortBy} viewMode={viewMode} showSessions={showSessions} />
           </div>
         </main>
       </div>
