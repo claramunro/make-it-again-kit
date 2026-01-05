@@ -4,7 +4,7 @@ import {
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
-  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines
+  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines, RefreshCw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -105,6 +105,7 @@ const SessionDetail = () => {
   const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [topicContextEnabled, setTopicContextEnabled] = useState(true);
+  const [summaryMenuOpen, setSummaryMenuOpen] = useState(false);
 
   // Find the current session to check if it has audio
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
@@ -598,7 +599,39 @@ const SessionDetail = () => {
                   <div className="rounded-xl border border-border bg-card p-5">
                     <div className="mb-4 flex items-center justify-between">
                       <h2 className="text-lg font-semibold text-foreground">Summary</h2>
-                      <MoreVertical className="h-5 w-5 text-muted-foreground" />
+                      <div className="relative">
+                        <button 
+                          onClick={() => setSummaryMenuOpen(!summaryMenuOpen)}
+                          className="rounded-lg p-1 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                        >
+                          <MoreVertical className="h-5 w-5" />
+                        </button>
+                        {summaryMenuOpen && (
+                          <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border bg-card py-1 shadow-lg">
+                            <button 
+                              onClick={() => setSummaryMenuOpen(false)}
+                              className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-muted"
+                            >
+                              <Pencil className="h-4 w-4" />
+                              Edit Summary
+                            </button>
+                            <button 
+                              onClick={() => setSummaryMenuOpen(false)}
+                              className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-muted"
+                            >
+                              <Upload className="h-4 w-4" />
+                              Share Summary
+                            </button>
+                            <button 
+                              onClick={() => setSummaryMenuOpen(false)}
+                              className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-muted"
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                              Re-generate Summary
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <p className="mb-4 text-sm leading-relaxed text-foreground">
                       The session explored Kevin Cavanaugh's unique approach to urban development, focusing on long-term holds, creative financing, and legal discrimination by profession. Key insights include the profitability of affordable housing without subsidies, architectural innovation using adaptive reuse, and the importance of enlightened investors. The discussion emphasized community-focused development and the potential for replicating these models in other cities.
