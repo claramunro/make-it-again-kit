@@ -250,8 +250,6 @@ const quickPromptCategories = [
 const visibleQuickPrompts = [
   'Summarize key points',
   'What are the action items?',
-  'Explain the main concepts',
-  'Identify key themes',
 ];
 
 const TopicDetail = () => {
