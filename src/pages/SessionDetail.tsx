@@ -735,9 +735,20 @@ const SessionDetail = () => {
 
             {/* Right Column - Chat */}
             <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
-              <div className="border-b border-border px-4 py-3 space-y-3">
+              <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-semibold text-foreground">Chat</h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-semibold text-foreground">Chat</h2>
+                    <Switch
+                      id="topic-context"
+                      checked={topicContextEnabled}
+                      onCheckedChange={setTopicContextEnabled}
+                      className="scale-75"
+                    />
+                    <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
+                      Topic context
+                    </Label>
+                  </div>
                   <div className="flex items-center gap-1">
                     <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
                       <FileText className="h-4 w-4" />
@@ -763,17 +774,6 @@ const SessionDetail = () => {
                       )}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
-                    Topic context
-                  </Label>
-                  <Switch
-                    id="topic-context"
-                    checked={topicContextEnabled}
-                    onCheckedChange={setTopicContextEnabled}
-                    className="scale-75"
-                  />
                 </div>
               </div>
 
