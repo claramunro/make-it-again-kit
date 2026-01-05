@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, Copy, RefreshCw, ChevronRight, ChevronDown, Send, Sparkles,
   Lightbulb, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, 
-  Quote, BarChart3, Pencil, Download, Star, X
+  Quote, BarChart3, Pencil, Download, Star, X, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { topics } from '@/data/topics';
@@ -337,8 +337,9 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         {/* Right Column - Chat (not on edit tab) */}
         {activeTopicTab !== 'edit' && (
           <div className="w-72 shrink-0 flex flex-col border-l border-border bg-muted/30">
-            <div className="border-b border-border p-4">
+            <div className="flex items-center justify-between border-b border-border p-4">
               <h2 className="text-sm font-semibold text-primary">Chat in Topic</h2>
+              <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
             </div>
             <div className="flex-1 overflow-auto p-4">
               <div className="text-sm text-muted-foreground">
