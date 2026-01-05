@@ -913,16 +913,16 @@ const SessionDetail = () => {
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                <div className="flex flex-wrap gap-1.5">
+                  <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
                     Summarize key points
                     <Sparkles className="h-3 w-3" />
                   </button>
-                  <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                  <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
                     What are the action items?
                     <Sparkles className="h-3 w-3" />
                   </button>
-                  <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                  <button className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs text-primary hover:bg-primary/10 transition-smooth">
                     More
                     <ChevronRight className="h-3 w-3" />
                   </button>
