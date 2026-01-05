@@ -9,6 +9,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -96,6 +104,7 @@ const SessionDetail = () => {
   const [chatMessage, setChatMessage] = useState('');
   const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [topicContextEnabled, setTopicContextEnabled] = useState(true);
 
   // Find the current session to check if it has audio
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
@@ -261,19 +270,19 @@ const SessionDetail = () => {
               <div className="flex-1 overflow-auto space-y-4 mb-4">
                 {/* User Message */}
                 <div className="flex justify-end">
-                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-muted px-4 py-3">
-                    <p className="text-sm text-foreground">How engaged are they in this opportunity?</p>
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3">
+                    <p className="text-sm text-primary-foreground">How engaged are they in this opportunity?</p>
                   </div>
                 </div>
 
                 {/* AI Response */}
-                <div className="rounded-xl border-l-4 border-primary/30 bg-primary/5 p-4">
+                <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3">
                   <p className="mb-3 text-sm leading-relaxed text-foreground">
                     The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland.
                   </p>
                   <ul className="space-y-2 text-sm text-foreground">
-                    <li>- He actively pursues projects that combine affordability with profitability.</li>
-                    <li>- His willingness to cap investor returns shows prioritization of mission over yield.</li>
+                    <li>• He actively pursues projects that combine affordability with profitability.</li>
+                    <li>• His willingness to cap investor returns shows prioritization of mission over yield.</li>
                   </ul>
                 </div>
               </div>
@@ -390,22 +399,36 @@ const SessionDetail = () => {
                 </div>
               </div>
 
-              {/* Right: Topic Tag + Star */}
+              {/* Right: Topic Select + Star */}
               <div className="shrink-0 flex items-center gap-3">
-                {selectedTopicData ? (
-                  <button
-                    onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
-                    className="transition-smooth hover:opacity-80"
-                  >
-                    <SessionBadge 
-                      topicBadge={{
-                        icon: selectedTopicData.icon,
-                        label: selectedTopicData.name,
-                        wallpaper: selectedTopicData.wallpaper,
-                      } as TopicBadgeInfo}
-                    />
-                  </button>
-                ) : null}
+                <Select
+                  value={selectedTopic}
+                  onValueChange={(value) => setSelectedTopic(value)}
+                >
+                  <SelectTrigger className="h-8 w-auto gap-2 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0">
+                    {selectedTopicData ? (
+                      <SessionBadge 
+                        topicBadge={{
+                          icon: selectedTopicData.icon,
+                          label: selectedTopicData.name,
+                          wallpaper: selectedTopicData.wallpaper,
+                        } as TopicBadgeInfo}
+                      />
+                    ) : (
+                      <span className="text-sm text-muted-foreground">Select topic</span>
+                    )}
+                  </SelectTrigger>
+                  <SelectContent className="z-50 bg-card border border-border shadow-lg">
+                    {topics.map((topic) => (
+                      <SelectItem key={topic.id} value={topic.id} className="cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          <span>{topic.icon}</span>
+                          <span>{topic.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <button 
                   onClick={() => setIsFavorite(!isFavorite)}
                   className="p-1 rounded-md transition-smooth hover:bg-muted"
@@ -712,7 +735,7 @@ const SessionDetail = () => {
 
             {/* Right Column - Chat */}
             <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
-              <div className="border-b border-border px-4 py-3">
+              <div className="border-b border-border px-4 py-3 space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-foreground">Chat</h2>
                   <div className="flex items-center gap-1">
@@ -741,25 +764,36 @@ const SessionDetail = () => {
                     </div>
                   </div>
                 </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
+                    Topic context
+                  </Label>
+                  <Switch
+                    id="topic-context"
+                    checked={topicContextEnabled}
+                    onCheckedChange={setTopicContextEnabled}
+                    className="scale-75"
+                  />
+                </div>
               </div>
 
               {/* Chat Messages Area - scrollable */}
               <div className="flex-1 overflow-auto p-4 space-y-4">
                 {/* User Message */}
                 <div className="flex justify-end">
-                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-muted px-4 py-3">
-                    <p className="text-sm text-foreground">How engaged are they in this opportunity?</p>
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3">
+                    <p className="text-sm text-primary-foreground">How engaged are they in this opportunity?</p>
                   </div>
                 </div>
 
                 {/* AI Response */}
-                <div className="rounded-xl border-l-4 border-primary/30 bg-primary/5 p-4">
+                <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3">
                   <p className="mb-3 text-sm leading-relaxed text-foreground">
                     The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland. He is highly engaged in this opportunity, demonstrating strong commitment through long-term holds, creative financing, and legal experimentation around profession-based housing.
                   </p>
                   <ul className="space-y-2 text-sm text-foreground">
-                    <li>- He actively pursues projects that combine affordability with profitability, using market-rate units to internally subsidize social impact units without legal encumbrances.</li>
-                    <li>- His willingness to cap investor returns (4% vs. 8%) and forgo refinancing shows prioritization of mission over maximum yield.</li>
+                    <li>• He actively pursues projects that combine affordability with profitability, using market-rate units to internally subsidize social impact units without legal encumbrances.</li>
+                    <li>• His willingness to cap investor returns (4% vs. 8%) and forgo refinancing shows prioritization of mission over maximum yield.</li>
                   </ul>
                 </div>
               </div>
