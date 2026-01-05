@@ -1,10 +1,25 @@
 import { useState } from 'react';
-import { FileText, AudioLines, ChevronRight, Star } from 'lucide-react';
+import { FileText, AudioLines, ChevronRight, Star, FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Session, TopicBadgeInfo } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
 import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
+
+// Empty state badge component for sessions without topics
+const EmptyTopicBadge = () => (
+  <div
+    className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
+    style={{
+      backgroundColor: 'hsl(0, 0%, 96%)',
+      color: 'hsl(0, 0%, 55%)',
+      borderColor: 'hsl(0, 0%, 88%)',
+    }}
+  >
+    <FolderOpen className="h-3.5 w-3.5" />
+    <span>Select topic</span>
+  </div>
+);
 
 interface SessionCardProps {
   session: Session;
@@ -89,9 +104,13 @@ export function SessionCard({
       </div>
 
       {/* Topic Badge - show to the left of star when not in selection mode */}
-      {!selectionMode && effectiveTopicBadge && (
+      {!selectionMode && (
         <div className="shrink-0">
-          <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+          {effectiveTopicBadge ? (
+            <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+          ) : (
+            <EmptyTopicBadge />
+          )}
         </div>
       )}
 
