@@ -595,16 +595,16 @@ const SessionDetail = () => {
 
                   {/* Floating Actions - Fixed position relative to viewport */}
                   <div className="fixed bottom-24 right-[340px] z-30 space-y-2">
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground shadow-md transition-smooth hover:bg-muted-foreground hover:text-muted">
                       <Pencil className="h-4 w-4" />
                     </button>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-smooth hover:bg-primary/90">
                       <Copy className="h-4 w-4" />
                     </button>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-smooth hover:bg-primary/90">
                       <Download className="h-4 w-4" />
                     </button>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-smooth hover:bg-primary/90">
                       <Sparkles className="h-4 w-4" />
                     </button>
                   </div>
