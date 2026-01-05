@@ -11,8 +11,7 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      // NOTE: use existing semantic tokens (badge-pro) to get the "blue" checkbox everywhere.
-      "peer h-4 w-4 shrink-0 rounded-[4px] border-2 border-muted-foreground/50 bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsl(var(--badge-pro))] data-[state=checked]:border-[hsl(var(--badge-pro))] data-[state=checked]:text-[hsl(var(--badge-pro-foreground))]",
+      "peer h-5 w-5 shrink-0 rounded-[4px] border-2 border-muted-foreground/50 bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[hsl(var(--badge-pro))] data-[state=checked]:border-[hsl(var(--badge-pro))] data-[state=checked]:text-[hsl(var(--badge-pro-foreground))]",
       className,
     )}
     {...props}
