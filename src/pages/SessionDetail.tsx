@@ -806,7 +806,7 @@ const SessionDetail = () => {
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
                     placeholder="How can I help?"
-                    className="flex-1 bg-transparent px-3 text-sm placeholder:text-muted-foreground focus:outline-none"
+                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none"
                   />
                   <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
                     <Send className="h-4 w-4" />
