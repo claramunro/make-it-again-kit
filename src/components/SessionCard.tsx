@@ -55,16 +55,8 @@ export function SessionCard({
   // Use topicBadge prop, fall back to session.topicBadge, then use session.badge
   const effectiveTopicBadge = topicBadge || session.topicBadge;
 
-  return (
-    <Link 
-      to={selectionMode ? '#' : (onSelect ? '#' : sessionUrl)}
-      onClick={handleClick}
-      className={cn(
-        "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm",
-        isSelected && !selectionMode && "border-primary bg-primary/[0.03]",
-        isChecked && selectionMode && "border-primary bg-primary/[0.03]"
-      )}
-    >
+  const cardContent = (
+    <>
       {/* Checkbox (only in selection mode) */}
       {selectionMode && (
         <div className="mt-0.5 flex shrink-0 items-center justify-center">
@@ -124,6 +116,27 @@ export function SessionCard({
       {!selectionMode && (
         <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-muted-foreground/50 transition-smooth group-hover:text-muted-foreground" />
       )}
+    </>
+  );
+
+  const cardClassName = cn(
+    "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm cursor-pointer",
+    isSelected && !selectionMode && "border-primary bg-primary/[0.03]",
+    isChecked && selectionMode && "border-primary bg-primary/[0.03]"
+  );
+
+  // Use div in selection mode to prevent navigation, Link otherwise
+  if (selectionMode || onSelect) {
+    return (
+      <div onClick={handleClick} className={cardClassName}>
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link to={sessionUrl} className={cardClassName}>
+      {cardContent}
     </Link>
   );
 }
