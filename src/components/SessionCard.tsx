@@ -124,8 +124,8 @@ export function SessionCard({
         )}
       </div>
 
-      {/* Content - constrained width for balanced 2-line wrap */}
-      <div className="flex-1 space-y-1 max-w-[340px]">
+      {/* Content */}
+      <div className="flex-1 min-w-0 space-y-1">
         <h3 className="text-sm font-medium leading-snug text-foreground line-clamp-2">
           {displayTitle}
         </h3>
