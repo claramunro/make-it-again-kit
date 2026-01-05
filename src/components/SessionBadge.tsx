@@ -51,7 +51,7 @@ export function SessionBadge({ type, topicBadge, showChevron }: SessionBadgeProp
     
     return (
       <span
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium max-w-full"
         style={{
           backgroundColor: colors.bg,
           color: colors.text,
@@ -59,9 +59,9 @@ export function SessionBadge({ type, topicBadge, showChevron }: SessionBadgeProp
           borderColor: colors.border,
         }}
       >
-        <span className="text-sm">{topicBadge.icon}</span>
-        {topicBadge.label}
-        {showChevron && <ChevronDown className="h-3 w-3 ml-0.5 opacity-60" />}
+        <span className="text-sm shrink-0">{topicBadge.icon}</span>
+        <span className="truncate">{topicBadge.label}</span>
+        {showChevron && <ChevronDown className="h-3 w-3 shrink-0 opacity-60" />}
       </span>
     );
   }
