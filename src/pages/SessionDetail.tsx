@@ -632,6 +632,25 @@ const SessionDetail = () => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Detailed Notes */}
+                  <div className="rounded-xl border border-border bg-card p-5">
+                    <div className="mb-4 flex items-center justify-between">
+                      <h2 className="text-lg font-semibold text-foreground">Detailed Notes</h2>
+                      <MoreVertical className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div className="space-y-4 text-sm leading-relaxed text-foreground">
+                      <p>
+                        Kevin Cavanaugh, founder of Guerrilla Development, shared his unconventional philosophy on urban development. Unlike traditional developers who focus on quick flips and maximum profit margins, Cavanaugh emphasized the value of long-term property holds and building genuine community relationships.
+                      </p>
+                      <p>
+                        A key insight from the discussion was his approach to "legal discrimination by profession" – strategically selecting tenants based on their profession to create a curated community atmosphere. This includes prioritizing artists, small business owners, and creative professionals who contribute to neighborhood character.
+                      </p>
+                      <p>
+                        The creative financing strategies discussed included seller financing arrangements, community investment models, and patience-based approaches that prioritize sustainable growth over rapid returns. These methods allow for more flexibility and better alignment with community needs.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
 
