@@ -734,7 +734,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
+            <div className="w-96 shrink-0 flex flex-col border-l border-border bg-card">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -800,15 +800,21 @@ const SessionDetail = () => {
 
               {/* Chat Input - always visible at bottom */}
               <div className="shrink-0 border-t border-border p-4 space-y-3">
-                <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-                  <input
-                    type="text"
+                <div className="flex items-end gap-2 rounded-xl border border-border bg-background p-2">
+                  <textarea
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
                     placeholder="How can I help?"
-                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                    rows={1}
+                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[24px] max-h-[72px] overflow-y-auto"
+                    style={{ height: 'auto' }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = Math.min(target.scrollHeight, 72) + 'px';
+                    }}
                   />
-                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full shrink-0">
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
