@@ -800,14 +800,14 @@ const SessionDetail = () => {
 
               {/* Chat Input - always visible at bottom */}
               <div className="shrink-0 border-t border-border p-4 space-y-3">
-                <div className="flex items-end gap-2 rounded-xl border border-border bg-background p-2">
+                <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2 min-h-[44px]">
                   <textarea
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
                     placeholder="How can I help?"
                     rows={1}
-                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[24px] max-h-[72px] overflow-y-auto"
-                    style={{ height: 'auto' }}
+                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[28px] max-h-[72px] overflow-y-auto leading-7"
+                    style={{ height: '28px' }}
                     onInput={(e) => {
                       const target = e.target as HTMLTextAreaElement;
                       target.style.height = 'auto';
