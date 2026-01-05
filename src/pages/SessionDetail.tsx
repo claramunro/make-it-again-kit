@@ -4,7 +4,7 @@ import {
   ArrowLeft, ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
-  Lightbulb, Quote, BarChart3, Clock, Upload
+  Lightbulb, Quote, BarChart3, Clock, Upload, Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -97,6 +97,8 @@ const SessionDetail = () => {
   // Find the current session to check if it has audio
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
   const hasAudio = currentSession?.type === 'audio';
+  
+  const [isFavorite, setIsFavorite] = useState(currentSession?.isFavorite || false);
 
   const selectedTopicData = currentSession?.topicId ? topics.find(t => t.id === currentSession.topicId) : null;
   const selectedSessionTypeData = sessionTypes.find(t => t.id === selectedSessionType);
@@ -368,10 +370,18 @@ const SessionDetail = () => {
                     No Topic
                   </span>
                 )}
-                <button className="text-yellow-500 hover:text-yellow-400 transition-smooth">
-                  <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
+                <button 
+                  onClick={() => setIsFavorite(!isFavorite)}
+                  className="p-1 rounded-md transition-smooth hover:bg-muted"
+                >
+                  <Star 
+                    className={cn(
+                      "h-5 w-5 transition-colors",
+                      isFavorite 
+                        ? "fill-yellow-400 text-yellow-400" 
+                        : "text-muted-foreground hover:text-yellow-400"
+                    )} 
+                  />
                 </button>
               </div>
             </div>
