@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
-  Calendar, Trash2, Share, Folder, FileText, Video, Bookmark, ALargeSmall,
+  Calendar, Trash2, Share, Folder, FolderOpen, FileText, Video, Bookmark, ALargeSmall,
   Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines, RefreshCw, FileCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -429,7 +429,18 @@ const SessionDetail = () => {
                         showChevron
                       />
                     ) : (
-                      <span className="text-sm text-muted-foreground">Select topic</span>
+                      <div
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
+                        style={{
+                          backgroundColor: 'hsl(0, 0%, 92%)',
+                          color: 'hsl(0, 0%, 45%)',
+                          borderColor: 'hsl(0, 0%, 80%)',
+                        }}
+                      >
+                        <FolderOpen className="h-3.5 w-3.5" />
+                        <span>Select topic</span>
+                        <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                      </div>
                     )}
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-card border border-border shadow-lg">
