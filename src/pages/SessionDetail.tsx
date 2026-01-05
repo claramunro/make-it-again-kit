@@ -558,7 +558,7 @@ const SessionDetail = () => {
 
               {/* Transcript Tab */}
               {activeTab === 'transcript' && (
-                <div>
+                <div className="relative">
                   {/* Transcript Header */}
                   <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
                     <div className="flex items-center gap-2 text-sm text-primary">
@@ -574,38 +574,39 @@ const SessionDetail = () => {
                   </div>
 
                   {/* Transcript Content */}
-                  <div className="relative rounded-xl border border-border bg-card p-5">
+                  <div className="rounded-xl border border-border bg-card p-5 pr-16">
                     <div className="space-y-6 text-sm leading-relaxed text-foreground">
                       <div>
                         <p className="mb-2 font-semibold">Speaker 1:</p>
                         <p>This is our first experiment in legal discrimination. I can say, I won't rent to you because you're a lawyer. And if you are on the front lines of fixing the homeless housing problem in the city, here's a key to a loft that's half price. I don't care what you make; I care what you do. So that's the experiment behind this.</p>
-                      </div>
-                      <div>
-                        <p>I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon. We have a few projects here, infill projects, mostly small to medium scale. Half of them are adaptive reuse projects, and half of them are new construction. We've got 24 projects. A dozen of them are completed, and a dozen are on the boards or under construction.</p>
+                        <p className="mt-4">I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon. We have a few projects here, infill projects, mostly small to medium scale. Half of them are adaptive reuse projects, and half of them are new construction. We've got 24 projects. A dozen of them are completed, and a dozen are on the boards or under construction.</p>
                       </div>
                       <div>
                         <p>I've been doing this for 20 years. I was trained as an architect, one of the 50% of architecture grads who isn't a licensed architect. I chose the development path. I don't want to call myself a real estate developer because they're like always the bad guy in the movies, but that's my profession.</p>
                       </div>
                       <div>
-                        <p>Gorilla Development came out after the last recession. It's "guerrilla" like, you know, guerrilla warfare, like the...</p>
+                        <p>Gorilla Development came out after the last recession. It's "guerrilla" like, you know, guerrilla warfare, like the nimble fighters that can take on the big guys. We focus on smaller infill projects that the large developers don't want to touch. These are often in neighborhoods that need investment but haven't seen it because the numbers don't work for the big players.</p>
+                      </div>
+                      <div>
+                        <p>Our model is different because we hold properties long-term rather than flipping them. This allows us to offer below-market rents to specific professions we want in our buildings. Teachers, social workers, nurses - people who make our communities better but often can't afford to live in them.</p>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Floating Actions - Fixed Bottom Right */}
-                    <div className="absolute bottom-4 right-4 space-y-2">
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Copy className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Download className="h-4 w-4" />
-                      </button>
-                      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
-                        <Sparkles className="h-4 w-4" />
-                      </button>
-                    </div>
+                  {/* Floating Actions - Fixed position relative to viewport */}
+                  <div className="fixed bottom-24 right-[340px] z-30 space-y-2">
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted-foreground hover:text-muted">
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                      <Copy className="h-4 w-4" />
+                    </button>
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                      <Download className="h-4 w-4" />
+                    </button>
+                    <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90">
+                      <Sparkles className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               )}
