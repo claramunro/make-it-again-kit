@@ -6,6 +6,7 @@ import {
   FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 
@@ -226,7 +227,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                     'Draft case study outline',
                   ].map((todo, i) => (
                     <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
-                      <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border" />
+                      <Checkbox className="mt-0.5" />
                       <div>
                         <p className="text-sm text-foreground">{todo}</p>
                         <p className="text-xs text-muted-foreground">Due: Not set</p>
