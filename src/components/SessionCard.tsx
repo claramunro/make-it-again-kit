@@ -1,28 +1,31 @@
 import { useState } from 'react';
-import { FileText, AudioLines, ChevronRight, Star, FolderOpen } from 'lucide-react';
+import { FileText, AudioLines, ChevronRight, Star, FolderOpen, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Session, TopicBadgeInfo } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
 import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
+import { topics } from '@/data/topics';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 
 // Max characters for title display (balanced 2-line wrap)
 const MAX_TITLE_LENGTH = 85;
 
-// Empty state badge component for sessions without topics
-const EmptyTopicBadge = () => (
-  <div
-    className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border cursor-pointer hover:bg-[hsl(0,0%,92%)] transition-colors"
-    style={{
-      backgroundColor: 'hsl(0, 0%, 96%)',
-      color: 'hsl(0, 0%, 55%)',
-      borderColor: 'hsl(0, 0%, 88%)',
-    }}
-  >
-    <FolderOpen className="h-3.5 w-3.5" />
-    <span>Select topic</span>
-  </div>
-);
+// Wallpaper to badge color mapping for select items
+const wallpaperBadgeColors: Record<string, { bg: string; text: string; border: string }> = {
+  sand: { bg: 'hsl(45, 40%, 94%)', text: 'hsl(35, 50%, 35%)', border: 'hsl(45, 35%, 85%)' },
+  peach: { bg: 'hsl(20, 60%, 94%)', text: 'hsl(15, 55%, 40%)', border: 'hsl(20, 50%, 85%)' },
+  mint: { bg: 'hsl(150, 35%, 93%)', text: 'hsl(155, 40%, 32%)', border: 'hsl(150, 30%, 82%)' },
+  lavender: { bg: 'hsl(270, 35%, 95%)', text: 'hsl(275, 40%, 45%)', border: 'hsl(270, 30%, 88%)' },
+  ocean: { bg: 'hsl(200, 50%, 94%)', text: 'hsl(205, 55%, 38%)', border: 'hsl(200, 45%, 85%)' },
+  sunset: { bg: 'hsl(30, 55%, 94%)', text: 'hsl(25, 60%, 40%)', border: 'hsl(30, 50%, 85%)' },
+};
 
 interface SessionCardProps {
   session: Session;
@@ -34,6 +37,7 @@ interface SessionCardProps {
   onCheckChange?: (id: string, checked: boolean) => void;
   topicBadge?: TopicBadgeInfo;
   onSelectTopic?: (sessionId: string) => void;
+  onAssignTopic?: (sessionId: string, topicId: string) => void;
 }
 
 export function SessionCard({ 
@@ -45,7 +49,8 @@ export function SessionCard({
   isChecked,
   onCheckChange,
   topicBadge,
-  onSelectTopic
+  onSelectTopic,
+  onAssignTopic
 }: SessionCardProps) {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
@@ -132,13 +137,46 @@ export function SessionCard({
 
       {/* Topic Badge - show to the left of star when not in selection mode */}
       {!selectionMode && (
-        <div className="shrink-0 ml-auto" onClick={handleBadgeClick}>
+        <div className="shrink-0 ml-auto" onClick={(e) => e.stopPropagation()}>
           {effectiveTopicBadge ? (
-            <div className="cursor-pointer hover:opacity-80 transition-opacity">
+            <div 
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={handleBadgeClick}
+            >
               <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
             </div>
           ) : (
-            <EmptyTopicBadge />
+            <Select
+              onValueChange={(value) => {
+                onAssignTopic?.(session.id, value);
+              }}
+            >
+              <SelectTrigger className="h-auto border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-[hsl(0,0%,96%)] hover:bg-[hsl(0,0%,92%)] text-[hsl(0,0%,55%)] border-[hsl(0,0%,88%)] transition-colors focus:ring-0 focus:ring-offset-0 w-auto gap-1.5">
+                <FolderOpen className="h-3.5 w-3.5" />
+                <span>Select topic</span>
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover">
+                {topics.map((topic) => {
+                  const colors = topic.wallpaper 
+                    ? wallpaperBadgeColors[topic.wallpaper] 
+                    : wallpaperBadgeColors.mint;
+                  return (
+                    <SelectItem key={topic.id} value={topic.id}>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
+                          style={{ backgroundColor: colors.bg }}
+                        >
+                          {topic.icon}
+                        </span>
+                        <span>{topic.name}</span>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
           )}
         </div>
       )}
