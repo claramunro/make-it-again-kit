@@ -268,9 +268,10 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
   );
 }
 
-// List view item for compact display
+// List view item - includes all card elements in horizontal layout
 export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
@@ -293,80 +294,128 @@ export function TopicListItem({ topic }: TopicCardProps) {
     console.log('Delete topic:', topic.id);
   };
 
+  // Show 1 session on mobile, 2 on desktop
+  const sessionsToShow = isMobile ? 1 : 2;
+  const remainingSessions = topic.sessionCount - sessionsToShow;
+
   return (
     <>
       <div 
         onClick={handleCardClick}
-        className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-smooth hover:border-primary/20 hover:shadow-sm cursor-pointer"
+        className="group rounded-xl border border-border bg-card overflow-hidden transition-smooth hover:border-primary/20 hover:shadow-md cursor-pointer"
       >
-        {/* Emoji container */}
-        <div className={cn(
-          'flex h-10 w-10 items-center justify-center rounded-xl shrink-0',
-          wallpaper.bg
-        )}>
-          <span className="text-lg">{topic.icon}</span>
-        </div>
-        
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-foreground truncate">{topic.name}</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {topic.sessionCount} sessions • {topic.date}
-          </p>
-        </div>
+        {/* Main content row */}
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            {/* Emoji container */}
+            <div className={cn(
+              'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
+              wallpaper.bg
+            )}>
+              <span className="text-2xl">{topic.icon}</span>
+            </div>
+            
+            {/* Title and metadata */}
+            <div className="flex-1 min-w-0">
+              {/* Row 1: Title + badges/actions */}
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-base font-semibold text-foreground truncate leading-none">{topic.name}</h3>
+                
+                <div className="flex items-center gap-1 shrink-0">
+                  {/* Shared badge */}
+                  {topic.sharedBy && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                      <Users className="h-3 w-3" />
+                      Shared
+                    </span>
+                  )}
+                  
+                  {/* Star button */}
+                  <button 
+                    className="p-1 rounded-full hover:bg-muted transition-smooth"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Star 
+                      className={cn(
+                        'h-4 w-4 transition-smooth',
+                        topic.isFavorite 
+                          ? 'fill-yellow-400 text-yellow-400' 
+                          : 'text-muted-foreground hover:text-yellow-400'
+                      )} 
+                    />
+                  </button>
+                  
+                  {/* Menu button */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button 
+                        className="p-1 rounded-full hover:bg-muted transition-smooth"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={handleEditClick} className="gap-2">
+                        <Pencil className="h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        Invite to Topic
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+              
+              {/* Row 2: Description + session count */}
+              <div className="flex items-center justify-between gap-2 mt-1">
+                <p className="text-sm text-muted-foreground">Topic Description</p>
+                <span className="text-sm text-muted-foreground shrink-0">
+                  {topic.sessionCount} Sessions
+                </span>
+              </div>
+            </div>
+          </div>
 
-        {/* Right side actions */}
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Shared badge */}
-          {topic.sharedBy && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-              <Users className="h-3 w-3" />
-              Shared
-            </span>
-          )}
-          
-          {/* Star button */}
-          <button 
-            className="p-1.5 rounded-full hover:bg-muted transition-smooth"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Star 
-              className={cn(
-                'h-4 w-4 transition-smooth',
-                topic.isFavorite 
-                  ? 'fill-yellow-400 text-yellow-400' 
-                  : 'text-muted-foreground hover:text-yellow-400'
-              )} 
-            />
-          </button>
-          
-          {/* Menu button */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button 
-                className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+          {/* Sessions list - horizontal on desktop */}
+          <div className="mt-4 flex flex-col md:flex-row gap-2">
+            {topic.sessions?.slice(0, sessionsToShow).map((session) => (
+              <Link
+                key={session.id}
+                to={`/topic/${topic.id}?tab=sessions`}
                 onClick={(e) => e.stopPropagation()}
+                className="flex-1 flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
               >
-                <MoreVertical className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={handleEditClick} className="gap-2">
-                <Pencil className="h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
-                <UserPlus className="h-4 w-4" />
-                Invite to Topic
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
-                <Trash2 className="h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                {/* Session icon */}
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
+                  {session.type === 'audio' ? (
+                    <AudioLines className="h-5 w-5" />
+                  ) : (
+                    <FileText className="h-5 w-5" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {session.date} · {session.duration}
+                  </p>
+                </div>
+              </Link>
+            ))}
+            
+            {/* Show more indicator */}
+            {remainingSessions > 0 && (
+              <div className="flex items-center justify-center text-sm text-muted-foreground px-4 py-3 md:shrink-0">
+                +{remainingSessions} more
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
