@@ -619,7 +619,7 @@ const SessionDetail = () => {
                           <MoreVertical className="h-5 w-5" />
                         </button>
                         {summaryMenuOpen && (
-                          <div className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border bg-card py-1 shadow-lg">
+                          <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
                             <button 
                               onClick={() => setSummaryMenuOpen(false)}
                               className="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-muted"
