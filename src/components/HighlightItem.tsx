@@ -33,8 +33,7 @@ export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItem
           {highlight.title}
         </h4>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs text-muted-foreground">{highlight.datetime}</span>
-          <span className="rounded-full bg-primary/80 px-2 py-0.5 text-xs font-medium text-primary-foreground">
+          <span className="rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium text-foreground">
             {highlight.timestamp}
           </span>
         </div>
