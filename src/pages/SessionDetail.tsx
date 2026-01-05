@@ -529,9 +529,9 @@ const SessionDetail = () => {
 
           {/* Main Layout - 2 columns: Content + Chat */}
           {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
-          <div className={cn("flex overflow-hidden", hasAudio ? "h-[calc(100vh-208px)]" : "h-[calc(100vh-136px)]")}>
+          <div className="flex overflow-hidden h-[calc(100vh-136px)]">
             {/* Center Column - Content based on tab */}
-            <div className="min-w-0 flex-1 overflow-auto p-6">
+            <div className={cn("min-w-0 flex-1 overflow-auto p-6", hasAudio && "pb-24")}>
               {/* Highlights Tab */}
               {activeTab === 'highlights' && (
                 <div className="rounded-xl border border-border bg-card flex overflow-hidden">
@@ -829,7 +829,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card h-[calc(100vh-136px)]">
+            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
