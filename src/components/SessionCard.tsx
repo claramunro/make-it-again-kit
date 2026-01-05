@@ -92,8 +92,8 @@ export function SessionCard({
           {session.title}
         </h3>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{session.type === 'audio' ? 'Audio' : 'Text'}</span>
-          <span>{session.date}</span>
+          <span>{session.time}</span>
+          <span>{session.duration}</span>
         </div>
       </div>
 
