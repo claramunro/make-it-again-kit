@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
-  ArrowLeft, ChevronDown, MoreVertical, Play, Pause, Sparkles, 
+  ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
   Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines
@@ -715,13 +715,17 @@ const SessionDetail = () => {
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <h2 className="font-semibold text-foreground">Chat</h2>
-                  <div className="relative">
-                    <button
-                      onClick={() => setShareMenuOpen(!shareMenuOpen)}
-                      className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-                    >
-                      <Upload className="h-4 w-4" />
+                  <div className="flex items-center gap-1">
+                    <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
+                      <FileText className="h-4 w-4" />
                     </button>
+                    <div className="relative">
+                      <button
+                        onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                        className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                      >
+                        <Upload className="h-4 w-4" />
+                      </button>
                     {shareMenuOpen && (
                       <div className="absolute right-0 top-full z-50 mt-1 w-44 rounded-lg border border-border bg-card py-1 shadow-lg">
                         <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
@@ -732,8 +736,9 @@ const SessionDetail = () => {
                           <FileText className="h-4 w-4 text-muted-foreground" />
                           Share as Markdown
                         </button>
-                      </div>
-                    )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -760,7 +765,7 @@ const SessionDetail = () => {
               </div>
 
               {/* Chat Input - always visible at bottom */}
-              <div className="shrink-0 border-t border-border p-4">
+              <div className="shrink-0 border-t border-border p-4 space-y-3">
                 <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
                   <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
                   <input
@@ -773,6 +778,16 @@ const SessionDetail = () => {
                   <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
                     <Send className="h-4 w-4" />
                   </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                    Identify key themes
+                    <Sparkles className="h-3 w-3" />
+                  </button>
+                  <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                    More
+                    <ChevronRight className="h-3 w-3" />
+                  </button>
                 </div>
               </div>
             </div>
