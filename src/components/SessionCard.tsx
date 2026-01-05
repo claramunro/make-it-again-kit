@@ -77,23 +77,23 @@ export function SessionCard({
         </div>
       )}
 
+      {/* Type Icon */}
+      <div className="mt-0.5 shrink-0 text-muted-foreground">
+        {session.type === 'audio' ? (
+          <AudioLines className="h-5 w-5" />
+        ) : (
+          <FileText className="h-5 w-5" />
+        )}
+      </div>
+
       {/* Content */}
       <div className="flex-1 space-y-1">
         <h3 className="text-sm font-medium leading-snug text-foreground line-clamp-2">
           {session.title}
         </h3>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            {session.type === 'audio' ? (
-              <AudioLines className="h-3.5 w-3.5" />
-            ) : (
-              <FileText className="h-3.5 w-3.5" />
-            )}
-            {session.type === 'audio' ? 'Audio' : 'Text'}
-          </span>
+          <span>{session.type === 'audio' ? 'Audio' : 'Text'}</span>
           <span>{session.date}</span>
-          <span>{session.time}</span>
-          <span>{session.duration}</span>
         </div>
       </div>
 
