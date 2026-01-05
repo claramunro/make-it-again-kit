@@ -98,7 +98,7 @@ const SessionDetail = () => {
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
   const hasAudio = currentSession?.type === 'audio';
 
-  const selectedTopicData = topics.find(t => t.id === '2');
+  const selectedTopicData = currentSession?.topicId ? topics.find(t => t.id === currentSession.topicId) : null;
   const selectedSessionTypeData = sessionTypes.find(t => t.id === selectedSessionType);
 
   // Mobile/Tablet Layout
@@ -328,16 +328,20 @@ const SessionDetail = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                {currentSession?.type === 'audio' ? (
+                  <Video className="h-5 w-5 shrink-0 text-muted-foreground" />
+                ) : (
+                  <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                )}
                 <div className="min-w-0">
                   <h1 className="truncate text-sm font-medium leading-snug text-foreground">
-                    Title
+                    {currentSession?.title || 'Untitled Session'}
                   </h1>
                   <p className="text-xs text-muted-foreground">
-                    Oct 18, 2025 9:16 AM
+                    {currentSession?.date || 'Unknown date'} {currentSession?.time || ''}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    2 minutes
+                    {currentSession?.duration || 'Unknown duration'}
                   </p>
                 </div>
               </div>
