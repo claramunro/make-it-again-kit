@@ -418,7 +418,7 @@ const SessionDetail = () => {
                   value={selectedTopic}
                   onValueChange={(value) => setSelectedTopic(value)}
                 >
-                  <SelectTrigger className="h-auto w-auto max-w-none gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden [&>span]:line-clamp-none">
+                  <SelectTrigger className="h-auto w-auto max-w-none gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden [&>span]:!line-clamp-none [&>span]:!whitespace-nowrap">
                     {selectedTopicData ? (
                       <SessionBadge 
                         topicBadge={{
