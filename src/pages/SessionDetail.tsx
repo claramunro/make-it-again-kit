@@ -829,7 +829,7 @@ const SessionDetail = () => {
             </div>
 
             {/* Right Column - Chat */}
-            <div className="fixed top-0 right-0 bottom-0 w-80 flex flex-col border-l border-border bg-card z-10">
+            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card h-[calc(100vh-136px)]">
               <div className="border-b border-border px-4 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
