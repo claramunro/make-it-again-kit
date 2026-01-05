@@ -915,7 +915,11 @@ const SessionDetail = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
-                    Identify key themes
+                    Summarize key points
+                    <Sparkles className="h-3 w-3" />
+                  </button>
+                  <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                    What are the action items?
                     <Sparkles className="h-3 w-3" />
                   </button>
                   <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
