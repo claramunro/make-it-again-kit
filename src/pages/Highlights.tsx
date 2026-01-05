@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { AudioLines } from 'lucide-react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
@@ -132,6 +133,7 @@ const HighlightsPage = () => {
                       key={group.id}
                       title={group.title}
                       icon={group.icon}
+                      SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
                       highlights={group.highlights}
                       selectedId={selectedHighlight?.id || null}
                       onSelectHighlight={handleSelectHighlight}
