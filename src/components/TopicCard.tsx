@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Star, ChevronRight, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
+import { Star, ChevronRight, ChevronDown, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { useTopics } from '@/contexts/TopicContext';
@@ -15,7 +15,6 @@ import {
 
 interface TopicCardProps {
   topic: Topic;
-  showSessions?: boolean;
 }
 
 interface TopicCardSelectableProps {
@@ -66,11 +65,12 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
 
 const defaultWallpaper = wallpaperPresets.mint;
 
-export function TopicCard({ topic, showSessions = true }: TopicCardProps) {
+export function TopicCard({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
@@ -88,11 +88,13 @@ export function TopicCard({ topic, showSessions = true }: TopicCardProps) {
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Placeholder for delete logic
     console.log('Delete topic:', topic.id);
   };
 
-  // Remove the session limiting - show all sessions when showSessions is true
+  const handleToggleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div 
@@ -169,18 +171,28 @@ export function TopicCard({ topic, showSessions = true }: TopicCardProps) {
               </div>
             </div>
             
-            {/* Row 2: Description + date/sessions */}
+            {/* Row 2: Description + date/sessions with expand toggle */}
             <div className="flex items-center justify-between gap-2 mt-1">
               <p className="text-sm text-muted-foreground">Topic Description</p>
-              <span className="text-sm text-muted-foreground shrink-0">
+              <button 
+                onClick={handleToggleExpand}
+                className="flex items-center gap-1 text-sm text-muted-foreground shrink-0 hover:text-foreground transition-smooth"
+              >
                 {topic.sessionCount} Sessions
-              </span>
+                {topic.sessions && topic.sessions.length > 0 && (
+                  isExpanded ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )
+                )}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Sessions list - only show when showSessions is true */}
-        {showSessions && topic.sessions && topic.sessions.length > 0 && (
+        {/* Sessions list - accordion style, collapsed by default */}
+        {isExpanded && topic.sessions && topic.sessions.length > 0 && (
           <div className="space-y-2">
             {topic.sessions.map((session) => (
               <Link
@@ -263,10 +275,11 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
 }
 
 // List view item - includes all card elements in horizontal layout
-export function TopicListItem({ topic, showSessions = true }: TopicCardProps) {
+export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
@@ -287,7 +300,10 @@ export function TopicListItem({ topic, showSessions = true }: TopicCardProps) {
     console.log('Delete topic:', topic.id);
   };
 
-
+  const handleToggleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsExpanded(!isExpanded);
+  };
   return (
     <>
       <div 
@@ -363,18 +379,28 @@ export function TopicListItem({ topic, showSessions = true }: TopicCardProps) {
                 </div>
               </div>
               
-              {/* Row 2: Description + session count */}
+              {/* Row 2: Description + session count with expand toggle */}
               <div className="flex items-center justify-between gap-2 mt-1">
                 <p className="text-sm text-muted-foreground">Topic Description</p>
-                <span className="text-sm text-muted-foreground shrink-0">
+                <button 
+                  onClick={handleToggleExpand}
+                  className="flex items-center gap-1 text-sm text-muted-foreground shrink-0 hover:text-foreground transition-smooth"
+                >
                   {topic.sessionCount} Sessions
-                </span>
+                  {topic.sessions && topic.sessions.length > 0 && (
+                    isExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )
+                  )}
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Sessions list - single column showing all sessions */}
-          {showSessions && topic.sessions && topic.sessions.length > 0 && (
+          {/* Sessions list - accordion style, collapsed by default */}
+          {isExpanded && topic.sessions && topic.sessions.length > 0 && (
             <div className="mt-4 flex flex-col gap-2">
               {topic.sessions.map((session) => (
                 <Link
