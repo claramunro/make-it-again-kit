@@ -392,8 +392,8 @@ const SessionDetail = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                <div className="min-w-0 max-w-[280px]">
-                  <h1 className="truncate text-base font-medium leading-snug text-foreground mb-1">
+                <div className="min-w-0 flex-1">
+                  <h1 className="line-clamp-2 text-base font-medium leading-snug text-foreground mb-1">
                     {currentSession?.title || 'Untitled Session'}
                   </h1>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -418,7 +418,7 @@ const SessionDetail = () => {
                   value={selectedTopic}
                   onValueChange={(value) => setSelectedTopic(value)}
                 >
-                  <SelectTrigger className="h-8 w-auto gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden">
+                  <SelectTrigger className="h-auto w-auto max-w-none gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden">
                     {selectedTopicData ? (
                       <SessionBadge 
                         topicBadge={{
