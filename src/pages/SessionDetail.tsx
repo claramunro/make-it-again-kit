@@ -333,8 +333,8 @@ const SessionDetail = () => {
                 ) : (
                   <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
                 )}
-                <div className="min-w-0">
-                  <h1 className="truncate text-sm font-medium leading-snug text-foreground">
+                <div className="min-w-0 max-w-md">
+                  <h1 className="line-clamp-2 text-sm font-medium leading-snug text-foreground">
                     {currentSession?.title || 'Untitled Session'}
                   </h1>
                   <p className="text-xs text-muted-foreground">
@@ -366,8 +366,8 @@ const SessionDetail = () => {
                 </div>
               </div>
 
-              {/* Right: Topic Tag */}
-              <div className="shrink-0">
+              {/* Right: Topic Tag + Session Type Dropdown */}
+              <div className="shrink-0 flex items-center gap-2">
                 {selectedTopicData ? (
                   <button
                     onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
@@ -382,6 +382,35 @@ const SessionDetail = () => {
                     No Topic
                   </span>
                 )}
+
+                {/* Session Type Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-smooth hover:bg-muted"
+                  >
+                    <span>{selectedSessionTypeData?.icon}</span>
+                    <span>{selectedSessionTypeData?.label}</span>
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                  {sessionTypeDropdownOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
+                      {sessionTypes.map(type => (
+                        <button 
+                          key={type.id}
+                          onClick={() => {
+                            setSelectedSessionType(type.id);
+                            setSessionTypeDropdownOpen(false);
+                          }}
+                          className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
+                        >
+                          <span>{type.icon}</span>
+                          {type.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
