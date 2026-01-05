@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
@@ -16,6 +16,13 @@ const HighlightsPage = () => {
   const [groupBy, setGroupBy] = useState<GroupBy>('sessions');
   const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Select the first highlight on page load (desktop only)
+  useEffect(() => {
+    if (!isMobile && highlights.length > 0 && !selectedHighlight) {
+      setSelectedHighlight(highlights[0]);
+    }
+  }, [isMobile, selectedHighlight]);
 
   // Group highlights by topic or session
   const groupedHighlights = useMemo(() => {
