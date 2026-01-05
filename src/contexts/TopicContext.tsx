@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { Topic, topics as initialTopics } from '@/data/topics';
 
 interface TopicContextType {
