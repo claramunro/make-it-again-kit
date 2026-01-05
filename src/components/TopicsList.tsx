@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ArrowDownUp, Plus, RefreshCw, Check, ChevronDown, LayoutGrid, List, Eye, EyeOff } from 'lucide-react';
+import { ArrowDownUp, Plus, RefreshCw, Check, ChevronDown, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TopicCard, TopicCardSelectable, TopicListItem } from '@/components/TopicCard';
 import { useTopics } from '@/contexts/TopicContext';
@@ -64,11 +64,9 @@ interface TopicsHeaderProps {
   onSortChange: (sort: TopicSortOption) => void;
   viewMode: TopicViewMode;
   onViewModeChange: (mode: TopicViewMode) => void;
-  showSessions: boolean;
-  onShowSessionsChange: (show: boolean) => void;
 }
 
-export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange, showSessions, onShowSessionsChange }: TopicsHeaderProps) {
+export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange }: TopicsHeaderProps) {
   const isMobile = useIsMobile();
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
@@ -103,16 +101,6 @@ export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange,
                 <List className="h-3.5 w-3.5" />
               </button>
             </div>
-            
-            {/* Show Sessions Toggle */}
-            <Button 
-              variant={showSessions ? "default" : "outline"} 
-              size="sm" 
-              className="h-8 gap-1 px-2 text-xs"
-              onClick={() => onShowSessionsChange(!showSessions)}
-            >
-              {showSessions ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
-            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-1.5 text-xs">
@@ -180,17 +168,6 @@ export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange,
               <List className="h-4 w-4" />
             </button>
           </div>
-          
-          {/* Show Sessions Toggle */}
-          <Button 
-            variant={showSessions ? "default" : "outline"} 
-            size="sm" 
-            className="gap-2"
-            onClick={() => onShowSessionsChange(!showSessions)}
-          >
-            {showSessions ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-            Sessions
-          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
@@ -230,10 +207,9 @@ export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange,
 interface TopicsListProps {
   sortBy: TopicSortOption;
   viewMode: TopicViewMode;
-  showSessions?: boolean;
 }
 
-export function TopicsList({ sortBy, viewMode, showSessions = true }: TopicsListProps) {
+export function TopicsList({ sortBy, viewMode }: TopicsListProps) {
   const { topics } = useTopics();
   
   const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
@@ -242,7 +218,7 @@ export function TopicsList({ sortBy, viewMode, showSessions = true }: TopicsList
     return (
       <div className="space-y-2">
         {sortedTopics.map((topic) => (
-          <TopicListItem key={topic.id} topic={topic} showSessions={showSessions} />
+          <TopicListItem key={topic.id} topic={topic} />
         ))}
       </div>
     );
@@ -251,7 +227,7 @@ export function TopicsList({ sortBy, viewMode, showSessions = true }: TopicsList
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {sortedTopics.map((topic) => (
-        <TopicCard key={topic.id} topic={topic} showSessions={showSessions} />
+        <TopicCard key={topic.id} topic={topic} />
       ))}
     </div>
   );

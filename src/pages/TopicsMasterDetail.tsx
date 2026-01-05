@@ -10,7 +10,6 @@ const TopicsMasterDetail = () => {
   );
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
   const [viewMode, setViewMode] = useState<TopicViewMode>('card');
-  const [showSessions, setShowSessions] = useState(true);
 
   return (
     <div className="flex min-h-screen bg-card">
@@ -21,7 +20,7 @@ const TopicsMasterDetail = () => {
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Topics Header - Full Width */}
           <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
-            <TopicsHeader sortBy={sortBy} onSortChange={setSortBy} viewMode={viewMode} onViewModeChange={setViewMode} showSessions={showSessions} onShowSessionsChange={setShowSessions} />
+            <TopicsHeader sortBy={sortBy} onSortChange={setSortBy} viewMode={viewMode} onViewModeChange={setViewMode} />
           </div>
           
           {/* Content: List + Detail side by side */}
