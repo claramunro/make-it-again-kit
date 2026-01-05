@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { FileText, Folder, Sparkles, Settings, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { FileText, FolderOpen, Sparkles, Settings, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SettingsDialog } from './SettingsDialog';
 import { StartSessionDialog } from './StartSessionDialog';
@@ -21,7 +21,7 @@ interface NavItem {
 
 const mainNavItems: NavItem[] = [
   { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
-  { icon: <Folder className="h-5 w-5" />, label: 'Topics', path: '/topics' },
+  { icon: <FolderOpen className="h-5 w-5" />, label: 'Topics', path: '/topics' },
   { icon: <Sparkles className="h-5 w-5" />, label: 'Highlights', path: '/highlights' },
 ];
 
