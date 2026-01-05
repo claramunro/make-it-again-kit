@@ -112,11 +112,17 @@ const SessionDetail = () => {
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [topicContextEnabled, setTopicContextEnabled] = useState(true);
   const [summaryMenuOpen, setSummaryMenuOpen] = useState(false);
-  const [todoActionFeedback, setTodoActionFeedback] = useState<string | null>(null);
+  const [todoTextCopied, setTodoTextCopied] = useState(false);
+  const [todoMarkdownCopied, setTodoMarkdownCopied] = useState(false);
 
-  const handleTodoAction = useCallback((actionText: string) => {
-    setTodoActionFeedback(actionText);
-    setTimeout(() => setTodoActionFeedback(null), 2000);
+  const handleTodoTextCopy = useCallback(() => {
+    setTodoTextCopied(true);
+    setTimeout(() => setTodoTextCopied(false), 2000);
+  }, []);
+
+  const handleTodoMarkdownCopy = useCallback(() => {
+    setTodoMarkdownCopied(true);
+    setTimeout(() => setTodoMarkdownCopied(false), 2000);
   }, []);
 
   // Find the current session to check if it has audio
@@ -432,9 +438,9 @@ const SessionDetail = () => {
                       <div
                         className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
                         style={{
-                          backgroundColor: 'hsl(0, 0%, 92%)',
-                          color: 'hsl(0, 0%, 45%)',
-                          borderColor: 'hsl(0, 0%, 80%)',
+                          backgroundColor: 'hsl(0, 0%, 96%)',
+                          color: 'hsl(0, 0%, 55%)',
+                          borderColor: 'hsl(0, 0%, 88%)',
                         }}
                       >
                         <FolderOpen className="h-3.5 w-3.5" />
@@ -673,38 +679,33 @@ const SessionDetail = () => {
                     <div className="mb-4 flex items-center justify-between">
                       <h2 className="text-lg font-semibold text-foreground">Your To-Dos</h2>
                       <div className="flex items-center gap-1">
-                        {todoActionFeedback && (
-                          <span className="text-xs text-muted-foreground animate-in fade-in-0 duration-200">
-                            {todoActionFeedback}
-                          </span>
-                        )}
                         <TooltipProvider>
-                          <Tooltip>
+                          <Tooltip open={todoTextCopied ? true : undefined}>
                             <TooltipTrigger asChild>
                               <button 
-                                onClick={() => handleTodoAction('Copied as text')}
+                                onClick={handleTodoTextCopy}
                                 className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
                               >
                                 <ALargeSmall className="h-5 w-5" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>Share as Text</p>
+                              <p>{todoTextCopied ? 'Text Copied!' : 'Share as Text'}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
                         <TooltipProvider>
-                          <Tooltip>
+                          <Tooltip open={todoMarkdownCopied ? true : undefined}>
                             <TooltipTrigger asChild>
                               <button 
-                                onClick={() => handleTodoAction('Copied as markdown')}
+                                onClick={handleTodoMarkdownCopy}
                                 className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
                               >
                                 <FileCode className="h-5 w-5" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p>Share as Markdown</p>
+                              <p>{todoMarkdownCopied ? 'Markdown Copied!' : 'Share as Markdown'}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
