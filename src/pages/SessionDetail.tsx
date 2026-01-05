@@ -496,96 +496,97 @@ const SessionDetail = () => {
             </div>
           </div>
 
-          {/* Main Layout - 3 columns for Highlights, 2 columns for Details/Transcript */}
+          {/* Main Layout - 2 columns: Content + Chat */}
           {/* Account for header (56px) + session header (~80px) + audio bar (~72px) */}
           <div className={cn("flex overflow-hidden", hasAudio ? "h-[calc(100vh-208px)]" : "h-[calc(100vh-136px)]")}>
-            {/* Left Column - Only show for Highlights tab */}
-            {activeTab === 'highlights' && (
-              <div className="w-64 min-w-0 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4 xl:w-80">
-                <div className="space-y-2">
-                  {mockBookmarks.map((bookmark) => (
-                    <button
-                      key={bookmark.id}
-                      onClick={() => setSelectedBookmark(bookmark)}
-                      className={cn(
-                        "w-full rounded-lg p-3 text-left transition-smooth",
-                        selectedBookmark.id === bookmark.id
-                          ? "bg-card border border-border shadow-sm"
-                          : "hover:bg-card/50"
-                      )}
-                    >
-                      <div className="flex items-start gap-2">
-                        <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium text-foreground line-clamp-2">
-                          {bookmark.title}
-                        </span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Center Column - Content based on tab */}
             <div className="min-w-0 flex-1 overflow-auto p-6">
               {/* Highlights Tab */}
               {activeTab === 'highlights' && (
-                <div className="rounded-xl border border-border bg-card p-6">
-                  {/* Header */}
-                  <div className="mb-6 flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{selectedBookmark.time}</span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          {selectedBookmark.duration}
-                        </span>
+                <div className="rounded-xl border border-border bg-card flex overflow-hidden">
+                  {/* Left: Bookmark List */}
+                  <div className="w-56 shrink-0 border-r border-border p-4 overflow-auto">
+                    <div className="space-y-2">
+                      {mockBookmarks.map((bookmark) => (
+                        <button
+                          key={bookmark.id}
+                          onClick={() => setSelectedBookmark(bookmark)}
+                          className={cn(
+                            "w-full rounded-lg p-3 text-left transition-smooth",
+                            selectedBookmark.id === bookmark.id
+                              ? "bg-muted"
+                              : "hover:bg-muted/50"
+                          )}
+                        >
+                          <div className="flex items-start gap-2">
+                            <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-medium text-foreground line-clamp-2">
+                              {bookmark.title}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right: Bookmark Details */}
+                  <div className="flex-1 p-6 overflow-auto">
+                    {/* Header */}
+                    <div className="mb-6 flex items-start justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">{selectedBookmark.time}</span>
+                          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            {selectedBookmark.duration}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" className="gap-2">
+                          <Upload className="h-4 w-4" />
+                          Share
+                        </Button>
+                        <Button variant="ghost" size="sm" className="gap-2">
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm" className="gap-2">
-                        <Upload className="h-4 w-4" />
-                        Share
-                      </Button>
-                      <Button variant="ghost" size="sm" className="gap-2">
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
 
-                  {/* Main Idea */}
-                  <div className="mb-6">
-                    <div className="mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                    {/* Main Idea */}
+                    <div className="mb-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {selectedBookmark.mainIdea}
+                      </p>
                     </div>
-                    <p className="text-sm leading-relaxed text-foreground">
-                      {selectedBookmark.mainIdea}
-                    </p>
-                  </div>
 
-                  {/* Original Context */}
-                  <div className="mb-6">
-                    <div className="mb-2 flex items-center gap-2">
-                      <Quote className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                    {/* Original Context */}
+                    <div className="mb-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Quote className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-muted-foreground italic">
+                        {selectedBookmark.originalContext}
+                      </p>
                     </div>
-                    <p className="text-sm leading-relaxed text-muted-foreground italic">
-                      {selectedBookmark.originalContext}
-                    </p>
-                  </div>
 
-                  {/* Analysis */}
-                  <div>
-                    <div className="mb-2 flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                    {/* Analysis */}
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {selectedBookmark.analysis}
+                      </p>
                     </div>
-                    <p className="text-sm leading-relaxed text-foreground">
-                      {selectedBookmark.analysis}
-                    </p>
                   </div>
                 </div>
               )}
