@@ -11,9 +11,14 @@ import { cn } from '@/lib/utils';
 
 type GroupBy = 'sessions' | 'topics';
 
+const HIGHLIGHTS_GROUP_BY_KEY = 'highlights-group-by';
+
 const HighlightsPage = () => {
   const isMobile = useIsMobile();
-  const [groupBy, setGroupBy] = useState<GroupBy>('sessions');
+  const [groupBy, setGroupBy] = useState<GroupBy>(() => {
+    const saved = localStorage.getItem(HIGHLIGHTS_GROUP_BY_KEY);
+    return (saved === 'sessions' || saved === 'topics') ? saved : 'sessions';
+  });
   const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -85,7 +90,10 @@ const HighlightsPage = () => {
               <div className="mb-6">
                 <div className="inline-flex rounded-lg bg-muted p-1">
                   <button
-                    onClick={() => setGroupBy('sessions')}
+                    onClick={() => {
+                      setGroupBy('sessions');
+                      localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
+                    }}
                     className={cn(
                       'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
                       groupBy === 'sessions'
@@ -96,7 +104,10 @@ const HighlightsPage = () => {
                     Sessions
                   </button>
                   <button
-                    onClick={() => setGroupBy('topics')}
+                    onClick={() => {
+                      setGroupBy('topics');
+                      localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
+                    }}
                     className={cn(
                       'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
                       groupBy === 'topics'
