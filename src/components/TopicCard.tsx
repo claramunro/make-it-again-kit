@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, ChevronRight, ChevronDown, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
@@ -233,7 +233,21 @@ export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(() => {
+    const saved = localStorage.getItem('topic-accordion-state');
+    if (saved) {
+      const state = JSON.parse(saved);
+      return state[topic.id] ?? false;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('topic-accordion-state');
+    const state = saved ? JSON.parse(saved) : {};
+    state[topic.id] = isExpanded;
+    localStorage.setItem('topic-accordion-state', JSON.stringify(state));
+  }, [isExpanded, topic.id]);
 
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
