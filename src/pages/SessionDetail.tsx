@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
-  Calendar, Trash2, Share, Folder, FileText, Video, Bookmark,
-  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines, RefreshCw
+  Calendar, Trash2, Share, Folder, FileText, Video, Bookmark, ALargeSmall,
+  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines, RefreshCw, FileCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -17,6 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -106,6 +112,12 @@ const SessionDetail = () => {
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [topicContextEnabled, setTopicContextEnabled] = useState(true);
   const [summaryMenuOpen, setSummaryMenuOpen] = useState(false);
+  const [todoActionFeedback, setTodoActionFeedback] = useState<string | null>(null);
+
+  const handleTodoAction = useCallback((actionText: string) => {
+    setTodoActionFeedback(actionText);
+    setTimeout(() => setTodoActionFeedback(null), 2000);
+  }, []);
 
   // Find the current session to check if it has audio
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
@@ -648,7 +660,43 @@ const SessionDetail = () => {
                   <div className="rounded-xl border border-border bg-card p-5">
                     <div className="mb-4 flex items-center justify-between">
                       <h2 className="text-lg font-semibold text-foreground">Your To-Dos</h2>
-                      <Download className="h-5 w-5 text-muted-foreground" />
+                      <div className="flex items-center gap-1">
+                        {todoActionFeedback && (
+                          <span className="text-xs text-muted-foreground animate-in fade-in-0 duration-200">
+                            {todoActionFeedback}
+                          </span>
+                        )}
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleTodoAction('Copied as text')}
+                                className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                              >
+                                <ALargeSmall className="h-5 w-5" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Share as Text</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button 
+                                onClick={() => handleTodoAction('Copied as markdown')}
+                                className="rounded-lg p-1.5 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                              >
+                                <FileCode className="h-5 w-5" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Share as Markdown</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
                     <div className="space-y-3">
                       {[
