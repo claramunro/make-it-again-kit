@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -170,7 +171,7 @@ const SessionDetail = () => {
                     'Draft case study outline',
                   ].map((todo, i) => (
                     <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
-                      <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border" />
+                      <Checkbox className="mt-0.5" />
                       <span className="text-sm text-foreground">{todo}</span>
                     </label>
                   ))}
@@ -565,7 +566,7 @@ const SessionDetail = () => {
                         'Schedule a follow-up call with Kevin Cavanaugh to clarify financial models'
                       ].map((todo, i) => (
                         <label key={i} className="flex items-start gap-3 rounded-lg border border-border bg-background p-3">
-                          <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-border" />
+                          <Checkbox className="mt-0.5" />
                           <div>
                             <p className="text-sm text-foreground">{todo}</p>
                             <p className="text-xs text-muted-foreground">Due: Not set</p>
