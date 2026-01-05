@@ -267,3 +267,115 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
     </div>
   );
 }
+
+// List view item for compact display
+export function TopicListItem({ topic }: TopicCardProps) {
+  const navigate = useNavigate();
+  const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+
+  const handleCardClick = () => {
+    navigate(`/topic/${topic.id}`);
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/topic/${topic.id}?tab=edit`);
+  };
+
+  const handleInviteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setInviteDialogOpen(true);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('Delete topic:', topic.id);
+  };
+
+  return (
+    <>
+      <div 
+        onClick={handleCardClick}
+        className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-smooth hover:border-primary/20 hover:shadow-sm cursor-pointer"
+      >
+        {/* Emoji container */}
+        <div className={cn(
+          'flex h-10 w-10 items-center justify-center rounded-xl shrink-0',
+          wallpaper.bg
+        )}>
+          <span className="text-lg">{topic.icon}</span>
+        </div>
+        
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-foreground truncate">{topic.name}</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {topic.sessionCount} sessions • {topic.date}
+          </p>
+        </div>
+
+        {/* Right side actions */}
+        <div className="flex items-center gap-1 shrink-0">
+          {/* Shared badge */}
+          {topic.sharedBy && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <Users className="h-3 w-3" />
+              Shared
+            </span>
+          )}
+          
+          {/* Star button */}
+          <button 
+            className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Star 
+              className={cn(
+                'h-4 w-4 transition-smooth',
+                topic.isFavorite 
+                  ? 'fill-yellow-400 text-yellow-400' 
+                  : 'text-muted-foreground hover:text-yellow-400'
+              )} 
+            />
+          </button>
+          
+          {/* Menu button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button 
+                className="p-1.5 rounded-full hover:bg-muted transition-smooth"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreVertical className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleEditClick} className="gap-2">
+                <Pencil className="h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleInviteClick} className="gap-2">
+                <UserPlus className="h-4 w-4" />
+                Invite to Topic
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDeleteClick} className="gap-2 text-destructive focus:text-destructive">
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+        </div>
+      </div>
+
+      {/* Invite Dialog */}
+      <InviteToTopicDialog
+        open={inviteDialogOpen}
+        onOpenChange={setInviteDialogOpen}
+        topicName={topic.name}
+      />
+    </>
+  );
+}

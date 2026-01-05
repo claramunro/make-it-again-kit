@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { ArrowDownUp, Plus, RefreshCw, Check, ChevronDown } from 'lucide-react';
+import { ArrowDownUp, Plus, RefreshCw, Check, ChevronDown, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { TopicCard, TopicCardSelectable } from '@/components/TopicCard';
+import { TopicCard, TopicCardSelectable, TopicListItem } from '@/components/TopicCard';
 import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { AddTopicDialog } from './AddTopicDialog';
@@ -12,8 +12,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 export type TopicSortOption = 'last-activity' | 'name' | 'most-active' | 'recently-created' | 'starred';
+export type TopicViewMode = 'card' | 'list';
 
 const SORT_OPTIONS: { value: TopicSortOption; label: string }[] = [
   { value: 'last-activity', label: 'Last Activity' },
@@ -60,9 +62,11 @@ export function sortTopics(topics: Topic[], sortBy: TopicSortOption): Topic[] {
 interface TopicsHeaderProps {
   sortBy: TopicSortOption;
   onSortChange: (sort: TopicSortOption) => void;
+  viewMode: TopicViewMode;
+  onViewModeChange: (mode: TopicViewMode) => void;
 }
 
-export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
+export function TopicsHeader({ sortBy, onSortChange, viewMode, onViewModeChange }: TopicsHeaderProps) {
   const isMobile = useIsMobile();
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
@@ -76,6 +80,27 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
             PRO
           </span>
           <div className="flex flex-1 justify-end gap-2">
+            {/* View Toggle */}
+            <div className="flex items-center rounded-lg border border-border bg-muted/50 p-0.5">
+              <button
+                onClick={() => onViewModeChange('card')}
+                className={cn(
+                  'rounded-md p-1.5 transition-smooth',
+                  viewMode === 'card' ? 'bg-card shadow-sm' : 'hover:bg-muted'
+                )}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={() => onViewModeChange('list')}
+                className={cn(
+                  'rounded-md p-1.5 transition-smooth',
+                  viewMode === 'list' ? 'bg-card shadow-sm' : 'hover:bg-muted'
+                )}
+              >
+                <List className="h-3.5 w-3.5" />
+              </button>
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-1.5 text-xs">
@@ -122,6 +147,27 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* View Toggle */}
+          <div className="flex items-center rounded-lg border border-border bg-muted/50 p-0.5">
+            <button
+              onClick={() => onViewModeChange('card')}
+              className={cn(
+                'rounded-md p-1.5 transition-smooth',
+                viewMode === 'card' ? 'bg-card shadow-sm' : 'hover:bg-muted'
+              )}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onViewModeChange('list')}
+              className={cn(
+                'rounded-md p-1.5 transition-smooth',
+                viewMode === 'list' ? 'bg-card shadow-sm' : 'hover:bg-muted'
+              )}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
@@ -160,12 +206,23 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
 
 interface TopicsListProps {
   sortBy: TopicSortOption;
+  viewMode: TopicViewMode;
 }
 
-export function TopicsList({ sortBy }: TopicsListProps) {
+export function TopicsList({ sortBy, viewMode }: TopicsListProps) {
   const { topics } = useTopics();
   
   const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
+  
+  if (viewMode === 'list') {
+    return (
+      <div className="space-y-2">
+        {sortedTopics.map((topic) => (
+          <TopicListItem key={topic.id} topic={topic} />
+        ))}
+      </div>
+    );
+  }
   
   return (
     <div className="grid gap-4 sm:grid-cols-2">
