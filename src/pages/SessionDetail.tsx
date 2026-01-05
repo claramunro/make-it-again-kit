@@ -330,7 +330,7 @@ const SessionDetail = () => {
         </main>
 
         {/* Audio Player */}
-        <div className="fixed bottom-20 left-0 right-0 z-20 border-t border-border bg-card px-4 py-3">
+        <div className="fixed bottom-20 left-24 right-0 z-20 border-t border-border bg-card px-4 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
