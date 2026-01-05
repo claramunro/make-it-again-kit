@@ -296,6 +296,8 @@ const TopicDetail = () => {
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   const [showCopiedTooltip, setShowCopiedTooltip] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [chatMessage, setChatMessage] = useState('');
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [insightsContent, setInsightsContent] = useState({
     intro1: `The topic of ${topic?.name || 'this topic'} has not been directly addressed in any of the three sessions provided. Instead, all sessions focused on demonstrating workflows within an AI-assisted development environment, particularly the use of Plan Mode for feature planning in a personal website project.`,
     intro2: `Despite the stated topic, no academic content related to ${topic?.name?.toLowerCase() || 'this topic'}—such as its history, chemistry, cultivation, or cultural significance—was presented. The sessions served as technical walkthroughs of software tools and interface navigation, with repeated emphasis on highlight activation, keyboard shortcuts, and structured planning before coding.`,
@@ -361,64 +363,84 @@ const TopicDetail = () => {
   // Chat Panel Component
   const ChatPanel = () => (
     <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col relative z-50">
-      <div className="p-4 border-b border-border flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-primary">Chat in Topic</h3>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Share className="h-4 w-4" />
-        </Button>
+      <div className="border-b border-border px-4 py-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-foreground">Chat</h2>
+          <div className="flex items-center gap-1">
+            <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
+              <FileText className="h-4 w-4" />
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+              >
+                <Share className="h-4 w-4" />
+              </button>
+              {shareMenuOpen && (
+                <div className="absolute right-0 top-full z-50 mt-1 w-44 rounded-lg border border-border bg-card py-1 shadow-lg">
+                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Share as Text
+                  </button>
+                  <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Share as Markdown
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      
-      {/* Share Options */}
-      <div className="px-4 py-3 border-b border-border space-y-2">
-        <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <Share className="h-4 w-4" />
-          Share as Text
-        </button>
-        <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <FileText className="h-4 w-4" />
-          Share as Markdown
-        </button>
-      </div>
-      
-      {/* Chat Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+
+      {/* Chat Messages Area - scrollable */}
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         {/* User Message */}
         <div className="flex justify-end">
-          <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-            Can you summarize the key points from this topic?
+          <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3">
+            <p className="text-sm text-primary-foreground">Can you summarize the key points from this topic?</p>
           </div>
         </div>
-        
+
         {/* AI Response */}
-        <div className="flex justify-start">
-          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
-            <p className="mb-2">Here are the key points from this topic:</p>
-            <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
-              <li>UI refinements are nearing completion</li>
-              <li>The main branch merge is ready</li>
-              <li>Mobile responsiveness improvements discussed</li>
-              <li>New font selection in progress</li>
-            </ul>
-          </div>
-        </div>
-        
-        {/* User Message */}
-        <div className="flex justify-end">
-          <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-4 py-2.5 text-sm text-primary-foreground">
-            What are the next steps?
-          </div>
-        </div>
-        
-        {/* AI Response */}
-        <div className="flex justify-start">
-          <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-2.5 text-sm text-foreground">
-            Based on the discussion, the next steps are to finalize the font selection, complete the mobile layout adjustments, and prepare for the design review meeting scheduled for next week.
-          </div>
+        <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3">
+          <p className="mb-3 text-sm leading-relaxed text-foreground">
+            Here are the key points from this topic:
+          </p>
+          <ul className="space-y-2 text-sm text-foreground">
+            <li>• UI refinements are nearing completion</li>
+            <li>• The main branch merge is ready</li>
+            <li>• Mobile responsiveness improvements discussed</li>
+            <li>• New font selection in progress</li>
+          </ul>
         </div>
       </div>
-      
-      {/* Quick Prompts */}
-      <div className="px-4 py-2 border-t border-border">
+
+      {/* Chat Input - always visible at bottom */}
+      <div className="shrink-0 border-t border-border p-4 space-y-3">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2 min-h-[44px]">
+          <textarea
+            value={chatMessage}
+            onChange={(e) => setChatMessage(e.target.value)}
+            placeholder="How can I help?"
+            rows={1}
+            className="flex-1 resize-none bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+            style={{
+              height: 'auto',
+              minHeight: '20px',
+              maxHeight: '120px',
+            }}
+            onInput={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = 'auto';
+              target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+            }}
+          />
+          <Button variant="action" size="icon" className="h-9 w-9 shrink-0 rounded-full">
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
         <div className="flex flex-wrap gap-1.5">
           {visibleQuickPrompts.map((prompt) => (
             <button
@@ -436,21 +458,6 @@ const TopicDetail = () => {
             More
             <ChevronRight className="h-3 w-3" />
           </button>
-        </div>
-      </div>
-      
-      {/* Chat Input */}
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-          <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="How can I help?"
-            className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
-          />
-          <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
-            <Send className="h-4 w-4" />
-          </Button>
         </div>
       </div>
       
