@@ -418,7 +418,7 @@ const SessionDetail = () => {
                   value={selectedTopic}
                   onValueChange={(value) => setSelectedTopic(value)}
                 >
-                  <SelectTrigger className="h-8 w-auto gap-2 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0">
+                  <SelectTrigger className="h-8 w-auto gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden">
                     {selectedTopicData ? (
                       <SessionBadge 
                         topicBadge={{
@@ -426,6 +426,7 @@ const SessionDetail = () => {
                           label: selectedTopicData.name,
                           wallpaper: selectedTopicData.wallpaper,
                         } as TopicBadgeInfo}
+                        showChevron
                       />
                     ) : (
                       <span className="text-sm text-muted-foreground">Select topic</span>

@@ -1,9 +1,11 @@
 import { BadgeType, TopicBadgeInfo, WallpaperType } from '@/types/session';
 import { cn } from '@/lib/utils';
+import { ChevronDown } from 'lucide-react';
 
 interface SessionBadgeProps {
   type?: BadgeType;
   topicBadge?: TopicBadgeInfo;
+  showChevron?: boolean;
 }
 
 // Wallpaper color presets for topic badges
@@ -40,7 +42,7 @@ const wallpaperBadgeColors: Record<WallpaperType, { bg: string; text: string; bo
   },
 };
 
-export function SessionBadge({ type, topicBadge }: SessionBadgeProps) {
+export function SessionBadge({ type, topicBadge, showChevron }: SessionBadgeProps) {
   // If topic badge is provided, render it with wallpaper colors
   if (topicBadge) {
     const colors = topicBadge.wallpaper 
@@ -59,6 +61,7 @@ export function SessionBadge({ type, topicBadge }: SessionBadgeProps) {
       >
         <span className="text-sm">{topicBadge.icon}</span>
         {topicBadge.label}
+        {showChevron && <ChevronDown className="h-3 w-3 ml-0.5 opacity-60" />}
       </span>
     );
   }
