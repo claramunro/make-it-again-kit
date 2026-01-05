@@ -50,8 +50,7 @@ export function SessionCard({
     onCheckChange?.(session.id, checked);
   };
 
-  // Session id "2" goes to the legacy view
-  const sessionUrl = session.id === '2' ? `/session-legacy/${session.id}` : `/session/${session.id}`;
+  const sessionUrl = `/session/${session.id}`;
 
   // Use topicBadge prop, fall back to session.topicBadge, then use session.badge
   const effectiveTopicBadge = topicBadge || session.topicBadge;
@@ -66,38 +65,35 @@ export function SessionCard({
         isChecked && selectionMode && "border-primary bg-primary/[0.03]"
       )}
     >
-      {/* Checkbox or Icon */}
-      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center">
-        {selectionMode ? (
+      {/* Checkbox (only in selection mode) */}
+      {selectionMode && (
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center">
           <Checkbox 
             checked={isChecked}
             onCheckedChange={handleCheckboxChange}
             onClick={(e) => e.stopPropagation()}
             className="h-5 w-5 border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
           />
-        ) : (
-          <div className="text-muted-foreground">
-            {session.type === 'audio' ? (
-              <AudioLines className="h-5 w-5" />
-            ) : (
-              <FileText className="h-5 w-5" />
-            )}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Content */}
-      <div className="flex-1 space-y-2">
-        <h3 className="text-sm font-medium leading-snug text-foreground">
+      <div className="flex-1 space-y-1">
+        <h3 className="text-sm font-medium leading-snug text-foreground line-clamp-2">
           {session.title}
         </h3>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
-            Time: {session.time}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="flex items-center gap-1">
+            {session.type === 'audio' ? (
+              <AudioLines className="h-3.5 w-3.5" />
+            ) : (
+              <FileText className="h-3.5 w-3.5" />
+            )}
+            {session.type === 'audio' ? 'Audio' : 'Text'}
           </span>
-        </div>
-        <div className="text-xs text-muted-foreground">
-          Duration: {session.duration}
+          <span>{session.date}</span>
+          <span>{session.time}</span>
+          <span>{session.duration}</span>
         </div>
       </div>
 
