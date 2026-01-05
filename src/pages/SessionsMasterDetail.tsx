@@ -2,12 +2,13 @@ import { useState, useCallback, useMemo } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
-import { sessionGroups } from '@/data/sessions';
+import { useSessions } from '@/contexts/SessionContext';
 import { SessionDetailPanel } from '@/components/SessionDetailPanel';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
 import { sortSessions } from '@/utils/sessionSorting';
 
 const SessionsMasterDetail = () => {
+  const { sessionGroups } = useSessions();
   const [selectedSessionId, setSelectedSessionId] = useState<string>(
     sessionGroups[0]?.sessions[0]?.id || ''
   );
@@ -15,7 +16,7 @@ const SessionsMasterDetail = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
 
-  const sortedGroups = useMemo(() => sortSessions(sessionGroups, sortBy), [sortBy]);
+  const sortedGroups = useMemo(() => sortSessions(sessionGroups, sortBy), [sessionGroups, sortBy]);
 
   const totalSessions = sessionGroups.reduce(
     (acc, group) => acc + group.sessions.length,
@@ -24,7 +25,7 @@ const SessionsMasterDetail = () => {
 
   const allSessionIds = useMemo(() => 
     sessionGroups.flatMap(group => group.sessions.map(s => s.id)),
-    []
+    [sessionGroups]
   );
 
   const handleToggleSelectionMode = useCallback(() => {
