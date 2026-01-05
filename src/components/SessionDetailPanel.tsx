@@ -257,6 +257,24 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                   ))}
                 </div>
               </div>
+
+              <div className="rounded-xl border border-border bg-card p-5">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-foreground">Detailed Notes</h2>
+                  <MoreVertical className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div className="space-y-4 text-sm leading-relaxed text-foreground">
+                  <p>
+                    The session explored unique approaches to urban development with a focus on sustainable, community-centered practices. Key themes included the importance of long-term property holds versus quick flips, and how patience-based strategies can lead to better outcomes for both developers and communities.
+                  </p>
+                  <p>
+                    Creative financing was a major topic, covering seller financing arrangements, community investment models, and alternative funding structures that prioritize sustainable growth over rapid returns. These approaches allow for more flexibility and better alignment with neighborhood needs.
+                  </p>
+                  <p>
+                    The discussion also touched on tenant curation strategies – selecting tenants based on profession to create vibrant, creative communities. This includes prioritizing artists, small business owners, and creative professionals who contribute positively to neighborhood character and culture.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
