@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
-import { TopicsHeader, TopicsList, TopicSortOption } from '@/components/TopicsList';
+import { TopicsHeader, TopicsList, TopicSortOption, TopicViewMode } from '@/components/TopicsList';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -15,6 +15,7 @@ const Topics = () => {
   const isLargeScreen = useIsLargeScreen();
   const { topics } = useTopics();
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
+  const [viewMode, setViewMode] = useState<TopicViewMode>('card');
 
   // Use master-detail layout on large screens
   if (isLargeScreen) {
@@ -50,8 +51,15 @@ const Topics = () => {
         
         <main className="flex-1 bg-background p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-5xl">
-            {!isMobile && <TopicsHeader sortBy={sortBy} onSortChange={setSortBy} />}
-            <TopicsList sortBy={sortBy} />
+            {!isMobile && (
+              <TopicsHeader 
+                sortBy={sortBy} 
+                onSortChange={setSortBy} 
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+              />
+            )}
+            <TopicsList sortBy={sortBy} viewMode={viewMode} />
           </div>
         </main>
       </div>

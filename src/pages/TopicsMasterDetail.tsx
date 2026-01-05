@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
-import { TopicsHeader, TopicsListSelectable, TopicSortOption } from '@/components/TopicsList';
+import { TopicsHeader, TopicsListSelectable, TopicSortOption, TopicViewMode } from '@/components/TopicsList';
 import { topics } from '@/data/topics';
 import { TopicDetailPanel } from '@/components/TopicDetailPanel';
 
@@ -9,6 +9,7 @@ const TopicsMasterDetail = () => {
     topics[0]?.id || ''
   );
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
+  const [viewMode, setViewMode] = useState<TopicViewMode>('card');
 
   return (
     <div className="flex min-h-screen bg-card">
@@ -19,7 +20,7 @@ const TopicsMasterDetail = () => {
         <main className="flex flex-1 flex-col overflow-hidden rounded-tl-2xl bg-background">
           {/* Topics Header - Full Width */}
           <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
-            <TopicsHeader sortBy={sortBy} onSortChange={setSortBy} />
+            <TopicsHeader sortBy={sortBy} onSortChange={setSortBy} viewMode={viewMode} onViewModeChange={setViewMode} />
           </div>
           
           {/* Content: List + Detail side by side */}
