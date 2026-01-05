@@ -398,9 +398,9 @@ const SessionDetail = () => {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 max-w-[340px]">
                   <h1 className="line-clamp-2 text-base font-medium leading-snug text-foreground mb-1">
-                    {currentSession?.title || 'Untitled Session'}
+                    {currentSession?.title ? (currentSession.title.length > 85 ? currentSession.title.slice(0, 85).trim() : currentSession.title) : 'Untitled Session'}
                   </h1>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
