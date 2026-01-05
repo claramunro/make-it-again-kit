@@ -50,7 +50,7 @@ export function SessionBadge({ type, topicBadge, showChevron }: SessionBadgeProp
       : wallpaperBadgeColors.mint;
     
     return (
-      <span
+      <div
         className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
         style={{
           backgroundColor: colors.bg,
@@ -62,7 +62,7 @@ export function SessionBadge({ type, topicBadge, showChevron }: SessionBadgeProp
         <span className="text-sm">{topicBadge.icon}</span>
         <span>{topicBadge.label}</span>
         {showChevron && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
-      </span>
+      </div>
     );
   }
 
