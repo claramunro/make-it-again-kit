@@ -801,13 +801,12 @@ const SessionDetail = () => {
               {/* Chat Input - always visible at bottom */}
               <div className="shrink-0 border-t border-border p-4 space-y-3">
                 <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-                  <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
                   <input
                     type="text"
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
                     placeholder="How can I help?"
-                    className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                    className="flex-1 bg-transparent px-3 text-sm placeholder:text-muted-foreground focus:outline-none"
                   />
                   <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
                     <Send className="h-4 w-4" />
