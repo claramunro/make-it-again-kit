@@ -3,6 +3,7 @@ import { SessionCard } from './SessionCard';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { useTopics } from '@/contexts/TopicContext';
+import { useSessions } from '@/contexts/SessionContext';
 
 interface SessionListProps {
   groups: SessionGroup[];
@@ -22,6 +23,7 @@ export function SessionList({
   onCheckChange
 }: SessionListProps) {
   const { getTopicById } = useTopics();
+  const { assignTopicToSession } = useSessions();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (date: string) => {
@@ -34,6 +36,10 @@ export function SessionList({
       }
       return next;
     });
+  };
+
+  const handleAssignTopic = (sessionId: string, topicId: string) => {
+    assignTopicToSession(sessionId, topicId);
   };
 
   return (
@@ -79,6 +85,7 @@ export function SessionList({
                       isChecked={selectedIds?.has(session.id)}
                       onCheckChange={onCheckChange}
                       topicBadge={topicBadge}
+                      onAssignTopic={handleAssignTopic}
                     />
                   );
                 })}
