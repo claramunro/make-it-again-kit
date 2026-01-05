@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { FileText, AudioLines, ChevronRight, Star, FolderOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Session, TopicBadgeInfo } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
 import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
 
+// Max characters for title display (balanced 2-line wrap)
+const MAX_TITLE_LENGTH = 85;
+
 // Empty state badge component for sessions without topics
 const EmptyTopicBadge = () => (
   <div
-    className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
+    className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border cursor-pointer hover:bg-[hsl(0,0%,92%)] transition-colors"
     style={{
       backgroundColor: 'hsl(0, 0%, 96%)',
       color: 'hsl(0, 0%, 55%)',
@@ -30,6 +33,7 @@ interface SessionCardProps {
   isChecked?: boolean;
   onCheckChange?: (id: string, checked: boolean) => void;
   topicBadge?: TopicBadgeInfo;
+  onSelectTopic?: (sessionId: string) => void;
 }
 
 export function SessionCard({ 
@@ -40,8 +44,10 @@ export function SessionCard({
   selectionMode,
   isChecked,
   onCheckChange,
-  topicBadge
+  topicBadge,
+  onSelectTopic
 }: SessionCardProps) {
+  const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -65,10 +71,31 @@ export function SessionCard({
     onCheckChange?.(session.id, checked);
   };
 
+  const handleBadgeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (effectiveTopicBadge) {
+      // Navigate to topic page if topic is assigned
+      const topicId = session.topicId;
+      if (topicId) {
+        navigate(`/topic/${topicId}`);
+      }
+    } else {
+      // Open topic selection dialog
+      onSelectTopic?.(session.id);
+    }
+  };
+
   const sessionUrl = `/session/${session.id}`;
 
   // Use topicBadge prop, fall back to session.topicBadge, then use session.badge
   const effectiveTopicBadge = topicBadge || session.topicBadge;
+
+  // Truncate title for balanced 2-line display
+  const displayTitle = session.title.length > MAX_TITLE_LENGTH 
+    ? session.title.slice(0, MAX_TITLE_LENGTH).trim()
+    : session.title;
 
   const cardContent = (
     <>
@@ -92,10 +119,10 @@ export function SessionCard({
         )}
       </div>
 
-      {/* Content */}
-      <div className="flex-1 space-y-1">
+      {/* Content - constrained width for balanced 2-line wrap */}
+      <div className="flex-1 space-y-1 max-w-[340px]">
         <h3 className="text-sm font-medium leading-snug text-foreground line-clamp-2">
-          {session.title}
+          {displayTitle}
         </h3>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span>{session.time}</span>
@@ -105,9 +132,11 @@ export function SessionCard({
 
       {/* Topic Badge - show to the left of star when not in selection mode */}
       {!selectionMode && (
-        <div className="shrink-0">
+        <div className="shrink-0" onClick={handleBadgeClick}>
           {effectiveTopicBadge ? (
-            <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+            <div className="cursor-pointer hover:opacity-80 transition-opacity">
+              <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+            </div>
           ) : (
             <EmptyTopicBadge />
           )}
