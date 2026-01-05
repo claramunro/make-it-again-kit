@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, LucideIcon } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { HighlightItem } from './HighlightItem';
 import { cn } from '@/lib/utils';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface HighlightGroupProps {
   title: string;
   icon?: string;
+  SessionIcon?: LucideIcon;
   highlights: Highlight[];
   selectedId: string | null;
   onSelectHighlight: (highlight: Highlight) => void;
@@ -15,7 +16,8 @@ interface HighlightGroupProps {
 
 export function HighlightGroup({ 
   title, 
-  icon, 
+  icon,
+  SessionIcon,
   highlights, 
   selectedId, 
   onSelectHighlight,
@@ -32,6 +34,7 @@ export function HighlightGroup({
       >
         <div className="flex items-center gap-3">
           {icon && <span className="text-xl">{icon}</span>}
+          {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground" />}
           <span className="font-medium text-foreground">{title}</span>
         </div>
         <div className="flex items-center gap-3">
