@@ -931,7 +931,7 @@ const SessionDetail = () => {
         
         {/* Audio Player - Fixed at bottom - Only show for audio sessions */}
         {hasAudio && (
-          <div className={cn("fixed bottom-0 right-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
+          <div className={cn("fixed bottom-0 right-80 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
             <div className="mx-auto flex max-w-4xl items-center gap-4">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
