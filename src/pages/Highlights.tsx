@@ -7,8 +7,17 @@ import { HighlightGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { HighlightDetailDrawer } from '@/components/HighlightDetailDrawer';
 import { highlights, Highlight } from '@/data/highlights';
+import { sessionGroups } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+
+// Create a map of session metadata by title for quick lookup
+const sessionMetaMap = new Map<string, { time: string; duration: string }>();
+sessionGroups.forEach(group => {
+  group.sessions.forEach(session => {
+    sessionMetaMap.set(session.title, { time: session.time, duration: session.duration });
+  });
+});
 
 type GroupBy = 'sessions' | 'topics';
 
@@ -134,6 +143,7 @@ const HighlightsPage = () => {
                       title={group.title}
                       icon={group.icon}
                       SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
+                      sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
                       highlights={group.highlights}
                       selectedId={selectedHighlight?.id || null}
                       onSelectHighlight={handleSelectHighlight}

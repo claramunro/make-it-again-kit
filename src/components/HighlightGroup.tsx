@@ -8,6 +8,7 @@ interface HighlightGroupProps {
   title: string;
   icon?: string;
   SessionIcon?: LucideIcon;
+  sessionMeta?: { time: string; duration: string };
   highlights: Highlight[];
   selectedId: string | null;
   onSelectHighlight: (highlight: Highlight) => void;
@@ -18,6 +19,7 @@ export function HighlightGroup({
   title, 
   icon,
   SessionIcon,
+  sessionMeta,
   highlights, 
   selectedId, 
   onSelectHighlight,
@@ -35,7 +37,14 @@ export function HighlightGroup({
         <div className="flex items-center gap-3">
           {icon && <span className="text-xl">{icon}</span>}
           {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground" />}
-          <span className="font-medium text-foreground">{title}</span>
+          <div className="flex flex-col items-start">
+            <span className="font-medium text-foreground">{title}</span>
+            {sessionMeta && (
+              <span className="text-xs text-muted-foreground">
+                {sessionMeta.time}  ·  {sessionMeta.duration}
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">
