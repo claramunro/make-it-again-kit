@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ChevronDown, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Trash2, 
-  FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload
+  FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -238,7 +238,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                           onClick={(e) => { e.stopPropagation(); }}
                           className="p-1.5 text-muted-foreground hover:text-foreground transition-smooth"
                         >
-                          <Upload className="h-3.5 w-3.5" />
+                          <CloudUpload className="h-3.5 w-3.5" />
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); }}
