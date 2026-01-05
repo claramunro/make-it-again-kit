@@ -12,15 +12,20 @@ const TopicContext = createContext<TopicContextType | undefined>(undefined);
 const STORAGE_KEY = 'hedy-topic-wallpapers';
 
 export function TopicProvider({ children }: { children: ReactNode }) {
+  // Always use initialTopics directly to ensure we have all session data
   const [topics, setTopics] = useState<Topic[]>(() => {
-    // Load saved wallpapers from localStorage
+    // Load saved wallpapers from localStorage and merge with current topics data
     const savedWallpapers = localStorage.getItem(STORAGE_KEY);
     if (savedWallpapers) {
-      const wallpaperMap: Record<string, Topic['wallpaper']> = JSON.parse(savedWallpapers);
-      return initialTopics.map(topic => ({
-        ...topic,
-        wallpaper: wallpaperMap[topic.id] || topic.wallpaper,
-      }));
+      try {
+        const wallpaperMap: Record<string, Topic['wallpaper']> = JSON.parse(savedWallpapers);
+        return initialTopics.map(topic => ({
+          ...topic,
+          wallpaper: wallpaperMap[topic.id] || topic.wallpaper,
+        }));
+      } catch {
+        return initialTopics;
+      }
     }
     return initialTopics;
   });
