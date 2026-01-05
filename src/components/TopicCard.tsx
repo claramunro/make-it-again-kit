@@ -15,6 +15,7 @@ import {
 
 interface TopicCardProps {
   topic: Topic;
+  showSessions?: boolean;
 }
 
 interface TopicCardSelectableProps {
@@ -65,7 +66,7 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
 
 const defaultWallpaper = wallpaperPresets.mint;
 
-export function TopicCard({ topic }: TopicCardProps) {
+export function TopicCard({ topic, showSessions = true }: TopicCardProps) {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
@@ -91,9 +92,7 @@ export function TopicCard({ topic }: TopicCardProps) {
     console.log('Delete topic:', topic.id);
   };
 
-  // On mobile, show only 1 session
-  const sessionsToShow = isMobile ? 1 : 2;
-  const remainingSessions = topic.sessionCount - sessionsToShow;
+  // Remove the session limiting - show all sessions when showSessions is true
 
   return (
     <div 
@@ -180,39 +179,34 @@ export function TopicCard({ topic }: TopicCardProps) {
           </div>
         </div>
 
-        {/* Sessions list */}
-        <div className="space-y-2">
-          {topic.sessions?.slice(0, sessionsToShow).map((session) => (
-            <Link
-              key={session.id}
-              to={`/topic/${topic.id}?tab=sessions`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-4 transition-smooth group/session"
-            >
-              {/* Session icon */}
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
-                {session.type === 'audio' ? (
-                  <AudioLines className="h-5 w-5" />
-                ) : (
-                  <FileText className="h-5 w-5" />
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{session.title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {session.date} · {session.duration}
-                </p>
-              </div>
-            </Link>
-          ))}
-          
-          {/* Show more link */}
-          {remainingSessions > 0 && (
-            <div className="w-full text-center text-sm text-muted-foreground py-3">
-              +{remainingSessions} more session{remainingSessions !== 1 ? 's' : ''}
-            </div>
-          )}
-        </div>
+        {/* Sessions list - only show when showSessions is true */}
+        {showSessions && topic.sessions && topic.sessions.length > 0 && (
+          <div className="space-y-2">
+            {topic.sessions.map((session) => (
+              <Link
+                key={session.id}
+                to={`/topic/${topic.id}?tab=sessions`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-4 transition-smooth group/session"
+              >
+                {/* Session icon */}
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
+                  {session.type === 'audio' ? (
+                    <AudioLines className="h-5 w-5" />
+                  ) : (
+                    <FileText className="h-5 w-5" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{session.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {session.date} · {session.duration}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Invite Dialog */}
@@ -269,7 +263,7 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
 }
 
 // List view item - includes all card elements in horizontal layout
-export function TopicListItem({ topic }: TopicCardProps) {
+export function TopicListItem({ topic, showSessions = true }: TopicCardProps) {
   const navigate = useNavigate();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
@@ -380,31 +374,33 @@ export function TopicListItem({ topic }: TopicCardProps) {
           </div>
 
           {/* Sessions list - single column showing all sessions */}
-          <div className="mt-4 flex flex-col gap-2">
-            {topic.sessions?.map((session) => (
-              <Link
-                key={session.id}
-                to={`/topic/${topic.id}?tab=sessions`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
-              >
-                {/* Session icon */}
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
-                  {session.type === 'audio' ? (
-                    <AudioLines className="h-5 w-5" />
-                  ) : (
-                    <FileText className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {session.date} · {session.duration}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {showSessions && topic.sessions && topic.sessions.length > 0 && (
+            <div className="mt-4 flex flex-col gap-2">
+              {topic.sessions.map((session) => (
+                <Link
+                  key={session.id}
+                  to={`/topic/${topic.id}?tab=sessions`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
+                >
+                  {/* Session icon */}
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
+                    {session.type === 'audio' ? (
+                      <AudioLines className="h-5 w-5" />
+                    ) : (
+                      <FileText className="h-5 w-5" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {session.date} · {session.duration}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
