@@ -271,7 +271,6 @@ export function TopicCardSelectable({ topic, isSelected, onSelect }: TopicCardSe
 // List view item - includes all card elements in horizontal layout
 export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
@@ -294,9 +293,6 @@ export function TopicListItem({ topic }: TopicCardProps) {
     console.log('Delete topic:', topic.id);
   };
 
-  // Show 1 session on mobile, 2 on desktop
-  const sessionsToShow = isMobile ? 1 : 2;
-  const remainingSessions = topic.sessionCount - sessionsToShow;
 
   return (
     <>
@@ -383,14 +379,14 @@ export function TopicListItem({ topic }: TopicCardProps) {
             </div>
           </div>
 
-          {/* Sessions list - horizontal on desktop */}
-          <div className="mt-4 flex flex-col md:flex-row gap-2">
-            {topic.sessions?.slice(0, sessionsToShow).map((session) => (
+          {/* Sessions list - single column showing all sessions */}
+          <div className="mt-4 flex flex-col gap-2">
+            {topic.sessions?.map((session) => (
               <Link
                 key={session.id}
                 to={`/topic/${topic.id}?tab=sessions`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
+                className="flex items-center gap-3 rounded-xl bg-muted/50 hover:bg-muted p-3 transition-smooth group/session"
               >
                 {/* Session icon */}
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
@@ -408,13 +404,6 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 </div>
               </Link>
             ))}
-            
-            {/* Show more indicator */}
-            {remainingSessions > 0 && (
-              <div className="flex items-center justify-center text-sm text-muted-foreground px-4 py-3 md:shrink-0">
-                +{remainingSessions} more
-              </div>
-            )}
           </div>
         </div>
       </div>
