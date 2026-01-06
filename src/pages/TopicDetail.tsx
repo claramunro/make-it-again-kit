@@ -895,10 +895,7 @@ const TopicDetail = () => {
                         {topic.icon}
                       </div>
                       {topic.sharedBy && (
-                        <span 
-                          className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background shadow-sm"
-                          style={{ backgroundColor: wallpaper.bannerColor }}
-                        >
+                        <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[hsl(var(--shared))] border-2 border-[hsl(var(--shared))] shadow-sm">
                           <Users className="h-3.5 w-3.5 text-white" />
                         </span>
                       )}
@@ -917,7 +914,7 @@ const TopicDetail = () => {
                     {/* Shared badge */}
                     {topic.sharedBy && (
                       <div className="shrink-0">
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--shared))] bg-[hsl(var(--shared)/0.1)] px-3 py-1.5 text-xs font-medium text-[hsl(var(--shared))]">
                           <Users className="h-3.5 w-3.5" />
                           Shared by {topic.sharedBy}
                         </span>

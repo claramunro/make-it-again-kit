@@ -43,6 +43,8 @@
     --badge-workout-bg: 142 40% 92%;
     --badge-pro: 217 91% 60%;
     --badge-pro-foreground: 0 0% 100%;
+    --shared: 217 91% 60%;
+    --shared-foreground: 0 0% 100%;
     
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 20 10% 40%;
@@ -102,6 +104,8 @@
     /* Custom colors - dark mode */
     --badge-pro: 217 91% 65%;
     --badge-pro-foreground: 0 0% 100%;
+    --shared: 217 91% 65%;
+    --shared-foreground: 0 0% 100%;
     
     /* Shadows - dark mode */
     --shadow-overlay: 0 0% 0%;
