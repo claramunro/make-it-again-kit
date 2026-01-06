@@ -439,7 +439,7 @@ const SessionDetail = () => {
                     </SelectTrigger>
                     <SelectContent className="z-50 bg-card border border-border shadow-lg">
                       {topics.map((topic) => (
-                        <SelectItem key={topic.id} value={topic.id} className="cursor-pointer">
+                        <SelectItem key={topic.id} value={topic.id} className="cursor-pointer pl-3">
                           <div className="flex items-center gap-2">
                             <span>{topic.icon}</span>
                             <span>{topic.name}</span>
