@@ -23,8 +23,19 @@ interface TopicCardSelectableProps {
   onSelect?: (id: string) => void;
 }
 
-// Wallpaper presets matching TopicDetail
-const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorder: string; badgeText: string; sharedBg: string; sharedText: string; sharedBorder: string }> = {
+// Wallpaper presets matching TopicDetail - with dark mode support for badges
+const wallpaperPresets: Record<string, { 
+  bg: string; 
+  badgeBg: string; 
+  badgeBorder: string; 
+  badgeText: string; 
+  sharedBg: string; 
+  sharedText: string; 
+  sharedBorder: string;
+  darkSharedBg: string;
+  darkSharedText: string;
+  darkSharedBorder: string;
+}> = {
   sand: { 
     bg: 'bg-gradient-to-br from-amber-200/60 via-yellow-100/60 to-amber-300/60', 
     badgeBg: 'bg-amber-100', 
@@ -32,7 +43,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-amber-700',
     sharedBg: 'hsl(45, 40%, 92%)',
     sharedText: 'hsl(35, 60%, 30%)',
-    sharedBorder: 'hsl(45, 35%, 80%)'
+    sharedBorder: 'hsl(45, 35%, 80%)',
+    darkSharedBg: 'hsl(45, 35%, 18%)',
+    darkSharedText: 'hsl(45, 60%, 70%)',
+    darkSharedBorder: 'hsl(45, 30%, 28%)'
   },
   peach: { 
     bg: 'bg-gradient-to-br from-orange-200/60 via-rose-100/60 to-orange-300/60', 
@@ -41,7 +55,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-orange-700',
     sharedBg: 'hsl(20, 55%, 92%)',
     sharedText: 'hsl(15, 65%, 32%)',
-    sharedBorder: 'hsl(20, 45%, 80%)'
+    sharedBorder: 'hsl(20, 45%, 80%)',
+    darkSharedBg: 'hsl(20, 45%, 18%)',
+    darkSharedText: 'hsl(20, 65%, 70%)',
+    darkSharedBorder: 'hsl(20, 40%, 28%)'
   },
   mint: { 
     bg: 'bg-gradient-to-br from-emerald-200/60 via-teal-100/60 to-emerald-300/60', 
@@ -50,7 +67,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-emerald-700',
     sharedBg: 'hsl(150, 30%, 90%)',
     sharedText: 'hsl(155, 45%, 28%)',
-    sharedBorder: 'hsl(150, 25%, 78%)'
+    sharedBorder: 'hsl(150, 25%, 78%)',
+    darkSharedBg: 'hsl(150, 30%, 16%)',
+    darkSharedText: 'hsl(150, 50%, 65%)',
+    darkSharedBorder: 'hsl(150, 25%, 26%)'
   },
   lavender: { 
     bg: 'bg-gradient-to-br from-purple-200/60 via-pink-100/60 to-purple-300/60', 
@@ -59,7 +79,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-purple-700',
     sharedBg: 'hsl(270, 30%, 92%)',
     sharedText: 'hsl(275, 45%, 35%)',
-    sharedBorder: 'hsl(270, 25%, 82%)'
+    sharedBorder: 'hsl(270, 25%, 82%)',
+    darkSharedBg: 'hsl(270, 30%, 18%)',
+    darkSharedText: 'hsl(270, 55%, 70%)',
+    darkSharedBorder: 'hsl(270, 25%, 28%)'
   },
   ocean: { 
     bg: 'bg-gradient-to-br from-blue-200/60 via-sky-100/60 to-blue-300/60', 
@@ -68,7 +91,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-blue-700',
     sharedBg: 'hsl(200, 45%, 92%)',
     sharedText: 'hsl(205, 60%, 30%)',
-    sharedBorder: 'hsl(200, 40%, 80%)'
+    sharedBorder: 'hsl(200, 40%, 80%)',
+    darkSharedBg: 'hsl(200, 40%, 16%)',
+    darkSharedText: 'hsl(200, 60%, 68%)',
+    darkSharedBorder: 'hsl(200, 35%, 26%)'
   },
   sunset: { 
     bg: 'bg-gradient-to-br from-orange-300/60 via-rose-200/60 to-yellow-300/60', 
@@ -77,7 +103,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-orange-700',
     sharedBg: 'hsl(30, 50%, 92%)',
     sharedText: 'hsl(25, 65%, 32%)',
-    sharedBorder: 'hsl(30, 45%, 80%)'
+    sharedBorder: 'hsl(30, 45%, 80%)',
+    darkSharedBg: 'hsl(30, 45%, 18%)',
+    darkSharedText: 'hsl(30, 65%, 70%)',
+    darkSharedBorder: 'hsl(30, 40%, 28%)'
   },
   rose: { 
     bg: 'bg-gradient-to-br from-rose-200/60 via-pink-100/60 to-rose-300/60', 
@@ -86,7 +115,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-rose-700',
     sharedBg: 'hsl(350, 40%, 92%)',
     sharedText: 'hsl(345, 55%, 35%)',
-    sharedBorder: 'hsl(350, 35%, 82%)'
+    sharedBorder: 'hsl(350, 35%, 82%)',
+    darkSharedBg: 'hsl(350, 35%, 18%)',
+    darkSharedText: 'hsl(350, 55%, 70%)',
+    darkSharedBorder: 'hsl(350, 30%, 28%)'
   },
   slate: { 
     bg: 'bg-gradient-to-br from-slate-200/60 via-gray-100/60 to-slate-300/60', 
@@ -95,7 +127,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-slate-700',
     sharedBg: 'hsl(210, 15%, 92%)',
     sharedText: 'hsl(215, 20%, 35%)',
-    sharedBorder: 'hsl(210, 12%, 80%)'
+    sharedBorder: 'hsl(210, 12%, 80%)',
+    darkSharedBg: 'hsl(210, 15%, 18%)',
+    darkSharedText: 'hsl(210, 20%, 68%)',
+    darkSharedBorder: 'hsl(210, 12%, 28%)'
   },
   forest: { 
     bg: 'bg-gradient-to-br from-green-200/60 via-emerald-100/60 to-green-300/60', 
@@ -104,7 +139,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-green-700',
     sharedBg: 'hsl(140, 30%, 90%)',
     sharedText: 'hsl(145, 45%, 28%)',
-    sharedBorder: 'hsl(140, 25%, 78%)'
+    sharedBorder: 'hsl(140, 25%, 78%)',
+    darkSharedBg: 'hsl(140, 30%, 16%)',
+    darkSharedText: 'hsl(140, 50%, 65%)',
+    darkSharedBorder: 'hsl(140, 25%, 26%)'
   },
   berry: { 
     bg: 'bg-gradient-to-br from-fuchsia-200/60 via-purple-100/60 to-fuchsia-300/60', 
@@ -113,7 +151,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-fuchsia-700',
     sharedBg: 'hsl(290, 35%, 92%)',
     sharedText: 'hsl(295, 50%, 35%)',
-    sharedBorder: 'hsl(290, 30%, 82%)'
+    sharedBorder: 'hsl(290, 30%, 82%)',
+    darkSharedBg: 'hsl(290, 35%, 18%)',
+    darkSharedText: 'hsl(290, 55%, 70%)',
+    darkSharedBorder: 'hsl(290, 30%, 28%)'
   },
   coral: { 
     bg: 'bg-gradient-to-br from-red-200/60 via-orange-100/60 to-red-300/60', 
@@ -122,7 +163,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-red-700',
     sharedBg: 'hsl(10, 50%, 92%)',
     sharedText: 'hsl(5, 60%, 35%)',
-    sharedBorder: 'hsl(10, 45%, 82%)'
+    sharedBorder: 'hsl(10, 45%, 82%)',
+    darkSharedBg: 'hsl(10, 45%, 18%)',
+    darkSharedText: 'hsl(10, 60%, 68%)',
+    darkSharedBorder: 'hsl(10, 40%, 28%)'
   },
   sky: { 
     bg: 'bg-gradient-to-br from-sky-200/60 via-cyan-100/60 to-sky-300/60', 
@@ -131,7 +175,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-sky-700',
     sharedBg: 'hsl(195, 45%, 92%)',
     sharedText: 'hsl(200, 55%, 30%)',
-    sharedBorder: 'hsl(195, 40%, 80%)'
+    sharedBorder: 'hsl(195, 40%, 80%)',
+    darkSharedBg: 'hsl(195, 40%, 16%)',
+    darkSharedText: 'hsl(195, 55%, 68%)',
+    darkSharedBorder: 'hsl(195, 35%, 26%)'
   },
   gold: { 
     bg: 'bg-gradient-to-br from-yellow-200/60 via-amber-100/60 to-yellow-300/60', 
@@ -140,7 +187,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-yellow-700',
     sharedBg: 'hsl(50, 45%, 90%)',
     sharedText: 'hsl(45, 60%, 28%)',
-    sharedBorder: 'hsl(50, 40%, 78%)'
+    sharedBorder: 'hsl(50, 40%, 78%)',
+    darkSharedBg: 'hsl(50, 40%, 16%)',
+    darkSharedText: 'hsl(50, 60%, 68%)',
+    darkSharedBorder: 'hsl(50, 35%, 26%)'
   },
   sage: { 
     bg: 'bg-gradient-to-br from-lime-200/60 via-green-100/60 to-lime-300/60', 
@@ -149,7 +199,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-lime-700',
     sharedBg: 'hsl(90, 30%, 90%)',
     sharedText: 'hsl(95, 40%, 30%)',
-    sharedBorder: 'hsl(90, 25%, 78%)'
+    sharedBorder: 'hsl(90, 25%, 78%)',
+    darkSharedBg: 'hsl(90, 30%, 16%)',
+    darkSharedText: 'hsl(90, 45%, 65%)',
+    darkSharedBorder: 'hsl(90, 25%, 26%)'
   },
   plum: { 
     bg: 'bg-gradient-to-br from-violet-200/60 via-purple-100/60 to-violet-300/60', 
@@ -158,7 +211,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-violet-700',
     sharedBg: 'hsl(260, 35%, 92%)',
     sharedText: 'hsl(265, 45%, 35%)',
-    sharedBorder: 'hsl(260, 30%, 82%)'
+    sharedBorder: 'hsl(260, 30%, 82%)',
+    darkSharedBg: 'hsl(260, 35%, 18%)',
+    darkSharedText: 'hsl(260, 50%, 70%)',
+    darkSharedBorder: 'hsl(260, 30%, 28%)'
   },
   copper: { 
     bg: 'bg-gradient-to-br from-orange-300/60 via-amber-200/60 to-orange-400/60', 
@@ -167,7 +223,10 @@ const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorde
     badgeText: 'text-orange-700',
     sharedBg: 'hsl(25, 50%, 90%)',
     sharedText: 'hsl(20, 60%, 30%)',
-    sharedBorder: 'hsl(25, 45%, 78%)'
+    sharedBorder: 'hsl(25, 45%, 78%)',
+    darkSharedBg: 'hsl(25, 45%, 18%)',
+    darkSharedText: 'hsl(25, 60%, 68%)',
+    darkSharedBorder: 'hsl(25, 40%, 28%)'
   },
 };
 
@@ -178,6 +237,14 @@ export function TopicCard({ topic }: TopicCardProps) {
   const isMobile = useIsMobile();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
+  
+  useEffect(() => {
+    const checkDarkMode = () => setIsDark(document.documentElement.classList.contains('dark'));
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
   const handleCardClick = () => {
     navigate(`/topic/${topic.id}`);
   };
@@ -236,9 +303,9 @@ export function TopicCard({ topic }: TopicCardProps) {
                   <span 
                     className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
                     style={{ 
-                      backgroundColor: wallpaper.sharedBg, 
-                      color: wallpaper.sharedText, 
-                      borderColor: wallpaper.sharedBorder 
+                      backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
+                      color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
+                      borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
                     }}
                   >
                     <Users className="h-3 w-3" />
@@ -437,9 +504,9 @@ export function TopicListItem({ topic }: TopicCardProps) {
                     <span 
                       className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
                       style={{ 
-                        backgroundColor: wallpaper.sharedBg, 
-                        color: wallpaper.sharedText, 
-                        borderColor: wallpaper.sharedBorder 
+                        backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
+                        color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
+                        borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
                       }}
                     >
                       <Users className="h-3 w-3" />
@@ -495,14 +562,19 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
                 <button 
                   onClick={handleToggleExpand}
-                  className="flex items-center gap-1 text-sm text-muted-foreground shrink-0 hover:text-foreground transition-smooth"
+                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium shrink-0 transition-smooth hover:opacity-80"
+                  style={{ 
+                    backgroundColor: wallpaper.sharedBg, 
+                    color: wallpaper.sharedText, 
+                    borderColor: wallpaper.sharedBorder 
+                  }}
                 >
                   {topic.sessionCount} Sessions
                   {topic.sessions && topic.sessions.length > 0 && (
                     isExpanded ? (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="h-3.5 w-3.5" />
                     ) : (
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-3.5 w-3.5" />
                     )
                   )}
                 </button>
