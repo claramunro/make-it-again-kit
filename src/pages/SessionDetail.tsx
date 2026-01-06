@@ -461,7 +461,7 @@ const SessionDetail = () => {
                   <ChevronDown className="h-3.5 w-3.5" />
                 </button>
                 {sessionTypeDropdownOpen && (
-                  <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
+                  <div className="absolute right-0 top-full z-50 mt-1 w-64 rounded-lg border border-border bg-card py-1 shadow-lg">
                     {sessionTypes.map(type => (
                       <button 
                         key={type.id}
