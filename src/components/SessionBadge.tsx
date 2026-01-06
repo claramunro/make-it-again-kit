@@ -41,6 +41,56 @@ export const wallpaperBadgeColors: Record<WallpaperType, { bg: string; text: str
     text: 'hsl(30, 70%, 25%)',
     border: 'hsl(30, 70%, 65%)',
   },
+  rose: {
+    bg: 'hsl(350, 70%, 92%)',
+    text: 'hsl(350, 60%, 30%)',
+    border: 'hsl(350, 60%, 70%)',
+  },
+  slate: {
+    bg: 'hsl(215, 20%, 92%)',
+    text: 'hsl(215, 20%, 30%)',
+    border: 'hsl(215, 20%, 65%)',
+  },
+  forest: {
+    bg: 'hsl(140, 50%, 90%)',
+    text: 'hsl(140, 50%, 25%)',
+    border: 'hsl(140, 50%, 60%)',
+  },
+  berry: {
+    bg: 'hsl(320, 60%, 92%)',
+    text: 'hsl(320, 50%, 30%)',
+    border: 'hsl(320, 50%, 70%)',
+  },
+  coral: {
+    bg: 'hsl(16, 80%, 92%)',
+    text: 'hsl(16, 70%, 30%)',
+    border: 'hsl(16, 70%, 70%)',
+  },
+  sky: {
+    bg: 'hsl(190, 70%, 92%)',
+    text: 'hsl(190, 60%, 25%)',
+    border: 'hsl(190, 60%, 65%)',
+  },
+  gold: {
+    bg: 'hsl(50, 80%, 90%)',
+    text: 'hsl(50, 70%, 25%)',
+    border: 'hsl(50, 70%, 65%)',
+  },
+  sage: {
+    bg: 'hsl(100, 30%, 90%)',
+    text: 'hsl(100, 30%, 30%)',
+    border: 'hsl(100, 30%, 65%)',
+  },
+  plum: {
+    bg: 'hsl(270, 50%, 92%)',
+    text: 'hsl(270, 50%, 30%)',
+    border: 'hsl(270, 50%, 68%)',
+  },
+  copper: {
+    bg: 'hsl(25, 50%, 90%)',
+    text: 'hsl(25, 50%, 28%)',
+    border: 'hsl(25, 50%, 60%)',
+  },
 };
 
 export function SessionBadge({ type, topicBadge, showChevron, isShared }: SessionBadgeProps) {

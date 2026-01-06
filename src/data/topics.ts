@@ -16,7 +16,7 @@ export interface Topic {
   sharedBy?: string;
   isFavorite?: boolean;
   sessions?: TopicSession[];
-  wallpaper?: 'sand' | 'peach' | 'mint' | 'lavender' | 'ocean' | 'sunset';
+  wallpaper?: 'sand' | 'peach' | 'mint' | 'lavender' | 'ocean' | 'sunset' | 'rose' | 'slate' | 'forest' | 'berry' | 'coral' | 'sky' | 'gold' | 'sage' | 'plum' | 'copper';
 }
 
 export const topics: Topic[] = [
