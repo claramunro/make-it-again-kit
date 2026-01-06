@@ -421,7 +421,6 @@ const SessionDetail = () => {
                             wallpaper: selectedTopicData.wallpaper,
                           } as TopicBadgeInfo}
                           showChevron
-                          isShared={!!selectedTopicData.sharedBy}
                         />
                       ) : (
                         <div

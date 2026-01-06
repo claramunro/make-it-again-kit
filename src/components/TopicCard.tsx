@@ -99,11 +99,23 @@ export function TopicCard({ topic }: TopicCardProps) {
         {/* Header row */}
         <div className="flex items-start gap-3 mb-4">
           {/* Emoji container */}
-          <div className={cn(
-            'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
-            wallpaper.bg
-          )}>
-            <span className="text-2xl">{topic.icon}</span>
+          <div className="relative">
+            <div className={cn(
+              'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
+              wallpaper.bg
+            )}>
+              <span className="text-2xl">{topic.icon}</span>
+            </div>
+            {topic.sharedBy && (
+              <span className={cn(
+                "absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full",
+                wallpaper.badgeBg,
+                wallpaper.badgeBorder,
+                "border"
+              )}>
+                <Users className="h-3 w-3 text-primary" />
+              </span>
+            )}
           </div>
           
           {/* Title, description, and metadata */}
@@ -283,11 +295,23 @@ export function TopicListItem({ topic }: TopicCardProps) {
         <div className="p-4">
           <div className="flex items-start gap-3">
             {/* Emoji container */}
-            <div className={cn(
-              'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
-              wallpaper.bg
-            )}>
-              <span className="text-2xl">{topic.icon}</span>
+            <div className="relative">
+              <div className={cn(
+                'flex h-14 w-14 items-center justify-center rounded-2xl shrink-0',
+                wallpaper.bg
+              )}>
+                <span className="text-2xl">{topic.icon}</span>
+              </div>
+              {topic.sharedBy && (
+                <span className={cn(
+                  "absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full",
+                  wallpaper.badgeBg,
+                  wallpaper.badgeBorder,
+                  "border"
+                )}>
+                  <Users className="h-3 w-3 text-primary" />
+                </span>
+              )}
             </div>
             
             {/* Title and metadata */}
