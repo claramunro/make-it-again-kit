@@ -165,9 +165,12 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
 
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Column - Only show for Highlights tab */}
-        {activeTab === 'highlights' && (
-          <div className="w-64 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
+        {/* Left/Center area with audio player */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex flex-1 overflow-hidden">
+            {/* Left Column - Only show for Highlights tab */}
+            {activeTab === 'highlights' && (
+              <div className="w-64 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
             <div className="space-y-2">
               {mockBookmarks.map((bookmark) => (
                 <button
@@ -359,9 +362,28 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
             </div>
           )}
         </div>
+      </div>
+          {/* Audio Player - only spans left/center columns */}
+          <div className="shrink-0 border-t border-border bg-card px-6 py-4">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
+              >
+                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+              </button>
+              <div className="flex-1">
+                <div className="h-2 w-full rounded-full bg-muted">
+                  <div className="h-2 w-1/3 rounded-full bg-primary" />
+                </div>
+              </div>
+              <span className="text-sm text-muted-foreground">0:45 / 2:00</span>
+            </div>
+          </div>
+        </div>
 
         {/* Right Column - Chat */}
-        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30 pb-16">
+        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
           <div className="border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Chat</h2>
           </div>
@@ -384,24 +406,6 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
               </Button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Audio Player */}
-      <div className="shrink-0 border-t border-border bg-card px-6 py-4">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90"
-          >
-            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-          </button>
-          <div className="flex-1">
-            <div className="h-2 w-full rounded-full bg-muted">
-              <div className="h-2 w-1/3 rounded-full bg-primary" />
-            </div>
-          </div>
-          <span className="text-sm text-muted-foreground">0:45 / 2:00</span>
         </div>
       </div>
     </div>
