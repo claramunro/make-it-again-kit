@@ -421,6 +421,7 @@ const SessionDetail = () => {
                             wallpaper: selectedTopicData.wallpaper,
                           } as TopicBadgeInfo}
                           showChevron
+                          isShared={!!selectedTopicData.sharedBy}
                         />
                       ) : (
                         <div
@@ -844,11 +845,11 @@ const SessionDetail = () => {
                       onCheckedChange={setTopicContextEnabled}
                       className={cn(
                         "scale-75",
-                        // When enabled, override the checked-track color with the topic wallpaper background
+                        // When enabled, override the checked-track color with the topic badge border color (more saturated)
                         selectedTopicData?.wallpaper && "data-[state=checked]:!bg-[var(--topic-color)]"
                       )}
                       style={selectedTopicData?.wallpaper ? ({
-                        "--topic-color": wallpaperBadgeColors[selectedTopicData.wallpaper].bg,
+                        "--topic-color": wallpaperBadgeColors[selectedTopicData.wallpaper].border,
                       } as React.CSSProperties) : undefined}
                     />
                     <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
