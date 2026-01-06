@@ -843,10 +843,13 @@ const SessionDetail = () => {
                       id="topic-context"
                       checked={topicContextEnabled}
                       onCheckedChange={setTopicContextEnabled}
-                      className="scale-75"
-                      style={topicContextEnabled && selectedTopicData?.wallpaper ? {
-                        backgroundColor: selectedTopicData.wallpaper
-                      } : undefined}
+                      className={cn(
+                        "scale-75",
+                        topicContextEnabled && selectedTopicData?.wallpaper && "[&[data-state=checked]]:bg-[var(--topic-color)]"
+                      )}
+                      style={selectedTopicData?.wallpaper ? {
+                        '--topic-color': selectedTopicData.wallpaper
+                      } as React.CSSProperties : undefined}
                     />
                     <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
                       Topic context
