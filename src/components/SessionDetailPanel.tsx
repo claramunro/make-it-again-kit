@@ -102,46 +102,14 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
       {/* Session Header */}
       <div className="shrink-0 border-b border-border bg-background px-4 py-4">
         <div className="flex items-center justify-between gap-4">
-          {/* Left: Icon + Title + Meta */}
-          <div className="flex items-center gap-3 min-w-0">
-            <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
-            <div className="min-w-0">
-              <h1 className="truncate text-sm font-medium leading-snug text-foreground">
-                Session Title
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                Oct 18, 2025 9:16 AM • 2 minutes
-              </p>
-            </div>
-          </div>
-
-          {/* Center: Tabs */}
-          <div className="flex-1 flex justify-center">
-            <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              {(['details', 'highlights', 'transcript'] as const).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={cn(
-                    'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                    activeTab === tab
-                      ? 'bg-card text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: Topic Tag */}
-          <div className="shrink-0">
+          {/* Left: Topic Badge + Tabs */}
+          <div className="flex items-center gap-4 min-w-0">
+            {/* Topic Badge */}
             {selectedTopicData ? (
               <button
                 onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth",
+                  "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth shrink-0",
                   wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].bg,
                   wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].text
                 )}
@@ -152,7 +120,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
               </button>
             ) : (
               <Select onValueChange={handleAssignTopic}>
-                <SelectTrigger className="h-auto gap-2 rounded-lg border-dashed border-muted-foreground/30 bg-transparent px-3 py-1.5 text-sm text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-smooth w-auto">
+                <SelectTrigger className="h-auto gap-2 rounded-lg border-dashed border-muted-foreground/30 bg-transparent px-3 py-1.5 text-sm text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-smooth w-auto shrink-0">
                   <FolderOpen className="h-4 w-4" />
                   <SelectValue placeholder="Select topic" />
                 </SelectTrigger>
@@ -173,6 +141,24 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                 </SelectContent>
               </Select>
             )}
+
+            {/* Tabs */}
+            <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+              {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={cn(
+                    'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                    activeTab === tab
+                      ? 'bg-card text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -375,7 +361,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         </div>
 
         {/* Right Column - Chat */}
-        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
+        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30 h-[calc(100vh-200px)]">
           <div className="border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Chat</h2>
           </div>
