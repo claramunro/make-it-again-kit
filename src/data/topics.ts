@@ -28,6 +28,7 @@ export const topics: Topic[] = [
     icon: '🎨',
     sessionCount: 10,
     date: 'Dec 1',
+    description: 'Mobile app visual refresh project',
     sharedBy: 'Julian',
     isFavorite: true,
     wallpaper: 'mint',
@@ -50,6 +51,7 @@ export const topics: Topic[] = [
     icon: '📦',
     sessionCount: 4,
     date: 'Nov 4',
+    description: 'Fresh ideas and new initiatives',
     isFavorite: true,
     wallpaper: 'sand',
     sessions: [
@@ -85,6 +87,7 @@ export const topics: Topic[] = [
     icon: '🏋️',
     sessionCount: 3,
     date: 'Oct 29',
+    description: 'Fitness routines and gym notes',
     isFavorite: false,
     wallpaper: 'ocean',
     sessions: [
@@ -99,6 +102,7 @@ export const topics: Topic[] = [
     icon: '☕',
     sessionCount: 3,
     date: 'Oct 29',
+    description: 'Exploring beans, brews, and roasters',
     isFavorite: false,
     wallpaper: 'peach',
     sessions: [

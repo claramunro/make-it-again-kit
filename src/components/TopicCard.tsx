@@ -24,42 +24,150 @@ interface TopicCardSelectableProps {
 }
 
 // Wallpaper presets matching TopicDetail
-const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorder: string; badgeText: string }> = {
+const wallpaperPresets: Record<string, { bg: string; badgeBg: string; badgeBorder: string; badgeText: string; sharedBg: string; sharedText: string; sharedBorder: string }> = {
   sand: { 
     bg: 'bg-gradient-to-br from-amber-200/60 via-yellow-100/60 to-amber-300/60', 
     badgeBg: 'bg-amber-100', 
     badgeBorder: 'border-amber-300',
-    badgeText: 'text-amber-700'
+    badgeText: 'text-amber-700',
+    sharedBg: 'hsl(45, 40%, 92%)',
+    sharedText: 'hsl(35, 60%, 30%)',
+    sharedBorder: 'hsl(45, 35%, 80%)'
   },
   peach: { 
     bg: 'bg-gradient-to-br from-orange-200/60 via-rose-100/60 to-orange-300/60', 
     badgeBg: 'bg-orange-100', 
     badgeBorder: 'border-orange-300',
-    badgeText: 'text-orange-700'
+    badgeText: 'text-orange-700',
+    sharedBg: 'hsl(20, 55%, 92%)',
+    sharedText: 'hsl(15, 65%, 32%)',
+    sharedBorder: 'hsl(20, 45%, 80%)'
   },
   mint: { 
     bg: 'bg-gradient-to-br from-emerald-200/60 via-teal-100/60 to-emerald-300/60', 
     badgeBg: 'bg-emerald-100', 
     badgeBorder: 'border-emerald-300',
-    badgeText: 'text-emerald-700'
+    badgeText: 'text-emerald-700',
+    sharedBg: 'hsl(150, 30%, 90%)',
+    sharedText: 'hsl(155, 45%, 28%)',
+    sharedBorder: 'hsl(150, 25%, 78%)'
   },
   lavender: { 
     bg: 'bg-gradient-to-br from-purple-200/60 via-pink-100/60 to-purple-300/60', 
     badgeBg: 'bg-purple-100', 
     badgeBorder: 'border-purple-300',
-    badgeText: 'text-purple-700'
+    badgeText: 'text-purple-700',
+    sharedBg: 'hsl(270, 30%, 92%)',
+    sharedText: 'hsl(275, 45%, 35%)',
+    sharedBorder: 'hsl(270, 25%, 82%)'
   },
   ocean: { 
     bg: 'bg-gradient-to-br from-blue-200/60 via-sky-100/60 to-blue-300/60', 
     badgeBg: 'bg-blue-100', 
     badgeBorder: 'border-blue-300',
-    badgeText: 'text-blue-700'
+    badgeText: 'text-blue-700',
+    sharedBg: 'hsl(200, 45%, 92%)',
+    sharedText: 'hsl(205, 60%, 30%)',
+    sharedBorder: 'hsl(200, 40%, 80%)'
   },
   sunset: { 
     bg: 'bg-gradient-to-br from-orange-300/60 via-rose-200/60 to-yellow-300/60', 
     badgeBg: 'bg-orange-100', 
     badgeBorder: 'border-orange-300',
-    badgeText: 'text-orange-700'
+    badgeText: 'text-orange-700',
+    sharedBg: 'hsl(30, 50%, 92%)',
+    sharedText: 'hsl(25, 65%, 32%)',
+    sharedBorder: 'hsl(30, 45%, 80%)'
+  },
+  rose: { 
+    bg: 'bg-gradient-to-br from-rose-200/60 via-pink-100/60 to-rose-300/60', 
+    badgeBg: 'bg-rose-100', 
+    badgeBorder: 'border-rose-300',
+    badgeText: 'text-rose-700',
+    sharedBg: 'hsl(350, 40%, 92%)',
+    sharedText: 'hsl(345, 55%, 35%)',
+    sharedBorder: 'hsl(350, 35%, 82%)'
+  },
+  slate: { 
+    bg: 'bg-gradient-to-br from-slate-200/60 via-gray-100/60 to-slate-300/60', 
+    badgeBg: 'bg-slate-100', 
+    badgeBorder: 'border-slate-300',
+    badgeText: 'text-slate-700',
+    sharedBg: 'hsl(210, 15%, 92%)',
+    sharedText: 'hsl(215, 20%, 35%)',
+    sharedBorder: 'hsl(210, 12%, 80%)'
+  },
+  forest: { 
+    bg: 'bg-gradient-to-br from-green-200/60 via-emerald-100/60 to-green-300/60', 
+    badgeBg: 'bg-green-100', 
+    badgeBorder: 'border-green-300',
+    badgeText: 'text-green-700',
+    sharedBg: 'hsl(140, 30%, 90%)',
+    sharedText: 'hsl(145, 45%, 28%)',
+    sharedBorder: 'hsl(140, 25%, 78%)'
+  },
+  berry: { 
+    bg: 'bg-gradient-to-br from-fuchsia-200/60 via-purple-100/60 to-fuchsia-300/60', 
+    badgeBg: 'bg-fuchsia-100', 
+    badgeBorder: 'border-fuchsia-300',
+    badgeText: 'text-fuchsia-700',
+    sharedBg: 'hsl(290, 35%, 92%)',
+    sharedText: 'hsl(295, 50%, 35%)',
+    sharedBorder: 'hsl(290, 30%, 82%)'
+  },
+  coral: { 
+    bg: 'bg-gradient-to-br from-red-200/60 via-orange-100/60 to-red-300/60', 
+    badgeBg: 'bg-red-100', 
+    badgeBorder: 'border-red-300',
+    badgeText: 'text-red-700',
+    sharedBg: 'hsl(10, 50%, 92%)',
+    sharedText: 'hsl(5, 60%, 35%)',
+    sharedBorder: 'hsl(10, 45%, 82%)'
+  },
+  sky: { 
+    bg: 'bg-gradient-to-br from-sky-200/60 via-cyan-100/60 to-sky-300/60', 
+    badgeBg: 'bg-sky-100', 
+    badgeBorder: 'border-sky-300',
+    badgeText: 'text-sky-700',
+    sharedBg: 'hsl(195, 45%, 92%)',
+    sharedText: 'hsl(200, 55%, 30%)',
+    sharedBorder: 'hsl(195, 40%, 80%)'
+  },
+  gold: { 
+    bg: 'bg-gradient-to-br from-yellow-200/60 via-amber-100/60 to-yellow-300/60', 
+    badgeBg: 'bg-yellow-100', 
+    badgeBorder: 'border-yellow-300',
+    badgeText: 'text-yellow-700',
+    sharedBg: 'hsl(50, 45%, 90%)',
+    sharedText: 'hsl(45, 60%, 28%)',
+    sharedBorder: 'hsl(50, 40%, 78%)'
+  },
+  sage: { 
+    bg: 'bg-gradient-to-br from-lime-200/60 via-green-100/60 to-lime-300/60', 
+    badgeBg: 'bg-lime-100', 
+    badgeBorder: 'border-lime-300',
+    badgeText: 'text-lime-700',
+    sharedBg: 'hsl(90, 30%, 90%)',
+    sharedText: 'hsl(95, 40%, 30%)',
+    sharedBorder: 'hsl(90, 25%, 78%)'
+  },
+  plum: { 
+    bg: 'bg-gradient-to-br from-violet-200/60 via-purple-100/60 to-violet-300/60', 
+    badgeBg: 'bg-violet-100', 
+    badgeBorder: 'border-violet-300',
+    badgeText: 'text-violet-700',
+    sharedBg: 'hsl(260, 35%, 92%)',
+    sharedText: 'hsl(265, 45%, 35%)',
+    sharedBorder: 'hsl(260, 30%, 82%)'
+  },
+  copper: { 
+    bg: 'bg-gradient-to-br from-orange-300/60 via-amber-200/60 to-orange-400/60', 
+    badgeBg: 'bg-orange-100', 
+    badgeBorder: 'border-orange-300',
+    badgeText: 'text-orange-700',
+    sharedBg: 'hsl(25, 50%, 90%)',
+    sharedText: 'hsl(20, 60%, 30%)',
+    sharedBorder: 'hsl(25, 45%, 78%)'
   },
 };
 
@@ -127,7 +235,11 @@ export function TopicCard({ topic }: TopicCardProps) {
                 {topic.sharedBy && (
                   <span 
                     className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
-                    style={{ backgroundColor: wallpaper.badgeBg, color: wallpaper.badgeText, borderColor: wallpaper.badgeBorder }}
+                    style={{ 
+                      backgroundColor: wallpaper.sharedBg, 
+                      color: wallpaper.sharedText, 
+                      borderColor: wallpaper.sharedBorder 
+                    }}
                   >
                     <Users className="h-3 w-3" />
                     Shared
@@ -179,7 +291,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             
             {/* Row 2: Description + session count */}
             <div className="flex items-center justify-between gap-2 mt-1">
-              <p className="text-sm text-muted-foreground">Topic Description</p>
+              <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
               <span className="text-sm text-muted-foreground shrink-0">
                 {topic.sessionCount} Sessions
               </span>
@@ -324,7 +436,11 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   {topic.sharedBy && (
                     <span 
                       className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
-                      style={{ backgroundColor: wallpaper.badgeBg, color: wallpaper.badgeText, borderColor: wallpaper.badgeBorder }}
+                      style={{ 
+                        backgroundColor: wallpaper.sharedBg, 
+                        color: wallpaper.sharedText, 
+                        borderColor: wallpaper.sharedBorder 
+                      }}
                     >
                       <Users className="h-3 w-3" />
                       Shared
@@ -376,7 +492,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
               
               {/* Row 2: Description + session count with expand toggle */}
               <div className="flex items-center justify-between gap-2 mt-1">
-                <p className="text-sm text-muted-foreground">Topic Description</p>
+                <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
                 <button 
                   onClick={handleToggleExpand}
                   className="flex items-center gap-1 text-sm text-muted-foreground shrink-0 hover:text-foreground transition-smooth"
@@ -418,10 +534,15 @@ export function TopicListItem({ topic }: TopicCardProps) {
                       {session.date}{session.time ? ` · ${session.time}` : ''} · {session.duration}
                     </p>
                   </div>
-                  {/* Star for favorited sessions */}
-                  {session.isFavorite && (
-                    <Star className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                  )}
+                  {/* Star for sessions */}
+                  <Star 
+                    className={cn(
+                      'h-4 w-4 shrink-0',
+                      session.isFavorite 
+                        ? 'fill-yellow-400 text-yellow-400' 
+                        : 'text-muted-foreground/30'
+                    )} 
+                  />
                 </Link>
               ))}
             </div>
