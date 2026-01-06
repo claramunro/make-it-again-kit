@@ -133,9 +133,11 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sessions Sidebar (only in sessions/overview tab) */}
-        {(activeTopicTab === 'sessions' || activeTopicTab === 'overview') && activeTopicTab === 'sessions' && (
-          <div className="w-72 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
+        {/* Left/Center area - scrollable */}
+        <div className="flex min-w-0 flex-1 overflow-hidden">
+          {/* Sessions Sidebar (only in sessions tab) */}
+          {activeTopicTab === 'sessions' && (
+            <div className="w-72 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
             <div className="space-y-2">
               {mockSessions.map((session) => (
                 <button
@@ -317,6 +319,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               )}
             </div>
           )}
+        </div>
         </div>
 
         {/* Right Column - Chat (not on edit tab) */}
