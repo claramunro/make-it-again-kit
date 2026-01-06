@@ -843,9 +843,9 @@ const TopicDetail = () => {
                 />
               </div>
               
-              {/* Wallpaper Selection */}
+              {/* Color Selection */}
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Wallpaper</h3>
+                <h3 className="text-sm font-semibold text-foreground">Color</h3>
                 <div className="grid grid-cols-4 gap-2">
                   {wallpaperPresets.map((preset) => (
                     <button
@@ -857,7 +857,10 @@ const TopicDetail = () => {
                         selectedWallpaper === preset.id ? 'border-primary' : 'border-transparent'
                       )}
                     >
-                      <div className={cn('h-full w-full', preset.gradient)} />
+                      <div 
+                        className="h-full w-full" 
+                        style={{ backgroundColor: preset.bannerColor }}
+                      />
                     </button>
                   ))}
                 </div>
@@ -1647,9 +1650,9 @@ const TopicDetail = () => {
                   <div className="space-y-6">
                     <h3 className="font-semibold">Appearance</h3>
                     
-                    {/* Wallpaper Selection */}
+                    {/* Color Selection */}
                     <div className="space-y-3">
-                      <Label className="text-sm">Wallpaper</Label>
+                      <Label className="text-sm">Color</Label>
                       <div className="flex flex-wrap gap-3">
                         {wallpaperPresets.map((preset) => (
                           <button
@@ -1661,94 +1664,13 @@ const TopicDetail = () => {
                               selectedWallpaper === preset.id && 'ring-2 ring-offset-2 ring-primary'
                             )}
                           >
-                            {/* Base gradient */}
-                            <div className={cn('absolute inset-0', preset.gradient)} />
-                            {/* Blur overlay based on slider */}
+                            {/* Solid color for selector */}
                             <div 
                               className="absolute inset-0" 
-                              style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
-                            />
-                            {/* Light effects */}
-                            <div 
-                              className="absolute inset-0"
-                              style={{
-                                background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%)'
-                              }}
-                            />
-                            <div 
-                              className="absolute inset-0"
-                              style={{
-                                background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%)'
-                              }}
+                              style={{ backgroundColor: preset.bannerColor }}
                             />
                           </button>
                         ))}
-                      </div>
-                    </div>
-                    
-                    {/* Blur Amount Slider */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-sm">Blur Amount</Label>
-                        <span className="text-xs text-muted-foreground">{blurAmount[0]}%</span>
-                      </div>
-                      <div className="relative">
-                        <div className="h-8 rounded-lg overflow-hidden">
-                          <div className={cn(
-                            'absolute inset-0',
-                            wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
-                          )} />
-                          <div 
-                            className="absolute inset-0" 
-                            style={{ backdropFilter: `blur(${blurAmount[0] / 25}px)` }}
-                          />
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={blurAmount[0]}
-                          onChange={(e) => setBlurAmount([parseInt(e.target.value)])}
-                          disabled={!!topic.sharedBy}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <div 
-                          className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
-                          style={{ left: `calc(${blurAmount[0]}% - 10px)` }}
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Overlay Opacity Slider */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-sm">Overlay Opacity</Label>
-                        <span className="text-xs text-muted-foreground">{overlayOpacity[0]}%</span>
-                      </div>
-                      <div className="relative">
-                        <div className="h-8 rounded-lg overflow-hidden">
-                          <div className={cn(
-                            'absolute inset-0',
-                            wallpaperPresets.find(p => p.id === selectedWallpaper)?.gradient || 'bg-muted'
-                          )} />
-                          <div 
-                            className="absolute inset-0 bg-white dark:bg-black" 
-                            style={{ opacity: overlayOpacity[0] / 100 }}
-                          />
-                        </div>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={overlayOpacity[0]}
-                          onChange={(e) => setOverlayOpacity([parseInt(e.target.value)])}
-                          disabled={!!topic.sharedBy}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <div 
-                          className="absolute top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-white border-2 border-primary shadow-md pointer-events-none"
-                          style={{ left: `calc(${overlayOpacity[0]}% - 10px)` }}
-                        />
                       </div>
                     </div>
                     

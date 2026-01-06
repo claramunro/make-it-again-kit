@@ -454,7 +454,7 @@ const SessionDetail = () => {
               <div className="shrink-0 relative">
                 <button
                   onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
-                  className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground transition-smooth hover:bg-muted"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground transition-smooth hover:bg-muted"
                 >
                   <span>{selectedSessionTypeData?.icon}</span>
                   <span>{selectedSessionTypeData?.label}</span>
@@ -484,7 +484,7 @@ const SessionDetail = () => {
             <div className="flex items-start gap-3 mb-3">
               <button 
                 onClick={() => navigate('/')}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-smooth hover:bg-primary/90 mt-0.5"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted/80 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/70 mt-0.5"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
