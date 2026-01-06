@@ -123,86 +123,79 @@ const HighlightsPage = () => {
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader title="Highlights" count={highlights.length} />
         
-        <main className="flex-1 bg-background overflow-hidden flex flex-col">
+        <main className="flex-1 bg-background overflow-hidden flex">
+          {/* Main scrollable content area */}
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="mx-auto max-w-5xl w-full">
-              {/* Desktop Header */}
-              {!isMobile && (
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-muted-foreground">Sort By</span>
-                    <span className="text-sm font-medium text-foreground">Recent</span>
-                  </div>
+            {/* Desktop Header */}
+            {!isMobile && (
+              <div className="mb-6 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
                 </div>
-              )}
-
-              {/* Group By Toggle */}
-              <div className="mb-6">
-                <div className="inline-flex rounded-lg bg-muted p-1">
-                  <button
-                    onClick={() => {
-                      setGroupBy('sessions');
-                      localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
-                    }}
-                    className={cn(
-                      'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                      groupBy === 'sessions'
-                        ? 'bg-background text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
-                  >
-                    Sessions
-                  </button>
-                  <button
-                    onClick={() => {
-                      setGroupBy('topics');
-                      localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
-                    }}
-                    className={cn(
-                      'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                      groupBy === 'topics'
-                        ? 'bg-background text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
-                  >
-                    Topics
-                  </button>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-muted-foreground">Sort By</span>
+                  <span className="text-sm font-medium text-foreground">Recent</span>
                 </div>
               </div>
+            )}
 
-              {/* Main Content */}
-              <div className="flex gap-6">
-                {/* Highlights List */}
-                <div className={cn(
-                  'space-y-4',
-                  !isMobile && selectedHighlight ? 'flex-1 pr-[424px]' : 'w-full'
-                )}>
-                  {groupedHighlights.map((group, index) => (
-                    <HighlightGroup
-                      key={group.id}
-                      title={group.title}
-                      icon={group.icon}
-                      SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
-                      sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
-                      sessionId={groupBy === 'sessions' ? group.id : undefined}
-                      highlights={group.highlights}
-                      sessionGroups={group.sessionGroups}
-                      selectedId={selectedHighlight?.id || null}
-                      onSelectHighlight={handleSelectHighlight}
-                      defaultExpanded={index === 0}
-                    />
-                  ))}
-                </div>
+            {/* Group By Toggle */}
+            <div className="mb-6">
+              <div className="inline-flex rounded-lg bg-muted p-1">
+                <button
+                  onClick={() => {
+                    setGroupBy('sessions');
+                    localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
+                  }}
+                  className={cn(
+                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                    groupBy === 'sessions'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  Sessions
+                </button>
+                <button
+                  onClick={() => {
+                    setGroupBy('topics');
+                    localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
+                  }}
+                  className={cn(
+                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                    groupBy === 'topics'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  Topics
+                </button>
               </div>
+            </div>
+
+            {/* Highlights List */}
+            <div className="space-y-4">
+              {groupedHighlights.map((group, index) => (
+                <HighlightGroup
+                  key={group.id}
+                  title={group.title}
+                  icon={group.icon}
+                  SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
+                  sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
+                  sessionId={groupBy === 'sessions' ? group.id : undefined}
+                  highlights={group.highlights}
+                  sessionGroups={group.sessionGroups}
+                  selectedId={selectedHighlight?.id || null}
+                  onSelectHighlight={handleSelectHighlight}
+                  defaultExpanded={index === 0}
+                />
+              ))}
             </div>
           </div>
 
-          {/* Desktop Detail Panel - Fixed Position, aligned with content area */}
+          {/* Desktop Detail Panel - Fixed right column */}
           {!isMobile && selectedHighlight && (
-            <div className="fixed right-6 top-[140px] bottom-6 w-[400px] rounded-xl border border-border bg-card flex flex-col overflow-hidden z-10">
+            <div className="w-[400px] shrink-0 border-l border-border bg-card flex flex-col overflow-hidden">
               <HighlightDetailPanel 
                 highlight={selectedHighlight} 
                 onClose={() => setSelectedHighlight(null)}
