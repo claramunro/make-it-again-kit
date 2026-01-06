@@ -29,26 +29,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Loader2 } from 'lucide-react';
 
-const topicColors = [
-  'hsl(12, 76%, 61%)',
-  'hsl(199, 89%, 48%)',
-  'hsl(235, 66%, 45%)',
-  'hsl(142, 71%, 45%)',
-  'hsl(142, 69%, 58%)',
-  'hsl(76, 74%, 50%)',
-  'hsl(36, 100%, 50%)',
-  'hsl(16, 100%, 50%)',
-  'hsl(0, 84%, 60%)',
-  'hsl(338, 71%, 51%)',
-  'hsl(262, 52%, 47%)',
-  'hsl(271, 91%, 65%)',
-  'hsl(25, 38%, 39%)',
-  'hsl(0, 0%, 62%)',
-  'hsl(207, 18%, 51%)',
-  'hsl(160, 84%, 39%)',
-  'hsl(181, 100%, 41%)',
-  'hsl(45, 93%, 47%)',
-];
+// Removed topicColors - now using wallpaper presets instead
 
 const topicIcons = [
   { icon: FolderOpen, name: 'folder' },
@@ -152,6 +133,16 @@ const wallpaperPresets = [
   { id: 'lavender', gradient: 'bg-gradient-to-br from-purple-300 via-pink-200 to-purple-400', name: 'Lavender', bannerColor: 'hsl(280, 60%, 80%)' },
   { id: 'ocean', gradient: 'bg-gradient-to-br from-blue-300 via-sky-200 to-blue-400', name: 'Ocean', bannerColor: 'hsl(200, 70%, 80%)' },
   { id: 'sunset', gradient: 'bg-gradient-to-br from-orange-400 via-rose-300 to-yellow-400', name: 'Sunset', bannerColor: 'hsl(30, 80%, 75%)' },
+  { id: 'rose', gradient: 'bg-gradient-to-br from-rose-300 via-pink-200 to-rose-400', name: 'Rose', bannerColor: 'hsl(350, 70%, 82%)' },
+  { id: 'slate', gradient: 'bg-gradient-to-br from-slate-300 via-gray-200 to-slate-400', name: 'Slate', bannerColor: 'hsl(215, 20%, 75%)' },
+  { id: 'forest', gradient: 'bg-gradient-to-br from-green-300 via-emerald-200 to-green-400', name: 'Forest', bannerColor: 'hsl(140, 50%, 70%)' },
+  { id: 'berry', gradient: 'bg-gradient-to-br from-fuchsia-300 via-pink-200 to-fuchsia-400', name: 'Berry', bannerColor: 'hsl(320, 60%, 78%)' },
+  { id: 'coral', gradient: 'bg-gradient-to-br from-red-300 via-orange-200 to-red-400', name: 'Coral', bannerColor: 'hsl(16, 80%, 78%)' },
+  { id: 'sky', gradient: 'bg-gradient-to-br from-cyan-300 via-sky-200 to-cyan-400', name: 'Sky', bannerColor: 'hsl(190, 70%, 78%)' },
+  { id: 'gold', gradient: 'bg-gradient-to-br from-yellow-300 via-amber-200 to-yellow-400', name: 'Gold', bannerColor: 'hsl(50, 80%, 75%)' },
+  { id: 'sage', gradient: 'bg-gradient-to-br from-lime-200 via-green-100 to-lime-300', name: 'Sage', bannerColor: 'hsl(100, 30%, 75%)' },
+  { id: 'plum', gradient: 'bg-gradient-to-br from-violet-300 via-purple-200 to-violet-400', name: 'Plum', bannerColor: 'hsl(270, 50%, 78%)' },
+  { id: 'copper', gradient: 'bg-gradient-to-br from-orange-300 via-amber-200 to-orange-400', name: 'Copper', bannerColor: 'hsl(25, 50%, 72%)' },
 ];
 
 // Map topic icons to wallpaper colors
@@ -258,7 +249,7 @@ const TopicDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
-  const { topics, updateTopicWallpaper, getTopicById } = useTopics();
+  const { topics, updateTopicWallpaper, updateTopic, getTopicById } = useTopics();
   
   // Read initial state from URL params
   const initialSessionId = searchParams.get('session') || mockSessions[0].id;
@@ -277,11 +268,15 @@ const TopicDetail = () => {
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     mockSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite }), {})
   );
-  const [iconType, setIconType] = useState<'icons' | 'emoji'>('icons');
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedIcon, setSelectedIcon] = useState(17);
-  const [topicName, setTopicName] = useState('');
-  const [topicDescription, setTopicDescription] = useState('');
+  const [iconType, setIconType] = useState<'icons' | 'emoji'>(() => {
+    // Check if topic icon is an emoji or icon name
+    const icon = topic?.icon || '';
+    return topicEmojis.includes(icon) ? 'emoji' : 'icons';
+  });
+  const [selectedEmoji, setSelectedEmoji] = useState(() => topic?.icon || '📦');
+  const [selectedIconIndex, setSelectedIconIndex] = useState(0);
+  const [topicName, setTopicName] = useState(() => topic?.name || '');
+  const [topicDescription, setTopicDescription] = useState(() => topic?.description || '');
   const [aiContext, setAiContext] = useState('Clara is working on design updates to the Hedy app.');
   const [selectedWallpaper, setSelectedWallpaper] = useState(topic?.wallpaper || 'mint');
   const [blurAmount, setBlurAmount] = useState([50]);
@@ -303,18 +298,51 @@ const TopicDetail = () => {
     lastGenerated: 'Dec 11, 2025 10:25 PM',
   });
   
-  // Sync selectedWallpaper when topic changes
+  // Sync state when topic changes
   useEffect(() => {
-    if (topic?.wallpaper) {
-      setSelectedWallpaper(topic.wallpaper);
+    if (topic) {
+      setSelectedWallpaper(topic.wallpaper || 'mint');
+      setTopicName(topic.name);
+      setTopicDescription(topic.description || '');
+      setSelectedEmoji(topic.icon);
+      setIconType(topicEmojis.includes(topic.icon) ? 'emoji' : 'icons');
     }
-  }, [topic?.wallpaper]);
+  }, [topic?.id]);
   
   // Save wallpaper changes
   const handleWallpaperChange = (wallpaper: typeof selectedWallpaper) => {
     setSelectedWallpaper(wallpaper);
     if (id) {
       updateTopicWallpaper(id, wallpaper);
+    }
+  };
+  
+  // Save name changes (debounced via onBlur)
+  const handleNameBlur = () => {
+    if (id && topicName && topicName !== topic?.name) {
+      updateTopic(id, { name: topicName });
+    }
+  };
+  
+  // Save description changes (debounced via onBlur)
+  const handleDescriptionBlur = () => {
+    if (id && topicDescription !== topic?.description) {
+      updateTopic(id, { description: topicDescription });
+    }
+  };
+  
+  // Handle icon selection
+  const handleIconSelect = (iconName: string) => {
+    if (id && !topic?.sharedBy) {
+      updateTopic(id, { icon: iconName });
+    }
+  };
+  
+  // Handle emoji selection
+  const handleEmojiSelect = (emoji: string) => {
+    setSelectedEmoji(emoji);
+    if (id && !topic?.sharedBy) {
+      updateTopic(id, { icon: emoji });
     }
   };
   
@@ -791,16 +819,41 @@ const TopicDetail = () => {
           {/* Edit Tab */}
           {mobileActiveTab === 'edit' && (
             <div className="space-y-6">
+              {/* Topic Name */}
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-foreground">Topic Name</h3>
+                <Input
+                  value={topicName}
+                  onChange={(e) => setTopicName(e.target.value)}
+                  onBlur={handleNameBlur}
+                  disabled={!!topic.sharedBy}
+                />
+              </div>
+              
+              {/* Topic Description */}
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-foreground">Description</h3>
+                <Textarea
+                  placeholder="Topic Description"
+                  value={topicDescription}
+                  onChange={(e) => setTopicDescription(e.target.value)}
+                  onBlur={handleDescriptionBlur}
+                  className="min-h-[80px]"
+                  disabled={!!topic.sharedBy}
+                />
+              </div>
+              
               {/* Wallpaper Selection */}
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-foreground">Wallpaper</h3>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   {wallpaperPresets.map((preset) => (
                     <button
                       key={preset.id}
-                      onClick={() => setSelectedWallpaper(preset.id as typeof selectedWallpaper)}
+                      onClick={() => handleWallpaperChange(preset.id as typeof selectedWallpaper)}
+                      disabled={!!topic.sharedBy}
                       className={cn(
-                        'aspect-video rounded-lg overflow-hidden border-2 transition-all',
+                        'aspect-square rounded-lg overflow-hidden border-2 transition-all',
                         selectedWallpaper === preset.id ? 'border-primary' : 'border-transparent'
                       )}
                     >
@@ -810,32 +863,21 @@ const TopicDetail = () => {
                 </div>
               </div>
 
-              {/* Color Selection */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground">Accent Color</h3>
-                <div className="flex flex-wrap gap-2">
-                  {topicColors.slice(0, 12).map((color, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedColor(i)}
-                      className={cn(
-                        'h-8 w-8 rounded-full transition-all',
-                        selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
-                      )}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-
               {/* Icon Selection */}
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-foreground">Icon</h3>
                 <div className="flex flex-wrap gap-2">
-                  {topicEmojis.slice(0, 12).map((emoji, i) => (
+                  {topicEmojis.map((emoji, i) => (
                     <button
                       key={i}
-                      className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-xl"
+                      onClick={() => handleEmojiSelect(emoji)}
+                      disabled={!!topic.sharedBy}
+                      className={cn(
+                        'flex h-10 w-10 items-center justify-center rounded-lg border transition-all text-xl',
+                        selectedEmoji === emoji 
+                          ? 'border-primary bg-primary/10' 
+                          : 'border-border bg-card hover:border-primary/50'
+                      )}
                     >
                       {emoji}
                     </button>
@@ -1580,8 +1622,9 @@ const TopicDetail = () => {
                         </div>
                         <Input
                           id="topicName"
-                          value={topicName || topic.name}
+                          value={topicName}
                           onChange={(e) => setTopicName(e.target.value)}
+                          onBlur={handleNameBlur}
                           className="pl-10"
                           disabled={!!topic.sharedBy}
                         />
@@ -1593,6 +1636,7 @@ const TopicDetail = () => {
                         placeholder="Topic Description"
                         value={topicDescription}
                         onChange={(e) => setTopicDescription(e.target.value)}
+                        onBlur={handleDescriptionBlur}
                         className="min-h-[80px]"
                         disabled={!!topic.sharedBy}
                       />
@@ -1708,24 +1752,6 @@ const TopicDetail = () => {
                       </div>
                     </div>
                     
-                    {/* Color Selection (accent color) */}
-                    <div className="space-y-3">
-                      <Label className="text-sm">Accent Color</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {topicColors.map((color, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setSelectedColor(i)}
-                            disabled={!!topic.sharedBy}
-                            className={cn(
-                              'h-8 w-8 rounded-full transition-all',
-                              selectedColor === i && 'ring-2 ring-offset-2 ring-primary'
-                            )}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                    </div>
                     
                     {/* Icon Selection */}
                     <div className="space-y-3">
@@ -1758,14 +1784,18 @@ const TopicDetail = () => {
                         <div className="flex flex-wrap gap-2">
                           {topicIcons.map((item, i) => {
                             const Icon = item.icon;
+                            const isSelected = topic?.icon === item.name || (!topicEmojis.includes(topic?.icon || '') && selectedIconIndex === i);
                             return (
                               <button
                                 key={i}
-                                onClick={() => setSelectedIcon(i)}
+                                onClick={() => {
+                                  setSelectedIconIndex(i);
+                                  handleIconSelect(item.name);
+                                }}
                                 disabled={!!topic.sharedBy}
                                 className={cn(
                                   'flex h-10 w-10 items-center justify-center rounded-lg border transition-all',
-                                  selectedIcon === i 
+                                  isSelected 
                                     ? 'border-primary bg-primary/10 text-primary' 
                                     : 'border-border bg-background text-muted-foreground hover:border-primary/50'
                                 )}
@@ -1780,8 +1810,14 @@ const TopicDetail = () => {
                           {topicEmojis.map((emoji, i) => (
                             <button
                               key={i}
+                              onClick={() => handleEmojiSelect(emoji)}
                               disabled={!!topic.sharedBy}
-                              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-xl hover:border-primary/50"
+                              className={cn(
+                                'flex h-10 w-10 items-center justify-center rounded-lg border transition-all text-xl',
+                                selectedEmoji === emoji 
+                                  ? 'border-primary bg-primary/10' 
+                                  : 'border-border bg-background hover:border-primary/50'
+                              )}
                             >
                               {emoji}
                             </button>

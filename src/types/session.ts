@@ -1,6 +1,6 @@
 export type BadgeType = 'new' | 'coffee' | 'workout' | null;
 
-export type WallpaperType = 'sand' | 'peach' | 'mint' | 'lavender' | 'ocean' | 'sunset';
+export type WallpaperType = 'sand' | 'peach' | 'mint' | 'lavender' | 'ocean' | 'sunset' | 'rose' | 'slate' | 'forest' | 'berry' | 'coral' | 'sky' | 'gold' | 'sage' | 'plum' | 'copper';
 
 export interface TopicBadgeInfo {
   icon: string;
