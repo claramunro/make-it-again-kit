@@ -4,6 +4,7 @@ export interface TopicSession {
   date: string;
   duration: string;
   type?: 'audio' | 'document';
+  isFavorite?: boolean;
 }
 
 export interface Topic {

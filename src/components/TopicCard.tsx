@@ -415,9 +415,13 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{session.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {session.date} · {session.duration}
+                      {session.duration}
                     </p>
                   </div>
+                  {/* Star for favorited sessions */}
+                  {session.isFavorite && (
+                    <Star className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                  )}
                 </Link>
               ))}
             </div>
