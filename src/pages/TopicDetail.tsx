@@ -121,8 +121,8 @@ const mockSessions = [
   },
 ];
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
-type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'edit';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings';
+type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'settings';
 type SessionTab = 'details' | 'highlights' | 'transcript';
 
 // Wallpaper presets with gradient configurations
@@ -259,7 +259,7 @@ const TopicDetail = () => {
   
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(
     initialTab === 'sessions' ? 'sessions' : 
-    initialTab === 'edit' ? 'edit' : 
+    initialTab === 'settings' ? 'settings' : 
     initialTab === 'highlights' ? 'highlights' : 'overview'
   );
   const [mobileActiveTab, setMobileActiveTab] = useState<MobileTopicTab>('overview');
@@ -817,7 +817,7 @@ const TopicDetail = () => {
           )}
 
           {/* Edit Tab */}
-          {mobileActiveTab === 'edit' && (
+          {mobileActiveTab === 'settings' && (
             <div className="space-y-6">
               {/* Topic Name */}
               <div className="space-y-2">
@@ -978,7 +978,7 @@ const TopicDetail = () => {
                   {/* Tabs row */}
                   <div className="mt-3 pl-32">
                     <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                      {(['overview', 'sessions', 'highlights', 'edit'] as const).map((tab) => (
+                      {(['overview', 'sessions', 'highlights', 'settings'] as const).map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setActiveTopicTab(tab)}
@@ -1601,10 +1601,10 @@ const TopicDetail = () => {
             </div>
           )}
           
-          {activeTopicTab === 'edit' && (
+          {activeTopicTab === 'settings' && (
             <div className="flex-1 overflow-y-auto p-6">
               <div className="max-w-4xl mx-auto">
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {/* View-only warning */}
                   {topic.sharedBy && (
                     <div className="rounded-lg bg-amber-100 px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
@@ -1614,7 +1614,7 @@ const TopicDetail = () => {
                   )}
                   
                   {/* Basic Information */}
-                  <div className="space-y-4">
+                  <div className="rounded-xl border border-border bg-card p-6 space-y-4">
                     <h3 className="font-semibold">Basic information</h3>
                     
                     <div className="space-y-2">
@@ -1647,7 +1647,7 @@ const TopicDetail = () => {
                   </div>
                   
                   {/* Appearance */}
-                  <div className="space-y-6">
+                  <div className="rounded-xl border border-border bg-card p-6 space-y-6">
                     <h3 className="font-semibold">Appearance</h3>
                     
                     {/* Color Selection */}
@@ -1750,7 +1750,7 @@ const TopicDetail = () => {
                   </div>
                   
                   {/* AI Context */}
-                  <div className="space-y-4">
+                  <div className="rounded-xl border border-border bg-card p-6 space-y-4">
                     <div className="flex items-center gap-2">
                       <Lightbulb className="h-4 w-4" />
                       <h3 className="font-semibold">AI context & instructions</h3>
