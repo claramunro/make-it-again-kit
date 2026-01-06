@@ -361,7 +361,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         </div>
 
         {/* Right Column - Chat */}
-        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30 h-[calc(100vh-200px)]">
+        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
           <div className="border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Chat</h2>
           </div>

@@ -79,7 +79,7 @@ const SessionsMasterDetail = () => {
         
         <main className="flex flex-1 flex-col overflow-hidden bg-background">
           {/* Sessions Header - Full Width */}
-          <div className="shrink-0 border-b border-border px-6 pt-6 pb-4">
+          <div className="shrink-0 border-b border-border px-6 pt-4 pb-3">
             <SessionsHeader 
               totalSessions={totalSessions}
               selectionMode={selectionMode}
