@@ -100,7 +100,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Session Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-4">
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2">
         <div className="flex items-center justify-between gap-4">
           {/* Left: Topic Badge + Tabs */}
           <div className="flex items-center gap-4 min-w-0">
@@ -361,7 +361,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         </div>
 
         {/* Right Column - Chat */}
-        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
+        <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30 pb-16">
           <div className="border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Chat</h2>
           </div>
