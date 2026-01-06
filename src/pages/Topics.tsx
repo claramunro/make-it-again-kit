@@ -9,6 +9,7 @@ import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { ArrowDownUp, Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TopicsMasterDetail from './TopicsMasterDetail';
+import { ProBadge } from '@/components/ProBadge';
 
 const Topics = () => {
   const isMobile = useIsMobile();
@@ -23,9 +24,7 @@ const Topics = () => {
 
   const mobileActions = (
     <>
-      <span className="rounded-md bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-        PRO
-      </span>
+      <ProBadge />
       <Button variant="outline" size="sm" className="h-8 gap-1 px-2 text-xs">
         <ArrowDownUp className="h-3.5 w-3.5" />
         Sort

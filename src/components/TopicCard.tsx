@@ -425,6 +425,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
   const navigate = useNavigate();
   const wallpaper = wallpaperPresets[topic.wallpaper || 'mint'] || defaultWallpaper;
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [isDark, setIsDark] = useState(document.documentElement.classList.contains('dark'));
   const [isExpanded, setIsExpanded] = useState(() => {
     const saved = localStorage.getItem('topic-accordion-state');
     if (saved) {
@@ -433,6 +434,13 @@ export function TopicListItem({ topic }: TopicCardProps) {
     }
     return false;
   });
+
+  useEffect(() => {
+    const checkDarkMode = () => setIsDark(document.documentElement.classList.contains('dark'));
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem('topic-accordion-state');
@@ -564,9 +572,9 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   onClick={handleToggleExpand}
                   className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium shrink-0 transition-smooth hover:opacity-80"
                   style={{ 
-                    backgroundColor: wallpaper.sharedBg, 
-                    color: wallpaper.sharedText, 
-                    borderColor: wallpaper.sharedBorder 
+                    backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
+                    color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
+                    borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
                   }}
                 >
                   {topic.sessionCount} Sessions

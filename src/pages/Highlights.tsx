@@ -200,9 +200,9 @@ const HighlightsPage = () => {
             </div>
           </div>
 
-          {/* Desktop Detail Panel - Fixed Position */}
+          {/* Desktop Detail Panel - Fixed Position, aligned with content area */}
           {!isMobile && selectedHighlight && (
-            <div className="fixed right-6 top-6 bottom-5 w-[400px] rounded-xl border border-border bg-card flex flex-col overflow-hidden z-10">
+            <div className="fixed right-6 top-[140px] bottom-6 w-[400px] rounded-xl border border-border bg-card flex flex-col overflow-hidden z-10">
               <HighlightDetailPanel 
                 highlight={selectedHighlight} 
                 onClose={() => setSelectedHighlight(null)}

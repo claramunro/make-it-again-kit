@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { ProBadge } from './ProBadge';
 import {
   Drawer,
   DrawerContent,
@@ -194,10 +195,7 @@ export function ImportTranscriptDialog({ open, onClose }: ImportTranscriptDialog
       <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader className="border-b border-border pb-4 text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600 mx-auto mb-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-              PRO
-            </span>
+            <ProBadge className="mx-auto mb-2" />
             <DrawerTitle className="text-xl">Import Transcript</DrawerTitle>
             <p className="text-sm text-muted-foreground mt-1">
               Choose the type of conversation or meeting this audio recording is from.
@@ -216,10 +214,7 @@ export function ImportTranscriptDialog({ open, onClose }: ImportTranscriptDialog
       <DialogContent className="sm:max-w-lg">
         <DialogHeader className="text-center space-y-3">
           <div className="flex justify-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-              PRO
-            </span>
+            <ProBadge />
           </div>
           <DialogTitle className="text-xl">Import Transcript</DialogTitle>
           <p className="text-sm text-muted-foreground">
