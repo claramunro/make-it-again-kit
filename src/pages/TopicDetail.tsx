@@ -10,6 +10,7 @@ import { Header } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { HighlightGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
+import { wallpaperBadgeColors } from '@/components/SessionBadge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTopics } from '@/contexts/TopicContext';
 import { highlights, Highlight } from '@/data/highlights';
@@ -869,6 +870,7 @@ const TopicDetail = () => {
           {/* Topic Header with Color Banner */}
           {(() => {
             const wallpaper = wallpaperPresets.find(p => p.id === selectedWallpaper) ?? wallpaperPresets[2];
+            const badgeColors = wallpaperBadgeColors[wallpaper.id as keyof typeof wallpaperBadgeColors] ?? wallpaperBadgeColors.mint;
             return (
               <div className="sticky top-0 z-10">
                 {/* Color Banner */}
@@ -895,7 +897,10 @@ const TopicDetail = () => {
                         {topic.icon}
                       </div>
                       {topic.sharedBy && (
-                        <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[hsl(var(--shared))] border-2 border-[hsl(var(--shared))] shadow-sm">
+                        <span 
+                          className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm"
+                          style={{ backgroundColor: badgeColors.border, borderColor: badgeColors.border }}
+                        >
                           <Users className="h-3.5 w-3.5 text-white" />
                         </span>
                       )}
@@ -914,7 +919,10 @@ const TopicDetail = () => {
                     {/* Shared badge */}
                     {topic.sharedBy && (
                       <div className="shrink-0">
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(var(--shared))] bg-[hsl(var(--shared)/0.1)] px-3 py-1.5 text-xs font-medium text-[hsl(var(--shared))]">
+                        <span 
+                          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium"
+                          style={{ backgroundColor: badgeColors.bg, color: badgeColors.text, borderColor: badgeColors.border }}
+                        >
                           <Users className="h-3.5 w-3.5" />
                           Shared by {topic.sharedBy}
                         </span>
