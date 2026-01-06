@@ -108,10 +108,9 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
       {/* Topic Header */}
       <div className="shrink-0 border-b border-border bg-background px-4 py-2">
         <div className="flex items-center justify-between gap-4">
-          {/* Left: Icon + Title + Tabs */}
+          {/* Left: Icon + Tabs */}
           <div className="flex items-center gap-4 min-w-0">
             <span className="text-2xl">{topic.icon}</span>
-            <span className="text-sm font-medium text-foreground truncate">{topic.name}</span>
 
             {/* Tabs */}
             <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
