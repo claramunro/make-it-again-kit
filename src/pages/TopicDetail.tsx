@@ -1398,8 +1398,8 @@ const TopicDetail = () => {
                   
                   {/* Core Concepts */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold border-t border-border pt-6">Core Concepts</h3>
-                    <div className="space-y-3">
+                    <h3 className="font-semibold">Core Concepts</h3>
+                    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       {[
                         { text: "Plan Mode is a feature that analyzes a user's codebase and generates structured implementation plans before writing code.", detail: "Introduced in Session 3 on Oct 14, 2025, as part of an AI-assisted development workflow for building website features." },
                         { text: "Highlight activation is a UI function that marks key moments in a chat session for later reference.", detail: "Repeatedly demonstrated in Session 1 on Oct 29, 2025, to test reliability and reinforce usability." },
@@ -1420,8 +1420,8 @@ const TopicDetail = () => {
                   
                   {/* Key Takeaways */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold border-t border-border pt-6">Key Takeaways</h3>
-                    <div className="space-y-3">
+                    <h3 className="font-semibold">Key Takeaways</h3>
+                    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       {[
                         { text: "Plan Mode is essential for analyzing existing code and generating reliable implementation strategies—this workflow will likely be emphasized in future applied tasks.", detail: null },
                         { text: "Repeated use of the highlight feature demonstrates its intended role in marking significant interactions for review.", detail: null },
@@ -1441,8 +1441,8 @@ const TopicDetail = () => {
                   
                   {/* Study Questions */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold border-t border-border pt-6">Study Questions</h3>
-                    <div className="space-y-3">
+                    <h3 className="font-semibold">Study Questions</h3>
+                    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       {[
                         { q: "What is the purpose of entering Plan Mode before implementing a new feature?", a: "This probes understanding of pre-implementation analysis and structured planning." },
                         { q: "How does the highlight feature enhance user interaction with the AI interface?", a: "Asks students to connect UI design with user retention and review efficiency." },
@@ -1463,8 +1463,8 @@ const TopicDetail = () => {
                   
                   {/* Connections & Context */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold border-t border-border pt-6">Connections & Context</h3>
-                    <div className="space-y-3">
+                    <h3 className="font-semibold">Connections & Context</h3>
+                    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       {[
                         { text: "The Plan Mode workflow mirrors software engineering best practices such as requirements analysis and architectural planning.", detail: "Connects to prior coursework on SDLC (Software Development Life Cycle), reinforcing academic foundations." },
                         { text: "Keyboard shortcut fluency reflects industry-standard IDE efficiency techniques.", detail: "Relates to lab exercises emphasizing tool fluency, similar to VS Code or JetBrains workflows." },
@@ -1483,8 +1483,8 @@ const TopicDetail = () => {
                   
                   {/* Exam Preparation */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold border-t border-border pt-6">Exam Preparation</h3>
-                    <div className="space-y-3">
+                    <h3 className="font-semibold">Exam Preparation</h3>
+                    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
                       {[
                         { priority: 'P1', text: "Practice navigating the AI interface using only keyboard shortcuts to build muscle memory.", detail: "Focus on Command + N and Shift + Tab sequences demonstrated on Oct 14, 2025." },
                         { priority: 'P1', text: "Review how Plan Mode analyzes code structures and generates implementation steps—be ready to describe the process in written responses.", detail: "This was central to the demo on Oct 14 and likely to appear on the exam." },
