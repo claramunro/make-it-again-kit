@@ -102,7 +102,7 @@ export function SessionBadge({ type, topicBadge, showChevron, isShared }: Sessio
     
     return (
       <div
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
+        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium whitespace-nowrap"
         style={{
           backgroundColor: colors.bg,
           color: colors.text,
@@ -110,19 +110,19 @@ export function SessionBadge({ type, topicBadge, showChevron, isShared }: Sessio
           borderColor: colors.border,
         }}
       >
-        <span className="relative text-sm">
+        <span className="relative text-xs">
           {topicBadge.icon}
           {isShared && (
             <span 
-              className="absolute -bottom-1 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full"
+              className="absolute -bottom-1 -right-1.5 flex h-3 w-3 items-center justify-center rounded-full"
               style={{ backgroundColor: colors.border }}
             >
-              <Users className="h-2 w-2 text-white" />
+              <Users className="h-1.5 w-1.5 text-white" />
             </span>
           )}
         </span>
         <span>{topicBadge.label}</span>
-        {showChevron && <ChevronDown className="h-3.5 w-3.5 opacity-70" />}
+        {showChevron && <ChevronDown className="h-3 w-3 opacity-70" />}
       </div>
     );
   }
@@ -152,11 +152,11 @@ export function SessionBadge({ type, topicBadge, showChevron, isShared }: Sessio
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
+        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium',
         config.className
       )}
     >
-      <span className="text-sm">{config.icon}</span>
+      <span className="text-xs">{config.icon}</span>
       {config.label}
     </span>
   );
