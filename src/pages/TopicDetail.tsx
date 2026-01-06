@@ -894,6 +894,14 @@ const TopicDetail = () => {
                       >
                         {topic.icon}
                       </div>
+                      {topic.sharedBy && (
+                        <span 
+                          className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background shadow-sm"
+                          style={{ backgroundColor: wallpaper.bannerColor }}
+                        >
+                          <Users className="h-3.5 w-3.5 text-white" />
+                        </span>
+                      )}
                     </div>
                     
                     {/* Title and metadata */}
