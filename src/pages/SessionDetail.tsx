@@ -28,9 +28,8 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
-import { SessionBadge } from '@/components/SessionBadge';
+import { SessionBadge, wallpaperBadgeColors } from '@/components/SessionBadge';
 import { TopicBadgeInfo } from '@/types/session';
-
 type SessionTab = 'details' | 'highlights' | 'transcript';
 type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript';
 
@@ -845,11 +844,11 @@ const SessionDetail = () => {
                       onCheckedChange={setTopicContextEnabled}
                       className={cn(
                         "scale-75",
-                        // When enabled, override the checked-track color with the topic wallpaper color
+                        // When enabled, override the checked-track color with the topic wallpaper background
                         selectedTopicData?.wallpaper && "data-[state=checked]:!bg-[var(--topic-color)]"
                       )}
                       style={selectedTopicData?.wallpaper ? ({
-                        "--topic-color": selectedTopicData.wallpaper,
+                        "--topic-color": wallpaperBadgeColors[selectedTopicData.wallpaper].bg,
                       } as React.CSSProperties) : undefined}
                     />
                     <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">

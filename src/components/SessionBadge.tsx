@@ -9,7 +9,7 @@ interface SessionBadgeProps {
 }
 
 // Wallpaper color presets for topic badges
-const wallpaperBadgeColors: Record<WallpaperType, { bg: string; text: string; border: string }> = {
+export const wallpaperBadgeColors: Record<WallpaperType, { bg: string; text: string; border: string }> = {
   sand: {
     bg: 'hsl(45, 80%, 92%)',
     text: 'hsl(45, 60%, 30%)',
