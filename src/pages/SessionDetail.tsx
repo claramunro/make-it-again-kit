@@ -387,67 +387,57 @@ const SessionDetail = () => {
         <main className="flex-1 overflow-hidden bg-background">
           {/* Session Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-3 md:px-6">
-            {/* Top Row: Star (far left) + Topic Badge (aligned with title) | Session Type Dropdown */}
-            <div className="flex items-start justify-between gap-4 mb-2">
-              {/* Left: Star above back button, then Badge aligned with title */}
-              <div className="flex items-center gap-3 min-w-0">
-                {/* Star - above back button position */}
-                <div className="w-8 shrink-0 flex justify-center">
-                  <button 
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className="p-1 rounded-md transition-smooth hover:bg-muted"
-                  >
-                    <Star 
-                      className={cn(
-                        "h-5 w-5 transition-colors",
-                        isFavorite 
-                          ? "fill-yellow-400 text-yellow-400" 
-                          : "text-muted-foreground hover:text-yellow-400"
-                      )} 
-                    />
-                  </button>
-                </div>
-                {/* Topic Badge - aligned with title */}
-                  <Select
-                    value={selectedTopic}
-                    onValueChange={(value) => setSelectedTopic(value)}
-                  >
-                    <SelectTrigger className="h-8 w-auto max-w-none gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden">
-                      {selectedTopicData ? (
-                        <SessionBadge 
-                          topicBadge={{
-                            icon: selectedTopicData.icon,
-                            label: selectedTopicData.name,
-                            wallpaper: selectedTopicData.wallpaper,
-                          } as TopicBadgeInfo}
-                          showChevron
-                        />
-                      ) : (
-                        <div
-                          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
-                          style={{
-                            backgroundColor: 'hsl(0, 0%, 96%)',
-                            color: 'hsl(0, 0%, 55%)',
-                            borderColor: 'hsl(0, 0%, 88%)',
-                          }}
-                        >
-                          <FolderOpen className="h-3.5 w-3.5" />
-                          <span>Select topic</span>
-                          <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+            {/* Top Row: Back button + Topic Badge | Session Type Dropdown */}
+            <div className="flex items-center justify-between gap-4 mb-2">
+              {/* Left: Back button + Topic Badge */}
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => navigate('/')}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted/80 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/70"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                {/* Topic Badge */}
+                <Select
+                  value={selectedTopic}
+                  onValueChange={(value) => setSelectedTopic(value)}
+                >
+                  <SelectTrigger className="h-8 w-auto max-w-none gap-0 border-none bg-transparent p-0 shadow-none hover:bg-transparent focus:ring-0 [&>svg]:hidden">
+                    {selectedTopicData ? (
+                      <SessionBadge 
+                        topicBadge={{
+                          icon: selectedTopicData.icon,
+                          label: selectedTopicData.name,
+                          wallpaper: selectedTopicData.wallpaper,
+                        } as TopicBadgeInfo}
+                        showChevron
+                      />
+                    ) : (
+                      <div
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap border"
+                        style={{
+                          backgroundColor: 'hsl(0, 0%, 96%)',
+                          color: 'hsl(0, 0%, 55%)',
+                          borderColor: 'hsl(0, 0%, 88%)',
+                        }}
+                      >
+                        <FolderOpen className="h-3.5 w-3.5" />
+                        <span>Select topic</span>
+                        <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                      </div>
+                    )}
+                  </SelectTrigger>
+                  <SelectContent className="z-50 bg-card border border-border shadow-lg">
+                    {topics.map((topic) => (
+                      <SelectItem key={topic.id} value={topic.id} className="cursor-pointer pl-3">
+                        <div className="flex items-center gap-2">
+                          <span>{topic.icon}</span>
+                          <span>{topic.name}</span>
                         </div>
-                      )}
-                    </SelectTrigger>
-                    <SelectContent className="z-50 bg-card border border-border shadow-lg">
-                      {topics.map((topic) => (
-                        <SelectItem key={topic.id} value={topic.id} className="cursor-pointer pl-3">
-                          <div className="flex items-center gap-2">
-                            <span>{topic.icon}</span>
-                            <span>{topic.name}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Right: Session Type Dropdown */}
@@ -480,13 +470,20 @@ const SessionDetail = () => {
               </div>
             </div>
 
-            {/* Second Row: Back button + Title & Meta */}
-            <div className="flex items-start gap-3 mb-3">
+            {/* Second Row: Star + Title & Meta */}
+            <div className="flex items-start gap-2 mb-3">
               <button 
-                onClick={() => navigate('/')}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-smooth hover:bg-muted/80 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/70 mt-0.5"
+                onClick={() => setIsFavorite(!isFavorite)}
+                className="p-1 rounded-md transition-smooth hover:bg-muted mt-0.5 shrink-0"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <Star 
+                  className={cn(
+                    "h-5 w-5 transition-colors",
+                    isFavorite 
+                      ? "fill-yellow-400 text-yellow-400" 
+                      : "text-muted-foreground hover:text-yellow-400"
+                  )} 
+                />
               </button>
               <div className="min-w-0 flex-1">
                 {/* Title */}
