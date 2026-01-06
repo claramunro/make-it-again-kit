@@ -388,14 +388,12 @@ const SessionDetail = () => {
         <main className="flex-1 overflow-hidden bg-background">
           {/* Session Header */}
           <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-3 md:px-6">
-            {/* Top Row: Star + Topic Badge (aligned with title below) | Session Type Dropdown */}
+            {/* Top Row: Star (far left) + Topic Badge (aligned with title) | Session Type Dropdown */}
             <div className="flex items-start justify-between gap-4 mb-2">
-              {/* Left spacer for back button width + gap, then Star + Badge */}
+              {/* Left: Star above back button, then Badge aligned with title */}
               <div className="flex items-center gap-3 min-w-0">
-                {/* Spacer to match back button width */}
-                <div className="w-8 shrink-0" />
-                {/* Star + Topic Badge Row */}
-                <div className="flex items-center gap-2">
+                {/* Star - above back button position */}
+                <div className="w-8 shrink-0 flex justify-center">
                   <button 
                     onClick={() => setIsFavorite(!isFavorite)}
                     className="p-1 rounded-md transition-smooth hover:bg-muted"
@@ -409,6 +407,8 @@ const SessionDetail = () => {
                       )} 
                     />
                   </button>
+                </div>
+                {/* Topic Badge - aligned with title */}
                   <Select
                     value={selectedTopic}
                     onValueChange={(value) => setSelectedTopic(value)}
@@ -449,7 +449,6 @@ const SessionDetail = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
               </div>
 
               {/* Right: Session Type Dropdown */}
