@@ -42,13 +42,13 @@ const Topics = () => {
   );
 
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-card">
+    <div className="flex h-screen overflow-hidden bg-card">
       {!isMobile && <SidebarV2 />}
       
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <MobileHeader title="Topics" count={topics.length} actions={mobileActions} />
         
-        <main className="flex-1 bg-background p-4 pb-24 md:p-6 md:pb-6">
+        <main className="flex-1 overflow-auto bg-background p-4 pb-24 md:p-6 md:pb-6">
           <div className="mx-auto max-w-5xl">
             {!isMobile && (
               <TopicsHeader 
