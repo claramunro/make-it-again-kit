@@ -108,7 +108,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             </div>
             {topic.sharedBy && (
               <span className={cn(
-                "absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full",
+                "absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full",
                 wallpaper.badgeBg,
                 wallpaper.badgeBorder,
                 "border"
@@ -304,7 +304,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
               </div>
               {topic.sharedBy && (
                 <span className={cn(
-                  "absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full",
+                  "absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full",
                   wallpaper.badgeBg,
                   wallpaper.badgeBorder,
                   "border"
