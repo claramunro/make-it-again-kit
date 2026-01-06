@@ -570,12 +570,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
                 <button 
                   onClick={handleToggleExpand}
-                  className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium shrink-0 transition-smooth hover:opacity-80"
-                  style={{ 
-                    backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
-                    color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
-                    borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
-                  }}
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground shrink-0 transition-smooth hover:opacity-80"
                 >
                   {topic.sessionCount} Sessions
                   {topic.sessions && topic.sessions.length > 0 && (
