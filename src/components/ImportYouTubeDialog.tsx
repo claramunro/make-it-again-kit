@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { ProBadge } from './ProBadge';
 import {
   Drawer,
   DrawerContent,
@@ -66,10 +67,7 @@ export function ImportYouTubeDialog({ open, onClose }: ImportYouTubeDialogProps)
       <Drawer open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader className="border-b border-border pb-4 text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600 mx-auto mb-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-              PRO
-            </span>
+            <ProBadge className="mx-auto mb-2" />
             <DrawerTitle className="flex items-center justify-center gap-2 text-xl">
               <PlayCircle className="h-5 w-5" />
               Import from YouTube
@@ -91,10 +89,7 @@ export function ImportYouTubeDialog({ open, onClose }: ImportYouTubeDialogProps)
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center space-y-3">
           <div className="flex justify-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-              PRO
-            </span>
+            <ProBadge />
           </div>
           <DialogTitle className="flex items-center justify-center gap-2 text-xl">
             <PlayCircle className="h-5 w-5" />
