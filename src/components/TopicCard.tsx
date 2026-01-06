@@ -107,13 +107,8 @@ export function TopicCard({ topic }: TopicCardProps) {
               <span className="text-2xl">{topic.icon}</span>
             </div>
             {topic.sharedBy && (
-              <span className={cn(
-                "absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full",
-                wallpaper.badgeBg,
-                wallpaper.badgeBorder,
-                "border"
-              )}>
-                <Users className="h-3 w-3 text-primary" />
+              <span className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[hsl(var(--shared))] border border-[hsl(var(--shared))]">
+                <Users className="h-3 w-3 text-white" />
               </span>
             )}
           </div>
@@ -127,7 +122,7 @@ export function TopicCard({ topic }: TopicCardProps) {
               <div className="flex items-center gap-1 shrink-0">
                 {/* Shared badge */}
                 {topic.sharedBy && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--shared))] bg-[hsl(var(--shared)/0.1)] px-2 py-0.5 text-xs font-medium text-[hsl(var(--shared))]">
                     <Users className="h-3 w-3" />
                     Shared
                   </span>
@@ -303,13 +298,8 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 <span className="text-2xl">{topic.icon}</span>
               </div>
               {topic.sharedBy && (
-                <span className={cn(
-                  "absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full",
-                  wallpaper.badgeBg,
-                  wallpaper.badgeBorder,
-                  "border"
-                )}>
-                  <Users className="h-3 w-3 text-primary" />
+                <span className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[hsl(var(--shared))] border border-[hsl(var(--shared))]">
+                  <Users className="h-3 w-3 text-white" />
                 </span>
               )}
             </div>
@@ -323,7 +313,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 <div className="flex items-center gap-1 shrink-0">
                   {/* Shared badge */}
                   {topic.sharedBy && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-[hsl(var(--shared))] bg-[hsl(var(--shared)/0.1)] px-2 py-0.5 text-xs font-medium text-[hsl(var(--shared))]">
                       <Users className="h-3 w-3" />
                       Shared
                     </span>
