@@ -2,6 +2,7 @@ export interface TopicSession {
   id: string;
   title: string;
   date: string;
+  time?: string;
   duration: string;
   type?: 'audio' | 'document';
   isFavorite?: boolean;
