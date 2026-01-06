@@ -106,23 +106,14 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Topic Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-4">
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2">
         <div className="flex items-center justify-between gap-4">
-          {/* Left: Icon + Title + Meta */}
-          <div className="flex items-center gap-3 min-w-0">
+          {/* Left: Icon + Title + Tabs */}
+          <div className="flex items-center gap-4 min-w-0">
             <span className="text-2xl">{topic.icon}</span>
-            <div className="min-w-0">
-              <h1 className="truncate text-sm font-medium leading-snug text-foreground">
-                {topic.name}
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                {topic.sessionCount} sessions • Last updated {topic.date}
-              </p>
-            </div>
-          </div>
+            <span className="text-sm font-medium text-foreground truncate">{topic.name}</span>
 
-          {/* Center: Tabs */}
-          <div className="flex-1 flex justify-center">
+            {/* Tabs */}
             <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
               {(['overview', 'sessions', 'highlights', 'edit'] as const).map(tab => (
                 <button
@@ -140,9 +131,6 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               ))}
             </div>
           </div>
-
-          {/* Right: Placeholder */}
-          <div className="w-32" />
         </div>
       </div>
 
@@ -336,40 +324,25 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
         {/* Right Column - Chat (not on edit tab) */}
         {activeTopicTab !== 'edit' && (
-          <div className="w-72 shrink-0 flex flex-col border-l border-border bg-muted/30">
-            <div className="flex items-center justify-between border-b border-border p-4">
-              <h2 className="text-sm font-semibold text-foreground">Chat in Topic</h2>
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
-                <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
-              </div>
+          <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
+            <div className="border-b border-border p-4">
+              <h2 className="text-sm font-semibold text-foreground">Chat</h2>
             </div>
             <div className="flex-1 overflow-auto p-4">
               <div className="text-sm text-muted-foreground">
                 Ask questions about this topic...
               </div>
             </div>
-            <div className="border-t border-border p-4 space-y-3">
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
-                <Sparkles className="ml-2 h-5 w-5 text-muted-foreground" />
+            <div className="border-t border-border p-4">
+              <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="How can I help?"
-                  className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                  placeholder="Type a message..."
+                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
-                <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                <Button size="icon" variant="ghost">
                   <Send className="h-4 w-4" />
                 </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
-                  Identify key themes
-                  <Sparkles className="h-3 w-3" />
-                </button>
-                <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
-                  More
-                  <ChevronRight className="h-3 w-3" />
-                </button>
               </div>
             </div>
           </div>
