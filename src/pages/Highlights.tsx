@@ -195,7 +195,7 @@ const HighlightsPage = () => {
 
           {/* Desktop Detail Panel - Fixed right column */}
           {!isMobile && selectedHighlight && (
-            <div className="w-[400px] shrink-0 p-6 pl-0 overflow-y-auto">
+            <div className="w-[400px] shrink-0 pt-[108px] pr-6 pb-6 overflow-y-auto">
               <HighlightDetailPanel 
                 highlight={selectedHighlight} 
                 onClose={() => setSelectedHighlight(null)}
