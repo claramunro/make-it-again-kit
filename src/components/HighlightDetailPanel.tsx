@@ -11,9 +11,8 @@ interface HighlightDetailPanelProps {
 
 export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col p-4">
-      <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card overflow-hidden">
-        {/* Header with session link - inside the card */}
+    <div className="flex flex-col rounded-xl border border-border bg-card overflow-hidden">
+      {/* Header with session link - inside the card */}
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <Link 
             to={`/session/${highlight.sessionId}`}
@@ -72,7 +71,6 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
               </div>
             </div>
           )}
-        </div>
       </div>
     </div>
   );
