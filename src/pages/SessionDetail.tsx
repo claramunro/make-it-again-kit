@@ -30,8 +30,8 @@ import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 import { SessionBadge, wallpaperBadgeColors } from '@/components/SessionBadge';
 import { TopicBadgeInfo } from '@/types/session';
-type SessionTab = 'details' | 'highlights' | 'transcript';
-type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript';
+type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings';
+type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript' | 'settings';
 
 const sessionTypes = [
   { id: 'business', label: 'Business Meetings', icon: '📁' },
@@ -160,7 +160,7 @@ const SessionDetail = () => {
 
           {/* Tab Bar - Full Width */}
           <div className="flex border-t border-border">
-            {(['details', 'highlights', 'chat', 'transcript'] as MobileSessionTab[]).map(tab => (
+            {(['details', 'highlights', 'chat', 'transcript', 'settings'] as MobileSessionTab[]).map(tab => (
               <button
                 key={tab}
                 onClick={() => setMobileActiveTab(tab)}
@@ -351,6 +351,61 @@ const SessionDetail = () => {
                     <p>I'm Kevin Cavanaugh, and I own Gorilla Development, a development firm here in Portland, Oregon.</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {mobileActiveTab === 'settings' && (
+            <div className="space-y-4">
+              {/* Session Details Section */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="text-base font-semibold text-foreground mb-4">Session Details</h3>
+                <div className="space-y-4">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Title</label>
+                    <input
+                      type="text"
+                      defaultValue={currentSession?.title || 'Untitled Session'}
+                      className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    />
+                  </div>
+
+                  {/* Date & Time */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Date</label>
+                      <input
+                        type="text"
+                        defaultValue={currentSession?.date || ''}
+                        placeholder="Nov 4, 2025"
+                        className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Time</label>
+                      <input
+                        type="text"
+                        defaultValue={currentSession?.time || ''}
+                        placeholder="4:58 PM"
+                        className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-4">
+                <h3 className="text-base font-semibold text-destructive mb-2">Danger Zone</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Once you delete a session, there is no going back.
+                </p>
+                <Button variant="destructive" size="sm" className="gap-2">
+                  <Trash2 className="h-4 w-4" />
+                  Delete Session
+                </Button>
               </div>
             </div>
           )}
@@ -558,7 +613,7 @@ const SessionDetail = () => {
             {/* Second Row: Tabs */}
             <div className="flex items-center">
               <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -872,6 +927,92 @@ const SessionDetail = () => {
                     <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-smooth hover:bg-primary/90">
                       <Sparkles className="h-4 w-4" />
                     </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Settings Tab */}
+              {activeTab === 'settings' && (
+                <div className="max-w-2xl space-y-6">
+                  {/* Session Details Section */}
+                  <div className="rounded-xl border border-border bg-card p-6">
+                    <h3 className="text-base font-semibold text-foreground mb-4">Session Details</h3>
+                    <div className="space-y-4">
+                      {/* Title */}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Title</label>
+                        <input
+                          type="text"
+                          defaultValue={currentSession?.title || 'Untitled Session'}
+                          className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        />
+                      </div>
+
+                      {/* Date & Time Row */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-muted-foreground">Date</label>
+                          <input
+                            type="text"
+                            defaultValue={currentSession?.date || ''}
+                            placeholder="Nov 4, 2025"
+                            className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-muted-foreground">Time</label>
+                          <input
+                            type="text"
+                            defaultValue={currentSession?.time || ''}
+                            placeholder="4:58 PM"
+                            className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Session Type Section */}
+                  <div className="rounded-xl border border-border bg-card p-6">
+                    <h3 className="text-base font-semibold text-foreground mb-4">Session Type</h3>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Type</label>
+                      <Select
+                        value={selectedSessionType}
+                        onValueChange={setSelectedSessionType}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue>
+                            <div className="flex items-center gap-2">
+                              <span>{selectedSessionTypeData?.icon}</span>
+                              <span>{selectedSessionTypeData?.label}</span>
+                            </div>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sessionTypes.map(type => (
+                            <SelectItem key={type.id} value={type.id}>
+                              <div className="flex items-center gap-2">
+                                <span>{type.icon}</span>
+                                <span>{type.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Danger Zone */}
+                  <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6">
+                    <h3 className="text-base font-semibold text-destructive mb-2">Danger Zone</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Once you delete a session, there is no going back. Please be certain.
+                    </p>
+                    <Button variant="destructive" size="sm" className="gap-2">
+                      <Trash2 className="h-4 w-4" />
+                      Delete Session
+                    </Button>
                   </div>
                 </div>
               )}
