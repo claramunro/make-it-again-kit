@@ -936,8 +936,12 @@ const TopicDetail = () => {
                     {/* Emoji container - positioned to overlap banner */}
                     <div className="relative -mt-14 ml-8">
                       <div 
-                        className="w-20 h-20 rounded-2xl border-4 border-background flex items-center justify-center text-3xl shadow-lg"
-                        style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
+                        className="w-20 h-20 rounded-2xl border-4 border-background flex items-center justify-center shadow-lg"
+                        style={{ 
+                          background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})`,
+                          fontSize: '2.5rem',
+                          lineHeight: 1
+                        }}
                       >
                         {topic.icon}
                       </div>
@@ -946,7 +950,7 @@ const TopicDetail = () => {
                           className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm"
                           style={{ backgroundColor: badgeColors.border, borderColor: badgeColors.border }}
                         >
-                          <Users className="h-3.5 w-3.5 text-white" />
+                          <Users className="h-3.5 w-3.5" style={{ color: badgeColors.bg }} />
                         </span>
                       )}
                     </div>
