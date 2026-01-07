@@ -923,7 +923,7 @@ const TopicDetail = () => {
                   {/* Back button positioned on the banner */}
                   <button 
                     onClick={() => navigate('/topics')}
-                    className="absolute top-2 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
+                    className="absolute top-2 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-background shadow-sm border border-border/50"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </button>
