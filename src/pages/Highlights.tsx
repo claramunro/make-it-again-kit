@@ -123,58 +123,58 @@ const HighlightsPage = () => {
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <MobileHeader title="Highlights" count={highlights.length} />
         
-        <main className="flex-1 bg-background overflow-hidden flex">
-          {/* Main scrollable content area */}
-          <div className="flex-1 overflow-y-auto p-6">
-            {/* Desktop Header */}
-            {!isMobile && (
-              <div className="mb-6 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-muted-foreground">Sort By</span>
-                  <span className="text-sm font-medium text-foreground">Recent</span>
-                </div>
+        <main className="flex-1 bg-background overflow-y-auto p-6">
+          {/* Desktop Header */}
+          {!isMobile && (
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
               </div>
-            )}
-
-            {/* Group By Toggle */}
-            <div className="mb-6">
-              <div className="inline-flex rounded-lg bg-muted p-1">
-                <button
-                  onClick={() => {
-                    setGroupBy('sessions');
-                    localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
-                  }}
-                  className={cn(
-                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                    groupBy === 'sessions'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  Sessions
-                </button>
-                <button
-                  onClick={() => {
-                    setGroupBy('topics');
-                    localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
-                  }}
-                  className={cn(
-                    'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
-                    groupBy === 'topics'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  Topics
-                </button>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">Sort By</span>
+                <span className="text-sm font-medium text-foreground">Recent</span>
               </div>
             </div>
+          )}
 
+          {/* Group By Toggle */}
+          <div className="mb-6">
+            <div className="inline-flex rounded-lg bg-muted p-1">
+              <button
+                onClick={() => {
+                  setGroupBy('sessions');
+                  localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
+                }}
+                className={cn(
+                  'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                  groupBy === 'sessions'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                Sessions
+              </button>
+              <button
+                onClick={() => {
+                  setGroupBy('topics');
+                  localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
+                }}
+                className={cn(
+                  'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
+                  groupBy === 'topics'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                Topics
+              </button>
+            </div>
+          </div>
+
+          {/* Content area with list and detail panel */}
+          <div className="flex gap-6">
             {/* Highlights List */}
-            <div className="space-y-4">
+            <div className={cn("space-y-4 flex-1 min-w-0", !isMobile && selectedHighlight && "max-w-[calc(100%-400px)]")}>
               {groupedHighlights.map((group, index) => (
                 <HighlightGroup
                   key={group.id}
@@ -191,18 +191,18 @@ const HighlightsPage = () => {
                 />
               ))}
             </div>
-          </div>
 
-          {/* Desktop Detail Panel - Fixed right column */}
-          {!isMobile && selectedHighlight && (
-            <div className="w-[400px] shrink-0 pt-[108px] pr-6 pb-6 overflow-y-auto">
-              <HighlightDetailPanel 
-                highlight={selectedHighlight} 
-                onClose={() => setSelectedHighlight(null)}
-                showCloseButton
-              />
-            </div>
-          )}
+            {/* Desktop Detail Panel */}
+            {!isMobile && selectedHighlight && (
+              <div className="w-[376px] shrink-0 sticky top-0 self-start">
+                <HighlightDetailPanel 
+                  highlight={selectedHighlight} 
+                  onClose={() => setSelectedHighlight(null)}
+                  showCloseButton
+                />
+              </div>
+            )}
+          </div>
         </main>
       </div>
 
