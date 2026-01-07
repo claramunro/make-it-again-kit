@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X, CheckSquare, ArrowDownUp, Check } from 'lucide-react';
+import { SlidersHorizontal, RefreshCw, Plus, ChevronDown, FileAudio, PlayCircle, FileText, X, CheckSquare, ArrowDownUp, Check, Merge } from 'lucide-react';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -9,6 +9,8 @@ import {
 } from './ui/dropdown-menu';
 import { ImportYouTubeDialog } from './ImportYouTubeDialog';
 import { ImportTranscriptDialog } from './ImportTranscriptDialog';
+import { MergeSessionsDialog } from './MergeSessionsDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export type SessionSortOption = 'most-recent' | 'oldest' | 'longest' | 'shortest' | 'starred';
 
@@ -43,6 +45,15 @@ export function SessionsHeader({
 }: SessionsHeaderProps) {
   const [youtubeDialogOpen, setYoutubeDialogOpen] = useState(false);
   const [transcriptDialogOpen, setTranscriptDialogOpen] = useState(false);
+  const [mergeDialogOpen, setMergeDialogOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleMergeComplete = () => {
+    toast({
+      title: "Sessions merged successfully",
+      description: "Your sessions have been combined into one.",
+    });
+  };
 
   const currentSortLabel = SESSION_SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Most Recent';
 
@@ -104,6 +115,10 @@ export function SessionsHeader({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => setMergeDialogOpen(true)}>
+            <Merge className="h-4 w-4" />
+            Merge Sessions
+          </Button>
           <Button variant="outline" size="sm" className="gap-2" onClick={onToggleSelectionMode}>
             <SlidersHorizontal className="h-4 w-4" />
             Select
@@ -151,6 +166,11 @@ export function SessionsHeader({
       <ImportTranscriptDialog 
         open={transcriptDialogOpen} 
         onClose={() => setTranscriptDialogOpen(false)} 
+      />
+      <MergeSessionsDialog 
+        open={mergeDialogOpen} 
+        onClose={() => setMergeDialogOpen(false)}
+        onMergeComplete={handleMergeComplete}
       />
     </>
   );
