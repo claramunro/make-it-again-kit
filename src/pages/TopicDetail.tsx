@@ -389,7 +389,7 @@ const TopicDetail = () => {
 
   // Chat Panel Component
   const ChatPanel = () => (
-    <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col relative z-50">
+    <div className="w-80 shrink-0 border-l border-border bg-card flex flex-col relative z-0">
       <div className="border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-foreground">Chat</h2>
