@@ -95,27 +95,6 @@ export function SessionsHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <ArrowDownUp className="h-4 w-4" />
-                {currentSortLabel}
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {SESSION_SORT_OPTIONS.map((option) => (
-              <DropdownMenuItem
-                  key={option.value}
-                  onClick={() => onSortChange(option.value)}
-                  className="flex items-center justify-between cursor-pointer"
-                >
-                  <span>{option.label}</span>
-                  {sortBy === option.value && <Check className="h-4 w-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Button variant="outline" size="sm" className="gap-2" onClick={() => setMergeDialogOpen(true)}>
             <Merge className="h-4 w-4" />
             Merge Sessions
