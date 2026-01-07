@@ -36,7 +36,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
               <Lightbulb className="h-4 w-4 text-primary" />
               <h3 className="font-medium text-foreground">Main Idea</h3>
             </div>
-            <div className="rounded-xl border border-border bg-background p-4">
+            <div className="rounded-xl bg-muted/50 p-4">
               <p className="text-sm leading-relaxed text-foreground">
                 {highlight.description}
               </p>
@@ -50,7 +50,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
                 <Quote className="h-4 w-4 text-primary" />
                 <h3 className="font-medium text-foreground">Original Context</h3>
               </div>
-              <div className="rounded-xl border border-border bg-background p-4">
+              <div className="rounded-xl bg-muted/50 p-4">
                 <p className="text-sm leading-relaxed text-muted-foreground italic">
                   {highlight.originalContext}
                 </p>
@@ -65,7 +65,7 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
                 <BarChart3 className="h-4 w-4 text-primary" />
                 <h3 className="font-medium text-foreground">Analysis</h3>
               </div>
-              <div className="rounded-xl border border-border bg-background p-4">
+              <div className="rounded-xl bg-muted/50 p-4">
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {highlight.analysis}
                 </p>
