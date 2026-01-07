@@ -89,6 +89,7 @@ export const topics: Topic[] = [
     sessionCount: 3,
     date: 'Oct 29',
     description: 'Fitness routines and gym notes',
+    sharedBy: '',
     isFavorite: false,
     wallpaper: 'ocean',
     sessions: [
@@ -235,6 +236,7 @@ export const topics: Topic[] = [
     sessionCount: 7,
     date: 'Sep 28',
     description: 'Hiring and team building',
+    sharedBy: '',
     isFavorite: false,
     wallpaper: 'lavender',
     sessions: [
@@ -285,6 +287,7 @@ export const topics: Topic[] = [
     sessionCount: 3,
     date: 'Sep 15',
     description: 'Team events and culture',
+    sharedBy: '',
     isFavorite: false,
     wallpaper: 'sunset',
     sessions: [

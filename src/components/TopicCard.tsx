@@ -283,7 +283,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             )}>
               <span className="text-2xl">{topic.icon}</span>
             </div>
-            {topic.sharedBy && (
+            {topic.sharedBy !== undefined && (
               <span 
                 className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border"
                 style={{ backgroundColor: wallpaper.badgeBorder, borderColor: wallpaper.badgeBorder }}
@@ -301,7 +301,7 @@ export function TopicCard({ topic }: TopicCardProps) {
               
               <div className="flex items-center gap-1 shrink-0">
                 {/* Shared badge */}
-                {topic.sharedBy && (
+                {topic.sharedBy !== undefined && (
                   <span 
                     className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium"
                     style={{ 
@@ -311,7 +311,7 @@ export function TopicCard({ topic }: TopicCardProps) {
                     }}
                   >
                     <Users className="h-2.5 w-2.5" />
-                    Shared by {topic.sharedBy}
+                    {topic.sharedBy ? `Shared by ${topic.sharedBy}` : 'Shared'}
                   </span>
                 )}
                 
@@ -492,7 +492,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
               )}>
                 <span className="text-2xl">{topic.icon}</span>
               </div>
-              {topic.sharedBy && (() => {
+              {topic.sharedBy !== undefined && (() => {
                 const badgeColors = wallpaperBadgeColors[(topic.wallpaper || 'mint') as WallpaperType] ?? wallpaperBadgeColors.mint;
                 return (
                   <span 
@@ -513,7 +513,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 
                 <div className="flex items-center gap-1 shrink-0">
                   {/* Shared badge */}
-                  {topic.sharedBy && (
+                  {topic.sharedBy !== undefined && (
                     <span 
                       className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium"
                       style={{ 
@@ -523,7 +523,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                       }}
                     >
                       <Users className="h-2.5 w-2.5" />
-                      Shared by {topic.sharedBy}
+                      {topic.sharedBy ? `Shared by ${topic.sharedBy}` : 'Shared'}
                     </span>
                   )}
                   

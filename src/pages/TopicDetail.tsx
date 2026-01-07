@@ -945,7 +945,7 @@ const TopicDetail = () => {
                       >
                         {topic.icon}
                       </div>
-                      {topic.sharedBy && (
+                      {topic.sharedBy !== undefined && (
                         <span 
                           className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm"
                           style={{ backgroundColor: badgeColors.border, borderColor: badgeColors.border }}
@@ -966,14 +966,14 @@ const TopicDetail = () => {
                     </div>
                     
                     {/* Shared badge */}
-                    {topic.sharedBy && (
+                    {topic.sharedBy !== undefined && (
                       <div className="shrink-0">
                         <span 
                           className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium"
                           style={{ backgroundColor: badgeColors.bg, color: badgeColors.text, borderColor: badgeColors.border }}
                         >
                           <Users className="h-3.5 w-3.5" />
-                          Shared by {topic.sharedBy}
+                          {topic.sharedBy ? `Shared by ${topic.sharedBy}` : 'Shared'}
                         </span>
                       </div>
                     )}
