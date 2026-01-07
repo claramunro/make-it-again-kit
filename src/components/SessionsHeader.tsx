@@ -52,6 +52,7 @@ export function SessionsHeader({
     toast({
       title: "Sessions merged successfully",
       description: "Your sessions have been combined into one.",
+      variant: "success",
     });
   };
 

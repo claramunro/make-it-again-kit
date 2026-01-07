@@ -88,6 +88,19 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
+  const [checkedTodos, setCheckedTodos] = useState<Set<number>>(new Set());
+
+  const toggleTodo = (index: number) => {
+    setCheckedTodos(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
 
   const session = getSessionById(sessionId);
   const assignedTopicId = session?.topicId;
@@ -279,8 +292,17 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                     'Research policy implications',
                     'Draft case study outline',
                   ].map((todo, i) => (
-                    <div key={i} className="group flex items-start gap-3 rounded-lg border border-border bg-background p-3">
-                      <Checkbox className="mt-0.5" />
+                    <div 
+                      key={i} 
+                      onClick={() => toggleTodo(i)}
+                      className="group flex items-start gap-3 rounded-lg border border-border bg-background p-3 cursor-pointer hover:bg-muted/50 transition-smooth"
+                    >
+                      <Checkbox 
+                        className="mt-0.5" 
+                        checked={checkedTodos.has(i)}
+                        onCheckedChange={() => toggleTodo(i)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-foreground">{todo}</p>
                         <p className="text-xs text-muted-foreground">Due: Not set</p>
