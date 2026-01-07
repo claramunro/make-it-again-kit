@@ -113,7 +113,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Session Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-2">
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-center">
         {/* Tabs */}
         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
           {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
