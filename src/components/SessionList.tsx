@@ -85,20 +85,28 @@ export function SessionList({
       {groups.map((group) => {
         const isCollapsed = collapsedGroups.has(group.date);
         return (
-          <div key={group.date} className="animate-fade-in">
+          <div key={group.date} className="animate-fade-in rounded-xl border border-border bg-card overflow-hidden">
+            {/* Date Group Header */}
             <button 
               onClick={() => toggleGroup(group.date)}
-              className="mb-3 flex w-full items-center justify-between text-sm font-medium text-foreground hover:text-foreground/80"
+              className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-smooth"
             >
-              <span>{group.date}</span>
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-foreground">{group.date}</span>
+                <span className="text-sm text-muted-foreground">
+                  {group.sessions.length} session{group.sessions.length !== 1 ? 's' : ''}
+                </span>
+              </div>
               {isCollapsed ? (
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-5 w-5 text-muted-foreground" />
               ) : (
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="h-5 w-5 text-muted-foreground" />
               )}
             </button>
+            
+            {/* Group Content */}
             {!isCollapsed && (
-              <div className="space-y-3">
+              <div className="space-y-3 p-4 pt-0">
                 {group.sessions.map((session) => {
                   // Get topic badge info if session is linked to a topic
                   let topicBadge: TopicBadgeInfo | undefined;
