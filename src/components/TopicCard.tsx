@@ -303,15 +303,15 @@ export function TopicCard({ topic }: TopicCardProps) {
                 {/* Shared badge */}
                 {topic.sharedBy && (
                   <span 
-                    className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
+                    className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium"
                     style={{ 
                       backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
                       color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
                       borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
                     }}
                   >
-                    <Users className="h-3 w-3" />
-                    Shared
+                    <Users className="h-2.5 w-2.5" />
+                    Shared by {topic.sharedBy}
                   </span>
                 )}
                 
@@ -515,15 +515,15 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   {/* Shared badge */}
                   {topic.sharedBy && (
                     <span 
-                      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
+                      className="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium"
                       style={{ 
                         backgroundColor: isDark ? wallpaper.darkSharedBg : wallpaper.sharedBg, 
                         color: isDark ? wallpaper.darkSharedText : wallpaper.sharedText, 
                         borderColor: isDark ? wallpaper.darkSharedBorder : wallpaper.sharedBorder 
                       }}
                     >
-                      <Users className="h-3 w-3" />
-                      Shared
+                      <Users className="h-2.5 w-2.5" />
+                      Shared by {topic.sharedBy}
                     </span>
                   )}
                   
