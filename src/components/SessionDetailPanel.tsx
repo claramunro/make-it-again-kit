@@ -114,65 +114,22 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
     <div className="flex h-full flex-col">
       {/* Session Header */}
       <div className="shrink-0 border-b border-border bg-background px-4 py-2">
-        <div className="flex items-center justify-between gap-4">
-          {/* Left: Topic Badge + Tabs */}
-          <div className="flex items-center gap-4 min-w-0">
-            {/* Topic Badge */}
-            {selectedTopicData ? (
-              <button
-                onClick={() => navigate(`/topic/${selectedTopicData.id}`)}
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth shrink-0",
-                  wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].bg,
-                  wallpaperBadgeColors[selectedTopicData.wallpaper || 'none'].text
-                )}
-              >
-                <span>{selectedTopicData.icon}</span>
-                <span>{selectedTopicData.name}</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
-            ) : (
-              <Select onValueChange={handleAssignTopic}>
-                <SelectTrigger className="h-auto gap-2 rounded-lg border-dashed border-muted-foreground/30 bg-transparent px-3 py-1.5 text-sm text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground transition-smooth w-auto shrink-0">
-                  <FolderOpen className="h-4 w-4" />
-                  <SelectValue placeholder="Select topic" />
-                </SelectTrigger>
-                <SelectContent>
-                  {topics.map((topic) => {
-                    const colors = wallpaperBadgeColors[topic.wallpaper || 'none'];
-                    return (
-                      <SelectItem key={topic.id} value={topic.id}>
-                        <div className="flex items-center gap-2">
-                          <span className={cn("flex h-5 w-5 items-center justify-center rounded text-xs", colors.bg)}>
-                            {topic.icon}
-                          </span>
-                          <span>{topic.name}</span>
-                        </div>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            )}
-
-            {/* Tabs */}
-            <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={cn(
-                    'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                    activeTab === tab
-                      ? 'bg-card text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Tabs */}
+        <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+          {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                activeTab === tab
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 
