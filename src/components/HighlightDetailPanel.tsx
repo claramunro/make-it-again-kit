@@ -12,9 +12,9 @@ interface HighlightDetailPanelProps {
 export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col p-4">
-      <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card">
-        {/* Header with session link */}
-        <div className="flex items-center justify-between border-b border-border p-4">
+      <div className="flex h-full min-h-0 flex-col rounded-xl border border-border bg-card overflow-hidden">
+        {/* Header with session link - inside the card */}
+        <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <Link 
             to={`/session/${highlight.sessionId}`}
             className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-smooth"
@@ -29,14 +29,14 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
         </div>
 
         {/* Content */}
-        <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6 space-y-5">
           {/* Main Idea */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2">
               <Lightbulb className="h-4 w-4 text-primary" />
               <h3 className="font-medium text-foreground">Main Idea</h3>
             </div>
-            <div className="rounded-lg border border-border bg-background p-4">
+            <div className="rounded-xl border border-border bg-background p-4">
               <p className="text-sm leading-relaxed text-foreground">
                 {highlight.description}
               </p>
@@ -46,11 +46,11 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
           {/* Original Context */}
           {highlight.originalContext && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2">
                 <Quote className="h-4 w-4 text-primary" />
                 <h3 className="font-medium text-foreground">Original Context</h3>
               </div>
-              <div className="rounded-lg border border-border bg-background p-4">
+              <div className="rounded-xl border border-border bg-background p-4">
                 <p className="text-sm leading-relaxed text-muted-foreground italic">
                   {highlight.originalContext}
                 </p>
@@ -61,11 +61,11 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
           {/* Analysis */}
           {highlight.analysis && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2">
                 <BarChart3 className="h-4 w-4 text-primary" />
                 <h3 className="font-medium text-foreground">Analysis</h3>
               </div>
-              <div className="rounded-lg border border-border bg-background p-4">
+              <div className="rounded-xl border border-border bg-background p-4">
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {highlight.analysis}
                 </p>
