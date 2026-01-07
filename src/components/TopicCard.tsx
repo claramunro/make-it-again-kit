@@ -495,7 +495,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border"
                   style={{ backgroundColor: wallpaper.badgeBorder, borderColor: wallpaper.badgeBorder }}
                 >
-                  <Users className="h-3 w-3 text-white" />
+                  <Users className="h-3 w-3" style={{ color: wallpaper.sharedBg }} />
                 </span>
               )}
             </div>
