@@ -126,14 +126,8 @@ const HighlightsPage = () => {
         <main className="flex-1 bg-background overflow-y-auto p-6">
           {/* Desktop Header */}
           {!isMobile && (
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">Sort By</span>
-                <span className="text-sm font-medium text-foreground">Recent</span>
-              </div>
+            <div className="mb-6">
+              <h1 className="text-xl font-semibold text-foreground">Highlights</h1>
             </div>
           )}
 
