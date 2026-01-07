@@ -923,7 +923,7 @@ const TopicDetail = () => {
                   {/* Back button positioned on the banner */}
                   <button 
                     onClick={() => navigate('/topics')}
-                    className="absolute top-4 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
+                    className="absolute top-2 left-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 backdrop-blur-sm text-foreground transition-smooth hover:bg-white shadow-sm"
                   >
                     <ArrowLeft className="h-4 w-4" />
                   </button>
@@ -934,9 +934,9 @@ const TopicDetail = () => {
                   {/* Row with emoji, title/meta, and shared badge */}
                   <div className="flex items-center gap-4">
                     {/* Emoji container - positioned to overlap banner */}
-                    <div className="relative -mt-16 ml-8">
+                    <div className="relative -mt-14 ml-8">
                       <div 
-                        className="w-24 h-24 rounded-2xl border-4 border-background flex items-center justify-center text-4xl shadow-lg"
+                        className="w-20 h-20 rounded-2xl border-4 border-background flex items-center justify-center text-3xl shadow-lg"
                         style={{ background: `linear-gradient(135deg, ${wallpaper.bannerColor}, ${wallpaper.bannerColor.replace('75%', '85%').replace('80%', '90%')})` }}
                       >
                         {topic.icon}
@@ -956,9 +956,12 @@ const TopicDetail = () => {
                       <h1 className="text-2xl font-semibold text-foreground">
                         {topic.name}
                       </h1>
-                      <p className="text-sm text-muted-foreground mt-0.5">
-                        {mockSessions.length} sessions • Last updated Dec 1 •
-                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground/80">
+                          {mockSessions.length}
+                        </span>
+                        <span className="text-sm text-muted-foreground">sessions • Last updated Dec 1</span>
+                      </div>
                     </div>
                     
                     {/* Shared badge */}
