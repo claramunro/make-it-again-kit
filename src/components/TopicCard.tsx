@@ -6,6 +6,8 @@ import { useTopics } from '@/contexts/TopicContext';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { InviteToTopicDialog } from './InviteToTopicDialog';
+import { wallpaperBadgeColors } from './SessionBadge';
+import { WallpaperType } from '@/types/session';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -490,14 +492,17 @@ export function TopicListItem({ topic }: TopicCardProps) {
               )}>
                 <span className="text-2xl">{topic.icon}</span>
               </div>
-              {topic.sharedBy && (
-                <span 
-                  className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border"
-                  style={{ backgroundColor: wallpaper.badgeBorder, borderColor: wallpaper.badgeBorder }}
-                >
-                  <Users className="h-3 w-3" style={{ color: wallpaper.sharedBg }} />
-                </span>
-              )}
+              {topic.sharedBy && (() => {
+                const badgeColors = wallpaperBadgeColors[(topic.wallpaper || 'mint') as WallpaperType] ?? wallpaperBadgeColors.mint;
+                return (
+                  <span 
+                    className="absolute bottom-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border"
+                    style={{ backgroundColor: badgeColors.border, borderColor: badgeColors.border }}
+                  >
+                    <Users className="h-3 w-3" style={{ color: badgeColors.bg }} />
+                  </span>
+                );
+              })()}
             </div>
             
             {/* Title and metadata */}
