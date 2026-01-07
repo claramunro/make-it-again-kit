@@ -40,7 +40,7 @@ const wallpaperBadgeColors: Record<WallpaperType | 'none', { bg: string; text: s
   copper: { bg: 'bg-orange-600/10 dark:bg-orange-600/20', text: 'text-orange-800 dark:text-orange-400' },
 };
 
-type SessionTab = 'details' | 'highlights' | 'transcript';
+type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings';
 
 // Mock bookmarks for this session
 const mockBookmarks = [
@@ -144,7 +144,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
 
             {/* Tabs */}
             <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              {(['details', 'highlights', 'transcript'] as const).map(tab => (
+              {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -358,6 +358,61 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                     <p>That's interesting. How do you plan to measure success in this experiment?</p>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="max-w-2xl space-y-6">
+              {/* Session Details Section */}
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h3 className="text-base font-semibold text-foreground mb-4">Session Details</h3>
+                <div className="space-y-4">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Title</label>
+                    <input
+                      type="text"
+                      defaultValue={session?.title || 'Untitled Session'}
+                      className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    />
+                  </div>
+
+                  {/* Date & Time Row */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Date</label>
+                      <input
+                        type="text"
+                        defaultValue={session?.date || ''}
+                        placeholder="Nov 4, 2025"
+                        className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Time</label>
+                      <input
+                        type="text"
+                        defaultValue={session?.time || ''}
+                        placeholder="4:58 PM"
+                        className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-5">
+                <h3 className="text-base font-semibold text-destructive mb-2">Danger Zone</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Once you delete a session, there is no going back. Please be certain.
+                </p>
+                <Button variant="destructive" size="sm" className="gap-2">
+                  <Trash2 className="h-4 w-4" />
+                  Delete Session
+                </Button>
               </div>
             </div>
           )}
