@@ -148,15 +148,42 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
 
 interface TopicsListProps {
   sortBy: TopicSortOption;
+  onSortChange?: (sort: TopicSortOption) => void;
 }
 
-export function TopicsList({ sortBy }: TopicsListProps) {
+export function TopicsList({ sortBy, onSortChange }: TopicsListProps) {
   const { topics } = useTopics();
   
   const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
+  const currentSortLabel = SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Last Activity';
   
   return (
     <div className="space-y-2">
+      {/* Sort dropdown - left justified, smaller */}
+      {onSortChange && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-smooth mb-3">
+              <ArrowDownUp className="h-3 w-3" />
+              {currentSortLabel}
+              <ChevronDown className="h-2.5 w-2.5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-40">
+            {SORT_OPTIONS.map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                onClick={() => onSortChange(option.value)}
+                className="flex items-center justify-between cursor-pointer text-xs"
+              >
+                <span>{option.label}</span>
+                {sortBy === option.value && <Check className="h-3 w-3 text-primary" />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      
       {sortedTopics.map((topic) => (
         <TopicListItem key={topic.id} topic={topic} />
       ))}

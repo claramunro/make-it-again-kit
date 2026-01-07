@@ -25,17 +25,15 @@ const Topics = () => {
   const mobileActions = (
     <>
       <ProBadge />
-      <Button variant="outline" size="sm" className="h-8 gap-1 px-2 text-xs">
-        <ArrowDownUp className="h-3.5 w-3.5" />
-        Sort
-      </Button>
-      <Button variant="outline" size="sm" className="h-8 gap-1 px-2 text-xs">
+      <Button 
+        size="sm" 
+        className="h-8 gap-1 px-2 text-xs bg-orange-100 text-orange-600 border border-orange-400 hover:bg-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500 dark:hover:bg-orange-500/30"
+      >
         <Plus className="h-3.5 w-3.5" />
         New
       </Button>
       <Button variant="outline" size="sm" className="h-8 gap-1 px-2 text-xs">
         <RefreshCw className="h-3.5 w-3.5" />
-        Refresh
       </Button>
     </>
   );
@@ -55,7 +53,7 @@ const Topics = () => {
                 onSortChange={setSortBy} 
               />
             )}
-            <TopicsList sortBy={sortBy} />
+            <TopicsList sortBy={sortBy} onSortChange={setSortBy} />
           </div>
         </main>
       </div>
