@@ -65,6 +65,7 @@ interface TopicsHeaderProps {
 
 export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
   const isMobile = useIsMobile();
+  const { topics } = useTopics();
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
   const currentSortLabel = SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Last Activity';
@@ -117,6 +118,9 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-semibold text-foreground">Topics</h1>
+          <span className="inline-flex items-center rounded-full bg-muted/80 px-2 py-0.5 text-xs font-medium text-muted-foreground/80">
+            {topics.length}
+          </span>
           <span className="rounded-md bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground">
             PRO
           </span>
