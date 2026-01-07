@@ -440,33 +440,78 @@ const SessionDetail = () => {
                 </Select>
               </div>
 
-              {/* Right: Session Type Dropdown */}
-              <div className="shrink-0 relative">
-                <button
-                  onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground transition-smooth hover:bg-muted"
-                >
-                  <span>{selectedSessionTypeData?.icon}</span>
-                  <span>{selectedSessionTypeData?.label}</span>
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </button>
-                {sessionTypeDropdownOpen && (
-                  <div className="absolute right-0 top-full z-50 mt-1 w-64 rounded-lg border border-border bg-card py-1 shadow-lg">
-                    {sessionTypes.map(type => (
-                      <button 
-                        key={type.id}
-                        onClick={() => {
-                          setSelectedSessionType(type.id);
-                          setSessionTypeDropdownOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
-                      >
-                        <span>{type.icon}</span>
-                        <span>{type.label}</span>
+              {/* Right: Session Type Dropdown + More Menu */}
+              <div className="flex items-center gap-2">
+                {/* Session Type Dropdown */}
+                <div className="shrink-0 relative">
+                  <button
+                    onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground transition-smooth hover:bg-muted"
+                  >
+                    <span>{selectedSessionTypeData?.icon}</span>
+                    <span>{selectedSessionTypeData?.label}</span>
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                  {sessionTypeDropdownOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-1 w-64 rounded-lg border border-border bg-card py-1 shadow-lg">
+                      {sessionTypes.map(type => (
+                        <button 
+                          key={type.id}
+                          onClick={() => {
+                            setSelectedSessionType(type.id);
+                            setSessionTypeDropdownOpen(false);
+                          }}
+                          className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-muted"
+                        >
+                          <span>{type.icon}</span>
+                          <span>{type.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* More Menu */}
+                <div className="relative">
+                  <button
+                    onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+                  {moreMenuOpen && (
+                    <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-lg border border-border bg-card py-1 shadow-lg">
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <Link2 className="h-4 w-4 text-muted-foreground" />
+                        Copy link to session
                       </button>
-                    ))}
-                  </div>
-                )}
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <UserPlus className="h-4 w-4 text-muted-foreground" />
+                        Invite to Session
+                      </button>
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        Send Recap Email
+                      </button>
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <Pencil className="h-4 w-4 text-muted-foreground" />
+                        Rename
+                      </button>
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        Edit Date & Time
+                      </button>
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted">
+                        <Share className="h-4 w-4 text-muted-foreground" />
+                        Share All Data
+                      </button>
+                      <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-muted">
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -491,7 +536,7 @@ const SessionDetail = () => {
                   {currentSession?.title ? (currentSession.title.length > 85 ? currentSession.title.slice(0, 85).trim() : currentSession.title) : 'Untitled Session'}
                 </h1>
                 {/* Meta info */}
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     {currentSession?.type === 'audio' ? (
                       <AudioLines className="h-3.5 w-3.5" />
@@ -500,8 +545,11 @@ const SessionDetail = () => {
                     )}
                     {currentSession?.type === 'audio' ? 'Audio' : 'Text'}
                   </span>
+                  <span>•</span>
                   <span>{currentSession?.date || 'Unknown date'}</span>
+                  <span>•</span>
                   <span>{currentSession?.time || ''}</span>
+                  <span>•</span>
                   <span>{currentSession?.duration || ''}</span>
                 </div>
               </div>
