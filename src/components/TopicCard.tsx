@@ -570,7 +570,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                 <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
                 <button 
                   onClick={handleToggleExpand}
-                  className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground shrink-0 transition-smooth hover:opacity-80"
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/80 shrink-0 transition-smooth hover:opacity-80"
                 >
                   {topic.sessionCount} Sessions
                   {topic.sessions && topic.sessions.length > 0 && (
