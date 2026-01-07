@@ -103,6 +103,8 @@ const SessionsMasterDetail = () => {
                 selectionMode={selectionMode}
                 selectedIds={selectedIds}
                 onCheckChange={handleCheckChange}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
               />
             </div>
             

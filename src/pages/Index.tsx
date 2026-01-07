@@ -106,6 +106,8 @@ const Index = () => {
               selectionMode={selectionMode}
               selectedIds={selectedIds}
               onCheckChange={handleCheckChange}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
           </div>
         </main>
