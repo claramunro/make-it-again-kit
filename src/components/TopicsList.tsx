@@ -127,30 +127,13 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <ArrowDownUp className="h-4 w-4" />
-                {currentSortLabel}
-                <ChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {SORT_OPTIONS.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  onClick={() => onSortChange(option.value)}
-                  className="flex items-center justify-between cursor-pointer"
-                >
-                  <span>{option.label}</span>
-                  {sortBy === option.value && <Check className="h-4 w-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => setAddDialogOpen(true)}>
+          <Button 
+            size="sm" 
+            className="gap-2 bg-orange-100 text-orange-600 border border-orange-400 hover:bg-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500 dark:hover:bg-orange-500/30" 
+            onClick={() => setAddDialogOpen(true)}
+          >
             <Plus className="h-4 w-4" />
-            Add
+            New Topic
           </Button>
           <Button variant="outline" size="sm" className="gap-2">
             <RefreshCw className="h-4 w-4" />
@@ -185,15 +168,42 @@ interface TopicsListSelectableProps {
   selectedTopicId?: string;
   onSelectTopic?: (id: string) => void;
   sortBy?: TopicSortOption;
+  onSortChange?: (sort: TopicSortOption) => void;
 }
 
-export function TopicsListSelectable({ selectedTopicId, onSelectTopic, sortBy = 'last-activity' }: TopicsListSelectableProps) {
+export function TopicsListSelectable({ selectedTopicId, onSelectTopic, sortBy = 'last-activity', onSortChange }: TopicsListSelectableProps) {
   const { topics } = useTopics();
   
   const sortedTopics = useMemo(() => sortTopics(topics, sortBy), [topics, sortBy]);
+  const currentSortLabel = SORT_OPTIONS.find(opt => opt.value === sortBy)?.label || 'Last Activity';
   
   return (
     <div className="space-y-3">
+      {/* Sort dropdown - left justified, smaller */}
+      {onSortChange && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-smooth mb-2">
+              <ArrowDownUp className="h-3 w-3" />
+              {currentSortLabel}
+              <ChevronDown className="h-2.5 w-2.5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-40">
+            {SORT_OPTIONS.map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                onClick={() => onSortChange(option.value)}
+                className="flex items-center justify-between cursor-pointer text-xs"
+              >
+                <span>{option.label}</span>
+                {sortBy === option.value && <Check className="h-3 w-3 text-primary" />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      
       {sortedTopics.map((topic) => (
         <TopicCardSelectable 
           key={topic.id} 

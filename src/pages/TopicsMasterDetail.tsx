@@ -30,6 +30,7 @@ const TopicsMasterDetail = () => {
                 selectedTopicId={selectedTopicId}
                 onSelectTopic={setSelectedTopicId}
                 sortBy={sortBy}
+                onSortChange={setSortBy}
               />
             </div>
             
