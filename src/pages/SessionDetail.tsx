@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
@@ -124,7 +124,23 @@ const SessionDetail = () => {
     setTimeout(() => setTodoMarkdownCopied(false), 2000);
   }, []);
 
-  // Find the current session to check if it has audio
+  // Close all dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // Check if click is inside any dropdown
+      if (!target.closest('[data-dropdown]')) {
+        setSessionTypeDropdownOpen(false);
+        setMoreMenuOpen(false);
+        setShareMenuOpen(false);
+        setSummaryMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const currentSession = sessionGroups.flatMap(g => g.sessions).find(s => s.id === id);
   const hasAudio = currentSession?.type === 'audio';
   
@@ -498,7 +514,7 @@ const SessionDetail = () => {
               {/* Right: Session Type Dropdown + More Menu */}
               <div className="flex items-center gap-2">
                 {/* Session Type Dropdown */}
-                <div className="shrink-0 relative">
+                <div className="shrink-0 relative" data-dropdown>
                   <button
                     onClick={() => setSessionTypeDropdownOpen(!sessionTypeDropdownOpen)}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-foreground transition-smooth hover:bg-muted"
@@ -527,7 +543,7 @@ const SessionDetail = () => {
                 </div>
 
                 {/* More Menu */}
-                <div className="relative">
+                <div className="relative" data-dropdown>
                   <button
                     onClick={() => setMoreMenuOpen(!moreMenuOpen)}
                     className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
@@ -733,7 +749,7 @@ const SessionDetail = () => {
                   <div className="rounded-xl border border-border bg-card p-5">
                     <div className="mb-4 flex items-center justify-between">
                       <h2 className="text-lg font-semibold text-foreground">Summary</h2>
-                      <div className="relative">
+                      <div className="relative" data-dropdown>
                         <button 
                           onClick={() => setSummaryMenuOpen(!summaryMenuOpen)}
                           className="rounded-lg p-1 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
@@ -1045,7 +1061,7 @@ const SessionDetail = () => {
                     <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
                       <FileText className="h-4 w-4" />
                     </button>
-                    <div className="relative">
+                    <div className="relative" data-dropdown>
                       <button
                         onClick={() => setShareMenuOpen(!shareMenuOpen)}
                         className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
