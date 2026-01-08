@@ -109,9 +109,12 @@ export function SessionsHeader({
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                size="sm" 
+                className="gap-2 bg-orange-100 text-orange-600 border border-orange-400 hover:bg-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500 dark:hover:bg-orange-500/30"
+              >
                 <Plus className="h-4 w-4" />
-                New
+                New Session
                 <ChevronDown className="h-3 w-3" />
               </Button>
             </DropdownMenuTrigger>
