@@ -297,7 +297,7 @@ export function TopicCard({ topic }: TopicCardProps) {
           <div className="flex-1 min-w-0">
             {/* Row 1: Title + badges/actions */}
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-base font-semibold text-foreground truncate leading-none">{topic.name}</h3>
+              <h3 className="text-base font-semibold text-foreground truncate leading-tight">{topic.name}</h3>
               
               <div className="flex items-center gap-1 shrink-0">
                 {/* Shared badge */}
@@ -359,7 +359,7 @@ export function TopicCard({ topic }: TopicCardProps) {
             </div>
             
             {/* Row 2: Description + session count */}
-            <div className="flex items-center justify-between gap-2 mt-1">
+            <div className="flex items-center justify-between gap-2 mt-0.5">
               <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
               <span className="text-sm text-muted-foreground shrink-0">
                 {topic.sessionCount} Sessions
@@ -509,7 +509,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
             <div className="flex-1 min-w-0">
               {/* Row 1: Title + badges/actions */}
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-base font-semibold text-foreground truncate leading-none">{topic.name}</h3>
+                <h3 className="text-base font-semibold text-foreground truncate leading-tight">{topic.name}</h3>
                 
                 <div className="flex items-center gap-1 shrink-0">
                   {/* Shared badge */}
@@ -571,7 +571,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
               </div>
               
               {/* Row 2: Description + session count with expand toggle */}
-              <div className="flex items-center justify-between gap-2 mt-1">
+              <div className="flex items-center justify-between gap-2 mt-0.5">
                 <p className="text-sm text-muted-foreground truncate">{topic.description || 'No description'}</p>
                 <button 
                   onClick={handleToggleExpand}
