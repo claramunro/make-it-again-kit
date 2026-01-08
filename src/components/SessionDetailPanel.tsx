@@ -137,13 +137,13 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         </div>
 
         {/* Right side: Topic selector + Menu */}
-        <div className="flex items-center gap-2 w-48 justify-end">
+        <div className="flex items-center gap-3 w-48 justify-end">
           <Select value={assignedTopicId || ''} onValueChange={handleAssignTopic}>
-            <SelectTrigger className="h-8 w-auto gap-2 border-border bg-muted/50 px-3 text-sm">
+            <SelectTrigger className="h-9 w-auto gap-2 rounded-full border-border bg-muted/50 px-4 text-sm font-medium hover:bg-muted transition-smooth [&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-muted-foreground">
               {selectedTopicData ? (
                 <span className="flex items-center gap-2">
                   <span>{selectedTopicData.icon}</span>
-                  <span className="max-w-[120px] truncate">{selectedTopicData.name}</span>
+                  <span className="max-w-[140px] truncate">{selectedTopicData.name}</span>
                 </span>
               ) : (
                 <span className="flex items-center gap-2 text-muted-foreground">
@@ -163,9 +163,9 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
               ))}
             </SelectContent>
           </Select>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
+          <button className="flex items-center justify-center h-9 w-9 text-muted-foreground hover:text-foreground transition-smooth">
+            <MoreVertical className="h-5 w-5" />
+          </button>
         </div>
       </div>
 
