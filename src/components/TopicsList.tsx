@@ -127,6 +127,10 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
           <Button 
             size="sm" 
             className="gap-2 bg-orange-100 text-orange-600 border border-orange-400 hover:bg-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500 dark:hover:bg-orange-500/30" 
@@ -134,10 +138,6 @@ export function TopicsHeader({ sortBy, onSortChange }: TopicsHeaderProps) {
           >
             <Plus className="h-4 w-4" />
             New Topic
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Refresh
           </Button>
         </div>
       </div>
