@@ -5,12 +5,22 @@ import { useState } from 'react';
 import { useTopics } from '@/contexts/TopicContext';
 import { useSessions } from '@/contexts/SessionContext';
 import { SessionSortOption, SESSION_SORT_OPTIONS } from './SessionsHeader';
+import { format, parse } from 'date-fns';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+
+const formatDateWithDay = (dateStr: string) => {
+  try {
+    const date = parse(dateStr, 'MMM d, yyyy', new Date());
+    return format(date, 'EEE, MMM d, yyyy');
+  } catch {
+    return dateStr;
+  }
+};
 
 interface SessionListProps {
   groups: SessionGroup[];
@@ -92,7 +102,7 @@ export function SessionList({
               className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-smooth"
             >
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-foreground">{group.date}</span>
+                <span className="text-sm font-medium text-foreground">{formatDateWithDay(group.date)}</span>
               </div>
               {isCollapsed ? (
                 <ChevronDown className="h-5 w-5 text-muted-foreground" />
