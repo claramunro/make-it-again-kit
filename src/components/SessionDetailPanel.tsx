@@ -19,26 +19,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-type WallpaperType = NonNullable<Topic['wallpaper']>;
-
-const wallpaperBadgeColors: Record<WallpaperType | 'none', { bg: string; text: string }> = {
-  none: { bg: 'bg-muted', text: 'text-foreground' },
-  sand: { bg: 'bg-amber-500/10 dark:bg-amber-500/20', text: 'text-amber-700 dark:text-amber-400' },
-  peach: { bg: 'bg-orange-500/10 dark:bg-orange-500/20', text: 'text-orange-700 dark:text-orange-400' },
-  mint: { bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-400' },
-  lavender: { bg: 'bg-purple-500/10 dark:bg-purple-500/20', text: 'text-purple-700 dark:text-purple-400' },
-  ocean: { bg: 'bg-blue-500/10 dark:bg-blue-500/20', text: 'text-blue-700 dark:text-blue-400' },
-  sunset: { bg: 'bg-pink-500/10 dark:bg-pink-500/20', text: 'text-pink-700 dark:text-pink-400' },
-  rose: { bg: 'bg-rose-500/10 dark:bg-rose-500/20', text: 'text-rose-700 dark:text-rose-400' },
-  slate: { bg: 'bg-slate-500/10 dark:bg-slate-500/20', text: 'text-slate-700 dark:text-slate-400' },
-  forest: { bg: 'bg-green-500/10 dark:bg-green-500/20', text: 'text-green-700 dark:text-green-400' },
-  berry: { bg: 'bg-fuchsia-500/10 dark:bg-fuchsia-500/20', text: 'text-fuchsia-700 dark:text-fuchsia-400' },
-  coral: { bg: 'bg-red-500/10 dark:bg-red-500/20', text: 'text-red-700 dark:text-red-400' },
-  sky: { bg: 'bg-cyan-500/10 dark:bg-cyan-500/20', text: 'text-cyan-700 dark:text-cyan-400' },
-  gold: { bg: 'bg-yellow-500/10 dark:bg-yellow-500/20', text: 'text-yellow-700 dark:text-yellow-400' },
-  sage: { bg: 'bg-lime-500/10 dark:bg-lime-500/20', text: 'text-lime-700 dark:text-lime-400' },
-  plum: { bg: 'bg-violet-500/10 dark:bg-violet-500/20', text: 'text-violet-700 dark:text-violet-400' },
-  copper: { bg: 'bg-orange-600/10 dark:bg-orange-600/20', text: 'text-orange-800 dark:text-orange-400' },
+// Wallpaper to badge color mapping for select items (same as SessionCard)
+const wallpaperBadgeColors: Record<string, { bg: string; text: string; border: string }> = {
+  sand: { bg: 'hsl(45, 40%, 94%)', text: 'hsl(35, 50%, 35%)', border: 'hsl(45, 35%, 85%)' },
+  peach: { bg: 'hsl(20, 60%, 94%)', text: 'hsl(15, 55%, 40%)', border: 'hsl(20, 50%, 85%)' },
+  mint: { bg: 'hsl(150, 35%, 93%)', text: 'hsl(155, 40%, 32%)', border: 'hsl(150, 30%, 82%)' },
+  lavender: { bg: 'hsl(270, 35%, 95%)', text: 'hsl(275, 40%, 45%)', border: 'hsl(270, 30%, 88%)' },
+  ocean: { bg: 'hsl(200, 50%, 94%)', text: 'hsl(205, 55%, 38%)', border: 'hsl(200, 45%, 85%)' },
+  sunset: { bg: 'hsl(30, 55%, 94%)', text: 'hsl(25, 60%, 40%)', border: 'hsl(30, 50%, 85%)' },
 };
 
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings';
@@ -114,9 +102,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Session Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex items-center justify-between">
-        {/* Left spacer for balance */}
-        <div className="w-48" />
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex items-center justify-center gap-4">
         
         {/* Centered Tabs */}
         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
@@ -137,34 +123,46 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         </div>
 
         {/* Right side: Topic selector + Menu */}
-        <div className="flex items-center gap-3 w-48 justify-end">
+        <div className="flex items-center gap-2 justify-end">
           <Select value={assignedTopicId || ''} onValueChange={handleAssignTopic}>
-            <SelectTrigger className="h-9 w-auto gap-2 rounded-full border-border bg-muted/50 px-4 text-sm font-medium hover:bg-muted transition-smooth [&>svg]:h-4 [&>svg]:w-4 [&>svg]:text-muted-foreground">
+            <SelectTrigger className="h-auto border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-[hsl(0,0%,96%)] hover:bg-[hsl(0,0%,92%)] text-[hsl(0,0%,55%)] border-[hsl(0,0%,88%)] transition-colors focus:ring-0 focus:ring-offset-0 w-auto gap-1.5">
               {selectedTopicData ? (
-                <span className="flex items-center gap-2">
+                <>
                   <span>{selectedTopicData.icon}</span>
-                  <span className="max-w-[140px] truncate">{selectedTopicData.name}</span>
-                </span>
+                  <span>{selectedTopicData.name}</span>
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </>
               ) : (
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <FolderOpen className="h-4 w-4" />
-                  <span>Add to topic</span>
-                </span>
+                <>
+                  <FolderOpen className="h-3.5 w-3.5" />
+                  <span>Select topic</span>
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </>
               )}
             </SelectTrigger>
-            <SelectContent className="bg-popover border-border z-50">
-              {topics.map((t) => (
-                <SelectItem key={t.id} value={t.id}>
-                  <span className="flex items-center gap-2">
-                    <span>{t.icon}</span>
-                    <span>{t.name}</span>
-                  </span>
-                </SelectItem>
-              ))}
+            <SelectContent className="z-50 bg-popover">
+              {topics.map((topic) => {
+                const colors = topic.wallpaper 
+                  ? wallpaperBadgeColors[topic.wallpaper] 
+                  : wallpaperBadgeColors.mint;
+                return (
+                  <SelectItem key={topic.id} value={topic.id}>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
+                        style={{ backgroundColor: colors?.bg }}
+                      >
+                        {topic.icon}
+                      </span>
+                      <span>{topic.name}</span>
+                    </div>
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
-          <button className="flex items-center justify-center h-9 w-9 text-muted-foreground hover:text-foreground transition-smooth">
-            <MoreVertical className="h-5 w-5" />
+          <button className="flex items-center justify-center h-7 w-7 text-muted-foreground hover:text-foreground transition-colors">
+            <MoreVertical className="h-4 w-4" />
           </button>
         </div>
       </div>
