@@ -92,10 +92,7 @@ export function SessionList({
               className="flex w-full items-center justify-between p-4 hover:bg-muted/30 transition-smooth"
             >
               <div className="flex items-center gap-3">
-                <span className="font-medium text-foreground">{group.date}</span>
-                <span className="text-sm text-muted-foreground">
-                  {group.sessions.length} session{group.sessions.length !== 1 ? 's' : ''}
-                </span>
+                <span className="text-sm font-medium text-foreground">{group.date}</span>
               </div>
               {isCollapsed ? (
                 <ChevronDown className="h-5 w-5 text-muted-foreground" />
