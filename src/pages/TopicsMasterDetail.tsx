@@ -11,7 +11,7 @@ const TopicsMasterDetail = () => {
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
 
   return (
-    <div className="flex min-h-screen bg-card">
+    <div className="flex h-screen bg-card overflow-hidden">
       <SidebarV2 />
       
       <div className="flex flex-1 flex-col">
