@@ -114,8 +114,11 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Session Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-center">
-        {/* Tabs */}
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex items-center justify-between">
+        {/* Left spacer for balance */}
+        <div className="w-48" />
+        
+        {/* Centered Tabs */}
         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
           {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
             <button
@@ -131,6 +134,38 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
+        </div>
+
+        {/* Right side: Topic selector + Menu */}
+        <div className="flex items-center gap-2 w-48 justify-end">
+          <Select value={assignedTopicId || ''} onValueChange={handleAssignTopic}>
+            <SelectTrigger className="h-8 w-auto gap-2 border-border bg-muted/50 px-3 text-sm">
+              {selectedTopicData ? (
+                <span className="flex items-center gap-2">
+                  <span>{selectedTopicData.icon}</span>
+                  <span className="max-w-[120px] truncate">{selectedTopicData.name}</span>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <FolderOpen className="h-4 w-4" />
+                  <span>Add to topic</span>
+                </span>
+              )}
+            </SelectTrigger>
+            <SelectContent className="bg-popover border-border z-50">
+              {topics.map((t) => (
+                <SelectItem key={t.id} value={t.id}>
+                  <span className="flex items-center gap-2">
+                    <span>{t.icon}</span>
+                    <span>{t.name}</span>
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
