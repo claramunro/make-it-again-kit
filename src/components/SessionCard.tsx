@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, AudioLines, ChevronRight, Star, FolderOpen, ChevronDown } from 'lucide-react';
+import { FileText, FileVideo, ChevronRight, Star, FolderOpen, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Session, TopicBadgeInfo } from '@/types/session';
 import { SessionBadge } from './SessionBadge';
@@ -118,7 +118,7 @@ export function SessionCard({
       {/* Type Icon */}
       <div className="mt-0.5 shrink-0 text-muted-foreground">
         {session.type === 'audio' ? (
-          <AudioLines className="h-5 w-5" />
+          <FileVideo className="h-5 w-5" />
         ) : (
           <FileText className="h-5 w-5" />
         )}
