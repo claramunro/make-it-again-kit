@@ -201,9 +201,10 @@ export function SessionCard({
   );
 
   const cardClassName = cn(
-    "group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-4 text-left transition-smooth hover:border-primary/20 hover:shadow-sm cursor-pointer",
-    isSelected && !selectionMode && "border-primary bg-primary/[0.03]",
-    isChecked && selectionMode && "border-primary bg-primary/[0.03]"
+    "group flex w-full items-start gap-4 rounded-xl p-4 text-left transition-smooth cursor-pointer",
+    "bg-muted/50 hover:bg-muted/70 border border-transparent",
+    isSelected && !selectionMode && "border-primary/20 bg-primary/10",
+    isChecked && selectionMode && "border-primary/20 bg-primary/10"
   );
 
   // Use div in selection mode to prevent navigation, Link otherwise
