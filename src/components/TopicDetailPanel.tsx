@@ -322,13 +322,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         {activeTopicTab !== 'edit' && (
           <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-sm font-semibold text-foreground">Chat</h2>
-              <div className="flex items-center gap-2">
-                <Switch id="topic-context-panel" className="scale-75" defaultChecked />
-                <label htmlFor="topic-context-panel" className="text-xs text-muted-foreground">Topic context</label>
-              </div>
-            </div>
+            <h2 className="text-sm font-semibold text-foreground">Chat</h2>
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
               <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
