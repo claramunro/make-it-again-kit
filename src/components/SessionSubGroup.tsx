@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, AudioLines } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileVideo } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { HighlightItem } from './HighlightItem';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ export function SessionSubGroup({
           to={`/session/${sessionId}`}
           className="flex items-center gap-2 flex-1"
         >
-          <AudioLines className="h-4 w-4 text-muted-foreground" />
+          <FileVideo className="h-4 w-4 text-muted-foreground" />
           <div className="flex flex-col items-start">
             <span className="text-sm font-medium text-foreground">{sessionTitle}</span>
             {sessionMeta && (

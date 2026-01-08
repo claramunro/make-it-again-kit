@@ -4,7 +4,7 @@ import {
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
   Calendar, Trash2, Share, Folder, FolderOpen, FileText, Video, Bookmark, ALargeSmall,
-  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, AudioLines, RefreshCw, FileCode
+  Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, FileVideo, RefreshCw, FileCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -610,7 +610,7 @@ const SessionDetail = () => {
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     {currentSession?.type === 'audio' ? (
-                      <AudioLines className="h-3.5 w-3.5" />
+                      <FileVideo className="h-3.5 w-3.5" />
                     ) : (
                       <FileText className="h-3.5 w-3.5" />
                     )}
