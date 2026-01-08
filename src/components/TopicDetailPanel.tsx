@@ -78,14 +78,17 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const navigate = useNavigate();
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
-  const [selectedSessionId, setSelectedSessionId] = useState(mockSessions[0].id);
+  
+  const topic = topics.find(t => t.id === topicId);
+  const topicSessions = topic?.sessions || [];
+  
+  const [selectedSessionId, setSelectedSessionId] = useState(topicSessions[0]?.id || '');
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
-    mockSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite }), {})
+    topicSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite || false }), {})
   );
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
   
-  const topic = topics.find(t => t.id === topicId);
-  const selectedSession = mockSessions.find(s => s.id === selectedSessionId);
+  const selectedSession = topicSessions.find(s => s.id === selectedSessionId);
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
   
   const topicHighlights = useMemo(() => {
@@ -135,7 +138,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {activeTopicTab === 'sessions' && (
             <div className="w-72 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
             <div className="space-y-2">
-              {mockSessions.map((session) => (
+              {topicSessions.map((session) => (
                 <button
                   key={session.id}
                   onClick={() => setSelectedSessionId(session.id)}
@@ -199,17 +202,21 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               <div className="rounded-xl border border-border bg-card p-6">
                 <h2 className="text-lg font-semibold text-foreground mb-4">Recent Sessions</h2>
                 <div className="space-y-3">
-                  {mockSessions.slice(0, 3).map((session) => (
-                    <div 
+                  {(topic.sessions || []).slice(0, 3).map((session) => (
+                    <button 
                       key={session.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                      onClick={() => {
+                        setSelectedSessionId(session.id);
+                        setActiveTopicTab('sessions');
+                      }}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-smooth text-left"
                     >
                       <FileText className="h-4 w-4 text-muted-foreground" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{session.title}</p>
                         <p className="text-xs text-muted-foreground">{session.date}</p>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -238,14 +245,14 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                 </div>
               </div>
 
-              {activeSessionTab === 'details' && (
+              {activeSessionTab === 'details' && selectedSession && (
                 <div className="rounded-xl border border-border bg-card p-6">
                   <h2 className="text-lg font-semibold text-foreground mb-2">{selectedSession.title}</h2>
                   <p className="text-xs text-muted-foreground mb-4">
                     {selectedSession.date} • {selectedSession.time} • {selectedSession.duration}
                   </p>
                   <p className="text-sm leading-relaxed text-foreground">
-                    {selectedSession.summary}
+                    Session details and notes from this discussion.
                   </p>
                 </div>
               )}
