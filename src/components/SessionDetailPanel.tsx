@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ChevronDown, MoreVertical, Play, Pause, Sparkles, 
+  ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Trash2, 
   FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, FolderOpen
 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
@@ -418,26 +419,63 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
 
         {/* Right Column - Chat */}
         <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
-          <div className="border-b border-border p-4">
-            <h2 className="text-sm font-semibold text-foreground">Chat</h2>
-          </div>
-          <div className="flex-1 overflow-auto p-4">
-            <div className="text-sm text-muted-foreground">
-              Ask questions about this session...
+          <div className="flex items-center justify-between border-b border-border p-4">
+            <div className="flex items-center gap-3">
+              <h2 className="text-sm font-semibold text-foreground">Chat</h2>
+              <div className="flex items-center gap-2">
+                <Switch id="topic-context" className="scale-75" />
+                <label htmlFor="topic-context" className="text-xs text-muted-foreground">Topic context</label>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+              <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
             </div>
           </div>
-          <div className="border-t border-border p-4">
-            <div className="flex gap-2">
+          <div className="flex-1 overflow-auto p-4 space-y-4">
+            {/* User message */}
+            <div className="flex justify-end">
+              <div className="rounded-2xl bg-primary px-4 py-3 text-sm text-primary-foreground max-w-[85%]">
+                Can you summarize the key points from this session?
+              </div>
+            </div>
+            {/* AI response */}
+            <div className="rounded-2xl bg-muted px-4 py-3 text-sm text-foreground">
+              <p className="mb-2">Here are the key points from this session:</p>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>Urban development approaches discussed</li>
+                <li>Long-term holds vs quick flips analyzed</li>
+                <li>Creative financing options explored</li>
+                <li>Community-focused development highlighted</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-border p-4 space-y-3">
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
               <input
                 type="text"
                 value={chatMessage}
                 onChange={(e) => setChatMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                placeholder="How can I help?"
+                className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
               />
-              <Button size="icon" variant="ghost">
+              <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
                 <Send className="h-4 w-4" />
               </Button>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                Summarize key points
+                <Sparkles className="h-3 w-3" />
+              </button>
+              <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                What are the action items?
+                <Sparkles className="h-3 w-3" />
+              </button>
+              <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                More
+                <ChevronRight className="h-3 w-3" />
+              </button>
             </div>
           </div>
         </div>

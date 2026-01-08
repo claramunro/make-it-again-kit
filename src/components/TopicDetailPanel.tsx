@@ -6,6 +6,7 @@ import {
   Quote, BarChart3, Pencil, Download, Star, X, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { topics } from '@/data/topics';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
@@ -320,13 +321,19 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         {/* Right Column - Chat (not on edit tab) */}
         {activeTopicTab !== 'edit' && (
           <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
-            <div className="flex items-center justify-between border-b border-border p-4">
+          <div className="flex items-center justify-between border-b border-border p-4">
+            <div className="flex items-center gap-3">
               <h2 className="text-sm font-semibold text-foreground">Chat</h2>
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
-                <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                <Switch id="topic-context-panel" className="scale-75" defaultChecked />
+                <label htmlFor="topic-context-panel" className="text-xs text-muted-foreground">Topic context</label>
               </div>
             </div>
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+              <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+            </div>
+          </div>
             <div className="flex-1 overflow-auto p-4 space-y-4">
               {/* User message */}
               <div className="flex justify-end">
