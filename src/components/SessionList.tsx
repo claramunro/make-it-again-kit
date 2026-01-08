@@ -16,7 +16,7 @@ import {
 const formatDateWithDay = (dateStr: string) => {
   try {
     const date = parse(dateStr, 'MMM d, yyyy', new Date());
-    return format(date, 'EEE, MMM d, yyyy');
+    return format(date, 'EEEE, MMM d, yyyy');
   } catch {
     return dateStr;
   }
