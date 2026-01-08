@@ -16,7 +16,7 @@ export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItem
         'group flex items-center gap-3 rounded-lg p-3 cursor-pointer transition-smooth',
         isSelected 
           ? 'bg-primary/10 border border-primary/20' 
-          : 'bg-muted/30 hover:bg-muted/50 border border-transparent'
+          : 'bg-muted/50 hover:bg-muted/70 border border-transparent'
       )}
     >
       {/* Highlight icon */}
