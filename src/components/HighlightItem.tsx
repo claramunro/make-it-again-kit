@@ -22,7 +22,7 @@ export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItem
       {/* Highlight icon */}
       <div className={cn(
         'flex h-8 w-8 items-center justify-center rounded',
-        isSelected ? 'text-primary' : 'text-muted-foreground/70'
+        isSelected ? 'text-primary' : 'text-foreground/40'
       )}>
         <Sparkles className={cn('h-5 w-5', isSelected && 'text-primary')} />
       </div>
