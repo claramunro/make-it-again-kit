@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { AudioLines } from 'lucide-react';
+import { FileVideo } from 'lucide-react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
@@ -174,7 +174,7 @@ const HighlightsPage = () => {
                   key={group.id}
                   title={group.title}
                   icon={group.icon}
-                  SessionIcon={groupBy === 'sessions' ? AudioLines : undefined}
+                  SessionIcon={groupBy === 'sessions' ? FileVideo : undefined}
                   sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
                   sessionId={groupBy === 'sessions' ? group.id : undefined}
                   highlights={group.highlights}

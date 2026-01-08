@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Star, ChevronRight, ChevronDown, FileText, AudioLines, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
+import { Star, ChevronRight, ChevronDown, FileText, FileVideo, Users, MoreVertical, Pencil, UserPlus, Trash2 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Topic } from '@/data/topics';
 import { useTopics } from '@/contexts/TopicContext';
@@ -603,7 +603,7 @@ export function TopicListItem({ topic }: TopicCardProps) {
                   {/* Session icon */}
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center text-muted-foreground/60">
                     {session.type === 'audio' ? (
-                      <AudioLines className="h-5 w-5" />
+                      <FileVideo className="h-5 w-5" />
                     ) : (
                       <FileText className="h-5 w-5" />
                     )}
