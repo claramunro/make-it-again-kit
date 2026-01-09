@@ -509,7 +509,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {activeTopicTab === 'highlights' && (
             <div className="flex flex-1 overflow-hidden">
               {/* Left: Highlights List */}
-              <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
+              <div className="w-72 shrink-0 overflow-auto border-r border-border p-4">
                 <div className="space-y-2">
                   {topicHighlights.length > 0 ? (
                     topicHighlights.map((highlight) => (
