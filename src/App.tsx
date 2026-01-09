@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TopicProvider } from "@/contexts/TopicContext";
 import { SessionProvider } from "@/contexts/SessionContext";
+import { TabProvider } from "@/contexts/TabContext";
 import Index from "./pages/Index";
 import Topics from "./pages/Topics";
 import Welcome from "./pages/Welcome";
@@ -41,8 +42,9 @@ initializeTheme();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TopicProvider>
-      <SessionProvider>
+  <TopicProvider>
+    <SessionProvider>
+      <TabProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -65,8 +67,9 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </SessionProvider>
-    </TopicProvider>
+      </TabProvider>
+    </SessionProvider>
+  </TopicProvider>
   </QueryClientProvider>
 );
 

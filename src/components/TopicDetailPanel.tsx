@@ -25,6 +25,7 @@ import {
 import { topics, Topic } from '@/data/topics';
 import { highlights, Highlight } from '@/data/highlights';
 import { useTopics } from '@/contexts/TopicContext';
+import { useTabContext } from '@/contexts/TabContext';
 import { cn } from '@/lib/utils';
 
 type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings';
@@ -135,8 +136,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
   const { updateTopic, updateTopicWallpaper } = useTopics();
-  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
-  const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
+  const { topicDetailTab: activeTopicTab, setTopicDetailTab: setActiveTopicTab, topicSessionSubTab: activeSessionTab, setTopicSessionSubTab: setActiveSessionTab } = useTabContext();
   
   const topic = topics.find(t => t.id === topicId);
   const topicSessions = topic?.sessions || [];
