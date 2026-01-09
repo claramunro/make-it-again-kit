@@ -505,101 +505,101 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             </div>
           )}
 
-          {/* Highlights Tab - Two Column Layout */}
+          {/* Highlights Tab - Two Column Layout in Single Card */}
           {activeTopicTab === 'highlights' && (
-            <div className="flex flex-1 overflow-hidden">
-              {/* Left: Highlights List */}
-              <div className="w-72 shrink-0 overflow-auto border-r border-border p-4">
-                <div className="space-y-2">
-                  {topicHighlights.length > 0 ? (
-                    topicHighlights.map((highlight) => (
-                      <button
-                        key={highlight.id}
-                        onClick={() => setSelectedHighlightId(highlight.id)}
-                        className={cn(
-                          "w-full rounded-lg p-3 text-left transition-smooth",
-                          selectedHighlight?.id === highlight.id
-                            ? "bg-primary/10 border border-primary/30"
-                            : "bg-muted hover:bg-muted/80"
-                        )}
-                      >
-                        <div className="flex items-start gap-2">
-                          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                          <div className="flex-1 min-w-0">
-                            <span className="text-sm font-medium text-foreground line-clamp-2">
-                              {highlight.title}
-                            </span>
-                            <p className="text-xs text-muted-foreground mt-1 truncate">
-                              {highlight.sessionTitle}
-                            </p>
+            <div className="flex-1 overflow-hidden p-4">
+              <div className="flex h-full overflow-hidden rounded-xl border border-border bg-card">
+                {/* Left: Highlights List */}
+                <div className="w-64 shrink-0 overflow-auto bg-muted/30 p-3">
+                  <div className="space-y-1.5">
+                    {topicHighlights.length > 0 ? (
+                      topicHighlights.map((highlight) => (
+                        <button
+                          key={highlight.id}
+                          onClick={() => setSelectedHighlightId(highlight.id)}
+                          className={cn(
+                            "w-full rounded-lg p-2.5 text-left transition-smooth",
+                            selectedHighlight?.id === highlight.id
+                              ? "bg-card border border-primary/30 shadow-sm"
+                              : "hover:bg-card/50"
+                          )}
+                        >
+                          <div className="flex items-start gap-2">
+                            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <div className="flex-1 min-w-0">
+                              <span className="text-sm font-medium text-foreground line-clamp-2">
+                                {highlight.title}
+                              </span>
+                              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                                {highlight.sessionTitle}
+                              </p>
+                            </div>
                           </div>
+                        </button>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-muted-foreground text-sm">
+                        No highlights in this topic yet
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right: Highlight Details */}
+                <div className="flex-1 overflow-auto p-4">
+                  {selectedHighlight ? (
+                    <div>
+                      <div className="mb-4 flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-base font-semibold text-foreground mb-1">{selectedHighlight.title}</h2>
+                          <p className="text-xs text-muted-foreground">{selectedHighlight.sessionTitle}</p>
                         </div>
-                      </button>
-                    ))
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Share className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <Lightbulb className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground">
+                          {selectedHighlight.description || 'No main idea available.'}
+                        </p>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <Quote className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-muted-foreground italic">
+                          {selectedHighlight.originalContext || 'No original context available.'}
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground">
+                          {selectedHighlight.analysis || 'No analysis available.'}
+                        </p>
+                      </div>
+                    </div>
                   ) : (
-                    <div className="text-center py-8 text-muted-foreground text-sm">
-                      No highlights in this topic yet
+                    <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
+                      Select a highlight to view details
                     </div>
                   )}
                 </div>
-              </div>
-
-              {/* Right: Highlight Details */}
-              <div className="flex-1 overflow-auto p-6">
-                {selectedHighlight ? (
-                  <div className="rounded-xl border border-border bg-card p-6">
-                    <div className="mb-6 flex items-start justify-between">
-                      <div>
-                        <h2 className="text-lg font-semibold text-foreground mb-1">{selectedHighlight.title}</h2>
-                        <p className="text-sm text-muted-foreground">{selectedHighlight.sessionTitle}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="gap-2">
-                          <Share className="h-4 w-4" />
-                          Share
-                        </Button>
-                        <Button variant="ghost" size="sm" className="gap-2">
-                          <Trash2 className="h-4 w-4" />
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="mb-6">
-                      <div className="mb-2 flex items-center gap-2">
-                        <Lightbulb className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
-                      </div>
-                      <p className="text-sm leading-relaxed text-foreground">
-                        {selectedHighlight.description || 'No main idea available.'}
-                      </p>
-                    </div>
-                    
-                    <div className="mb-6">
-                      <div className="mb-2 flex items-center gap-2">
-                        <Quote className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
-                      </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground italic">
-                        {selectedHighlight.originalContext || 'No original context available.'}
-                      </p>
-                    </div>
-                    
-                    <div>
-                      <div className="mb-2 flex items-center gap-2">
-                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
-                      </div>
-                      <p className="text-sm leading-relaxed text-foreground">
-                        {selectedHighlight.analysis || 'No analysis available.'}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    Select a highlight to view details
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -861,7 +861,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
       {/* Right Column - Topic Chat (extends full height alongside tabs) */}
       {activeTopicTab !== 'settings' && activeTopicTab !== 'sessions' && (
-        <div className="w-80 lg:w-96 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
+        <div className="w-72 lg:w-80 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Topic Chat</h2>
             <div className="flex items-center gap-2">
