@@ -315,7 +315,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           )}
 
           {/* Center Column - Content based on tab */}
-          <div className="min-w-0 flex-1 overflow-auto p-6">
+          <div className="min-w-0 flex-1 overflow-auto p-4">
           {/* Overview Tab */}
           {activeTopicTab === 'overview' && (
             <div className="space-y-6">
@@ -521,7 +521,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
           {/* Highlights Tab - Two Column Layout in Single Card */}
           {activeTopicTab === 'highlights' && (
-            <div className="flex-1 overflow-hidden p-4">
+            <div className="flex-1 overflow-hidden">
               <div className="flex h-full overflow-hidden rounded-xl border border-border bg-card">
                 {/* Left: Highlights List */}
                 <div className="w-64 shrink-0 overflow-auto bg-muted/30 p-3">
