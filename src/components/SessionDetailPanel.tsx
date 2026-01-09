@@ -97,7 +97,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Session Header */}
-      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex items-center justify-center gap-4">
+      <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex items-center gap-4">
         
         {/* Centered Tabs */}
         <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
@@ -120,8 +120,8 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
           ))}
         </div>
 
-        {/* Right side: Topic selector + Menu */}
-        <div className="flex items-center gap-2 justify-end">
+        {/* Right side: Topic selector + Menu - pushed to far right */}
+        <div className="ml-auto flex items-center gap-2">
           {selectedTopicData ? (
             <Select value={assignedTopicId || ''} onValueChange={handleAssignTopic}>
               <SelectTrigger className="h-auto border-0 bg-transparent p-0 focus:ring-0 focus:ring-offset-0 w-auto [&>svg:last-child]:hidden">
