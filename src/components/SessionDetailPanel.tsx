@@ -65,13 +65,23 @@ interface SessionDetailPanelProps {
 export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const navigate = useNavigate();
   const { getSessionById, assignTopicToSession } = useSessions();
-  const { sessionDetailTab: activeTab, setSessionDetailTab: setActiveTab } = useTabContext();
+  const { 
+    sessionDetailTab: activeTab, 
+    setSessionDetailTab: setActiveTab,
+    sessionHighlightId,
+    setSessionHighlightId,
+  } = useTabContext();
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
-  const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
+  
+  // Derive selectedBookmark from persisted ID
+  const selectedBookmark = sessionHighlightId 
+    ? mockBookmarks.find(b => b.id === sessionHighlightId) || mockBookmarks[0]
+    : mockBookmarks[0];
+    
   const [checkedTodos, setCheckedTodos] = useState<Set<number>>(new Set());
 
   const toggleTodo = (index: number) => {
@@ -145,7 +155,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                     {mockBookmarks.map((bookmark) => (
                       <button
                         key={bookmark.id}
-                        onClick={() => setSelectedBookmark(bookmark)}
+                        onClick={() => setSessionHighlightId(bookmark.id)}
                         className={cn(
                           "w-full rounded-lg p-2.5 text-left transition-smooth",
                           selectedBookmark.id === bookmark.id

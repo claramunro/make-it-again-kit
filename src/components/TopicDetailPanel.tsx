@@ -136,7 +136,16 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
   const { updateTopic, updateTopicWallpaper } = useTopics();
-  const { topicDetailTab: activeTopicTab, setTopicDetailTab: setActiveTopicTab, topicSessionSubTab: activeSessionTab, setTopicSessionSubTab: setActiveSessionTab } = useTabContext();
+  const { 
+    topicDetailTab: activeTopicTab, 
+    setTopicDetailTab: setActiveTopicTab, 
+    topicSessionSubTab: activeSessionTab, 
+    setTopicSessionSubTab: setActiveSessionTab,
+    topicHighlightId,
+    setTopicHighlightId,
+    topicSessionHighlightId,
+    setTopicSessionHighlightId,
+  } = useTabContext();
   
   const topic = topics.find(t => t.id === topicId);
   const topicSessions = topic?.sessions || [];
@@ -145,8 +154,13 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     topicSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite || false }), {})
   );
-  const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
-  const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
+  
+  // Derive selectedBookmark from persisted ID (for Topic -> Sessions -> Session -> Highlights)
+  const selectedBookmarkId = topicSessionHighlightId || mockSessionBookmarks[0].id;
+  const setSelectedBookmarkId = setTopicSessionHighlightId;
+  
+  // Derive selectedHighlight from persisted ID (for Topic -> Highlights tab)
+  const selectedHighlightIdLocal = topicHighlightId;
   
   // Settings tab state
   const [topicName, setTopicName] = useState(topic?.name || '');
@@ -177,11 +191,11 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
   // Set first highlight as selected when highlights load
   const selectedHighlight = useMemo(() => {
-    if (selectedHighlightId) {
-      return topicHighlights.find(h => h.id === selectedHighlightId) || topicHighlights[0];
+    if (selectedHighlightIdLocal) {
+      return topicHighlights.find(h => h.id === selectedHighlightIdLocal) || topicHighlights[0];
     }
     return topicHighlights[0] || null;
-  }, [selectedHighlightId, topicHighlights]);
+  }, [selectedHighlightIdLocal, topicHighlights]);
   
   const toggleSessionFavorite = (sessionId: string) => {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
@@ -516,7 +530,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                       topicHighlights.map((highlight) => (
                         <button
                           key={highlight.id}
-                          onClick={() => setSelectedHighlightId(highlight.id)}
+                          onClick={() => setTopicHighlightId(highlight.id)}
                           className={cn(
                             "w-full rounded-lg p-2.5 text-left transition-smooth",
                             selectedHighlight?.id === highlight.id
