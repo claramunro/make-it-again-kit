@@ -1316,8 +1316,8 @@ const TopicDetail = () => {
                 )}
               </div>
               
-              {/* Right: Chat Panel */}
-              <ChatPanel />
+              {/* Right: Chat Panel (only on large screens) */}
+              {isLargeScreen && <ChatPanel />}
             </div>
           )}
           
