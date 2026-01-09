@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Trash2, 
-  FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, FolderOpen, MessageCircle
+  FileText, Video, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, FolderOpen, MessageCircle
 } from 'lucide-react';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { useIsXlScreen } from '@/hooks/use-xl-screen';
@@ -211,7 +211,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                   )}
                 >
                   <div className="flex items-start gap-2">
-                    <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                     <span className="text-sm font-medium text-foreground line-clamp-2">
                       {bookmark.title}
                     </span>
@@ -238,7 +238,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                 >
                   <SelectTrigger className="w-full bg-card">
                     <div className="flex items-center gap-2">
-                      <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                      <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                       <SelectValue placeholder="Select a highlight" />
                     </div>
                   </SelectTrigger>

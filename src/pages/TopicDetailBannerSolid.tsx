@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, Send, Sparkles, ChevronRight, Star, Mic, BookmarkIcon, Clock } from 'lucide-react';
+import { ArrowLeft, Users, Send, Sparkles, ChevronRight, Star, Mic, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { Header } from '@/components/Header';
@@ -216,7 +216,7 @@ const TopicDetailBannerSolid = () => {
                             <>
                               <span>•</span>
                               <span className="flex items-center gap-1">
-                                <BookmarkIcon className="h-3 w-3" />
+                                <Sparkles className="h-3 w-3" />
                                 {session.bookmarks}
                               </span>
                             </>
@@ -231,7 +231,7 @@ const TopicDetailBannerSolid = () => {
               
               {activeTab === 'highlights' && (
                 <div className="text-center py-12">
-                  <BookmarkIcon className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                  <Sparkles className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
                   <p className="text-muted-foreground">No highlights yet</p>
                   <p className="text-sm text-muted-foreground/70">Highlights from sessions will appear here</p>
                 </div>
