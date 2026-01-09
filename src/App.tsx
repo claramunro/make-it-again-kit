@@ -42,34 +42,34 @@ initializeTheme();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-  <TopicProvider>
-    <SessionProvider>
-      <TabProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/welcome" element={<Welcome />} />
-              <Route path="/" element={<Index />} />
-              <Route path="/topics" element={<Topics />} />
-              <Route path="/topic/:id" element={<TopicDetail />} />
-              <Route path="/topic/:id/focus" element={<TopicDetailFocus />} />
-              <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
-              <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
-              <Route path="/topic4/:id" element={<TopicDetailBannerFull />} />
-              <Route path="/highlights" element={<Highlights />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/session/:id" element={<SessionDetail />} />
-              <Route path="/design-system" element={<DesignSystem />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </TabProvider>
-    </SessionProvider>
-  </TopicProvider>
+    <BrowserRouter>
+      <TopicProvider>
+        <SessionProvider>
+          <TabProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route path="/welcome" element={<Welcome />} />
+                <Route path="/" element={<Index />} />
+                <Route path="/topics" element={<Topics />} />
+                <Route path="/topic/:id" element={<TopicDetail />} />
+                <Route path="/topic/:id/focus" element={<TopicDetailFocus />} />
+                <Route path="/topic2/:id" element={<TopicDetailBannerGradient />} />
+                <Route path="/topic3/:id" element={<TopicDetailBannerSolid />} />
+                <Route path="/topic4/:id" element={<TopicDetailBannerFull />} />
+                <Route path="/highlights" element={<Highlights />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/session/:id" element={<SessionDetail />} />
+                <Route path="/design-system" element={<DesignSystem />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
+          </TabProvider>
+        </SessionProvider>
+      </TopicProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
