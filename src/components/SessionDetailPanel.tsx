@@ -6,6 +6,7 @@ import {
   FileText, Video, Bookmark, Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, FolderOpen, MessageCircle
 } from 'lucide-react';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -65,6 +66,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const navigate = useNavigate();
   const { getSessionById, assignTopicToSession } = useSessions();
   const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(false);
@@ -193,8 +195,8 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         {/* Left/Center area with audio player */}
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex flex-1 overflow-hidden">
-            {/* Left Column - Only show for Highlights tab */}
-            {activeTab === 'highlights' && (
+            {/* Left Column - Only show for Highlights tab on xl screens */}
+            {activeTab === 'highlights' && isXlScreen && (
               <div className="w-64 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
             <div className="space-y-2">
               {mockBookmarks.map((bookmark) => (
@@ -224,58 +226,86 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
         <div className="min-w-0 flex-1 overflow-auto p-6">
           {/* Highlights Tab */}
           {activeTab === 'highlights' && (
-            <div className="rounded-xl border border-border bg-card p-6">
-              <div className="mb-6 flex items-start justify-between">
-                <div>
-                  <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
-                  <div className="mt-1 flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">{selectedBookmark.time}</span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      {selectedBookmark.duration}
-                    </span>
+            <div className="space-y-4">
+              {/* Dropdown selector - show on non-xl screens */}
+              {!isXlScreen && (
+                <Select
+                  value={selectedBookmark.id}
+                  onValueChange={(value) => {
+                    const bookmark = mockBookmarks.find(b => b.id === value);
+                    if (bookmark) setSelectedBookmark(bookmark);
+                  }}
+                >
+                  <SelectTrigger className="w-full bg-card">
+                    <div className="flex items-center gap-2">
+                      <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                      <SelectValue placeholder="Select a highlight" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="z-50 bg-card">
+                    {mockBookmarks.map((bookmark) => (
+                      <SelectItem key={bookmark.id} value={bookmark.id}>
+                        <span className="line-clamp-1">{bookmark.title}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
+              {/* Highlight Detail Card */}
+              <div className="rounded-xl border border-border bg-card p-6">
+                <div className="mb-6 flex items-start justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">{selectedBookmark.time}</span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        {selectedBookmark.duration}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <Upload className="h-4 w-4" />
+                      Share
+                    </Button>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </Button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Upload className="h-4 w-4" />
-                    Share
-                  </Button>
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Trash2 className="h-4 w-4" />
-                    Delete
-                  </Button>
-                </div>
-              </div>
 
-              <div className="mb-6">
-                <div className="mb-2 flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                <div className="mb-6">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {selectedBookmark.mainIdea}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed text-foreground">
-                  {selectedBookmark.mainIdea}
-                </p>
-              </div>
 
-              <div className="mb-6">
-                <div className="mb-2 flex items-center gap-2">
-                  <Quote className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                <div className="mb-6">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Quote className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-muted-foreground italic">
+                    {selectedBookmark.originalContext}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground italic">
-                  {selectedBookmark.originalContext}
-                </p>
-              </div>
 
-              <div>
-                <div className="mb-2 flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                    <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground">
+                    {selectedBookmark.analysis}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed text-foreground">
-                  {selectedBookmark.analysis}
-                </p>
               </div>
             </div>
           )}
