@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
@@ -7,14 +6,11 @@ import { useSessions } from '@/contexts/SessionContext';
 import { SessionDetailPanel } from '@/components/SessionDetailPanel';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
 import { sortSessions } from '@/utils/sessionSorting';
-import { useIsXlScreen } from '@/hooks/use-xl-screen';
 
 const SELECTED_SESSION_KEY = 'sessions-master-selected-id';
 
 const SessionsMasterDetail = () => {
   const { sessionGroups } = useSessions();
-  const isXlScreen = useIsXlScreen();
-  const navigate = useNavigate();
   const [selectedSessionId, setSelectedSessionIdState] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(SELECTED_SESSION_KEY);
@@ -57,15 +53,6 @@ const SessionsMasterDetail = () => {
       }
     }
   }, [allSessionIds, selectedSessionId, selectionMode]);
-
-  // When screen shrinks below XL, navigate to the selected session's detail page
-  useEffect(() => {
-    console.log('[SessionsMasterDetail] isXlScreen:', isXlScreen, 'selectedSessionId:', selectedSessionId, 'selectionMode:', selectionMode);
-    if (!isXlScreen && selectedSessionId && !selectionMode) {
-      console.log('[SessionsMasterDetail] navigating to', `/session/${selectedSessionId}`);
-      navigate(`/session/${selectedSessionId}`, { replace: true });
-    }
-  }, [isXlScreen, selectedSessionId, selectionMode, navigate]);
 
   const handleToggleSelectionMode = useCallback(() => {
     setSelectionMode(prev => !prev);
