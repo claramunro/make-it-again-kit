@@ -136,7 +136,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         <div className="flex min-w-0 flex-1 overflow-hidden">
           {/* Sessions Sidebar (only in sessions tab) */}
           {activeTopicTab === 'sessions' && (
-            <div className="w-72 shrink-0 overflow-auto border-r border-border bg-muted/30 p-4">
+            <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
             <div className="space-y-2">
               {topicSessions.map((session) => (
                 <button
@@ -145,8 +145,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   className={cn(
                     "w-full rounded-lg p-3 text-left transition-smooth",
                     selectedSessionId === session.id
-                      ? "bg-card border border-border shadow-sm"
-                      : "hover:bg-card/50"
+                      ? "bg-primary/10 border border-primary/30"
+                      : "bg-muted hover:bg-muted/80"
                   )}
                 >
                   <div className="flex items-start gap-2">
