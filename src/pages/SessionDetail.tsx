@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, ChevronDown, ChevronRight, MoreVertical, Play, Pause, Sparkles, 
   Send, Wand2, Pencil, Copy, Download, Link2, UserPlus, Mail, 
-  Calendar, Trash2, Share, Folder, FolderOpen, FileText, Video, Bookmark, ALargeSmall,
+  Calendar, Trash2, Share, Folder, FolderOpen, FileText, Video, ALargeSmall,
   Lightbulb, Quote, BarChart3, Clock, Upload, CloudUpload, Star, FileVideo, RefreshCw, FileCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -272,7 +272,7 @@ const SessionDetail = () => {
               >
                 <SelectTrigger className="w-full bg-card">
                   <div className="flex items-center gap-2">
-                    <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                    <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                     <SelectValue placeholder="Select a highlight" />
                   </div>
                 </SelectTrigger>
@@ -288,7 +288,7 @@ const SessionDetail = () => {
               {/* Selected Highlight Details */}
               <div className="rounded-xl border border-primary bg-card p-4">
                 <div className="flex items-start gap-3 mb-4">
-                  <Bookmark className="mt-0.5 h-5 w-5 shrink-0 fill-yellow-400 text-yellow-400" />
+                  <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                   <span className="text-base font-semibold text-foreground">{selectedBookmark.title}</span>
                 </div>
                 
@@ -698,7 +698,7 @@ const SessionDetail = () => {
                           )}
                         >
                           <div className="flex items-start gap-2">
-                            <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                            <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                             <span className="text-sm font-medium text-foreground line-clamp-2">
                               {bookmark.title}
                             </span>

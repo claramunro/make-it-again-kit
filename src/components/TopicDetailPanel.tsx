@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, Copy, RefreshCw, ChevronRight, ChevronDown, Send, Sparkles,
-  Lightbulb, FileText, Share, Bookmark, Clock, Trash2, 
+  Lightbulb, FileText, Share, Clock, Trash2, 
   Quote, BarChart3, Pencil, Download, Star, X, Upload, MessageSquare,
   FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle,
   Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search,
@@ -415,7 +415,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   >
                     <SelectTrigger className="w-full bg-card">
                       <div className="flex items-center gap-2">
-                        <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                        <Sparkles className="h-4 w-4 shrink-0 text-primary" />
                         <SelectValue placeholder="Select a highlight" />
                       </div>
                     </SelectTrigger>

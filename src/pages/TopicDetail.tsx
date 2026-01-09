@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
+import { ArrowLeft, Users, Copy, RefreshCw, ChevronRight, ChevronDown, Info, Send, Sparkles, Lock, Lightbulb, FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle, Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search, MusicIcon, Heart, Star, Settings, Camera, Smartphone, Check, FileText, Share, Clock, Trash2, Quote, BarChart3, Pencil, Download, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -741,7 +741,7 @@ const TopicDetail = () => {
                     </p>
                     {session.bookmarks > 0 && (
                       <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                        <BookmarkIcon className="h-3 w-3" />
+                        <Sparkles className="h-3 w-3" />
                         {session.bookmarks} highlights
                       </p>
                     )}
@@ -1051,7 +1051,7 @@ const TopicDetail = () => {
                         </p>
                         {session.bookmarks > 0 && (
                           <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-                            <BookmarkIcon className="h-3 w-3" />
+                            <Sparkles className="h-3 w-3" />
                             {session.bookmarks} bookmarks
                           </p>
                         )}
