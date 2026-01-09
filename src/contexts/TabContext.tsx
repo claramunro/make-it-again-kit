@@ -31,6 +31,10 @@ interface TabContextType {
   highlightsGroupBy: HighlightsGroupBy;
   setHighlightsGroupBy: (groupBy: HighlightsGroupBy) => void;
 
+  // Selected highlight ID persistence
+  selectedHighlightId: string | null;
+  setSelectedHighlightId: (id: string | null) => void;
+
   // "Return me to where I was" navigation targets for left-nav
   getNavPath: (section: NavSection) => string;
 }
@@ -38,6 +42,7 @@ interface TabContextType {
 const TabContext = createContext<TabContextType | undefined>(undefined);
 
 const SECTION_PATHS_STORAGE_KEY = 'nav-last-paths';
+const SELECTED_HIGHLIGHT_KEY = 'highlights-selected-id';
 
 function loadSavedSectionPaths(): SectionPathState {
   if (typeof window === 'undefined') return { sessions: '/', topics: '/topics', highlights: '/highlights' };
@@ -70,6 +75,24 @@ export function TabProvider({ children }: { children: ReactNode }) {
     }
     return 'sessions';
   });
+
+  const [selectedHighlightId, setSelectedHighlightIdState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(SELECTED_HIGHLIGHT_KEY) || null;
+    }
+    return null;
+  });
+
+  const setSelectedHighlightId = (id: string | null) => {
+    setSelectedHighlightIdState(id);
+    if (typeof window !== 'undefined') {
+      if (id) {
+        localStorage.setItem(SELECTED_HIGHLIGHT_KEY, id);
+      } else {
+        localStorage.removeItem(SELECTED_HIGHLIGHT_KEY);
+      }
+    }
+  };
 
   const [sectionPaths, setSectionPaths] = useState<SectionPathState>(() => loadSavedSectionPaths());
 
@@ -137,6 +160,8 @@ export function TabProvider({ children }: { children: ReactNode }) {
       setTopicSessionSubTab,
       highlightsGroupBy,
       setHighlightsGroupBy: handleSetHighlightsGroupBy,
+      selectedHighlightId,
+      setSelectedHighlightId,
       getNavPath,
     }}>
       {children}
