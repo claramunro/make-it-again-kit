@@ -154,6 +154,52 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
         {/* Main Content Area */}
         <div className="flex flex-1 overflow-hidden">
+          {/* Sessions Sidebar (only in sessions tab on XL screens) */}
+          {activeTopicTab === 'sessions' && isXlScreen && (
+            <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
+              <div className="space-y-2">
+                {topicSessions.map((session) => (
+                  <button
+                    key={session.id}
+                    onClick={() => setSelectedSessionId(session.id)}
+                    className={cn(
+                      "w-full rounded-lg p-3 text-left transition-smooth",
+                      selectedSessionId === session.id
+                        ? "bg-primary/10 border border-primary/30"
+                        : "bg-muted hover:bg-muted/80"
+                    )}
+                  >
+                    <div className="flex items-start gap-2">
+                      <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm font-medium text-foreground line-clamp-2">
+                          {session.title}
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {session.date} • {session.duration}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSessionFavorite(session.id);
+                        }}
+                        className="p-1 rounded hover:bg-muted"
+                      >
+                        <Star className={cn(
+                          'h-4 w-4',
+                          sessionFavorites[session.id]
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-muted-foreground'
+                        )} />
+                      </button>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Center Column - Content based on tab */}
           <div className="min-w-0 flex-1 overflow-auto p-6">
           {/* Overview Tab */}
@@ -200,28 +246,30 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {/* Sessions Tab */}
           {activeTopicTab === 'sessions' && (
             <div className="space-y-6">
-              {/* Session Dropdown Selector */}
-              <Select
-                value={selectedSessionId}
-                onValueChange={(value) => setSelectedSessionId(value)}
-              >
-                <SelectTrigger className="w-full bg-card">
-                  <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <SelectValue placeholder="Select a session" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-card">
-                  {topicSessions.map((session) => (
-                    <SelectItem key={session.id} value={session.id}>
-                      <div className="flex items-center gap-2">
-                        <span className="line-clamp-1">{session.title}</span>
-                        <span className="text-xs text-muted-foreground">• {session.date}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Session Dropdown Selector (only on non-XL screens) */}
+              {!isXlScreen && (
+                <Select
+                  value={selectedSessionId}
+                  onValueChange={(value) => setSelectedSessionId(value)}
+                >
+                  <SelectTrigger className="w-full bg-card">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <SelectValue placeholder="Select a session" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="z-50 bg-card">
+                    {topicSessions.map((session) => (
+                      <SelectItem key={session.id} value={session.id}>
+                        <div className="flex items-center gap-2">
+                          <span className="line-clamp-1">{session.title}</span>
+                          <span className="text-xs text-muted-foreground">• {session.date}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
 
               {/* Session Sub-tabs */}
               {selectedSession && (
