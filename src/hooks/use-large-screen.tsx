@@ -3,7 +3,12 @@ import * as React from "react";
 const LARGE_SCREEN_BREAKPOINT = 1024;
 
 export function useIsLargeScreen() {
-  const [isLargeScreen, setIsLargeScreen] = React.useState<boolean | undefined>(undefined);
+  const [isLargeScreen, setIsLargeScreen] = React.useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= LARGE_SCREEN_BREAKPOINT;
+    }
+    return true; // Default to large screen on SSR
+  });
 
   React.useEffect(() => {
     const mql = window.matchMedia(`(min-width: ${LARGE_SCREEN_BREAKPOINT}px)`);
@@ -11,9 +16,10 @@ export function useIsLargeScreen() {
       setIsLargeScreen(window.innerWidth >= LARGE_SCREEN_BREAKPOINT);
     };
     mql.addEventListener("change", onChange);
+    // Sync on mount in case initial value was stale
     setIsLargeScreen(window.innerWidth >= LARGE_SCREEN_BREAKPOINT);
     return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return !!isLargeScreen;
+  return isLargeScreen;
 }
