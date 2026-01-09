@@ -43,16 +43,27 @@ interface HighlightGroupData {
 
 const HighlightsPage = () => {
   const isMobile = useIsMobile();
-  const { highlightsGroupBy: groupBy, setHighlightsGroupBy: setGroupBy } = useTabContext();
-  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
+  const { 
+    highlightsGroupBy: groupBy, 
+    setHighlightsGroupBy: setGroupBy,
+    selectedHighlightId,
+    setSelectedHighlightId,
+  } = useTabContext();
+  
+  // Derive selectedHighlight from persisted ID
+  const selectedHighlight = useMemo(() => {
+    if (!selectedHighlightId) return null;
+    return highlights.find(h => h.id === selectedHighlightId) || null;
+  }, [selectedHighlightId]);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Select the first highlight on page load (desktop only)
+  // Select the first highlight on page load (desktop only) if none persisted
   useEffect(() => {
     if (!isMobile && highlights.length > 0 && !selectedHighlight) {
-      setSelectedHighlight(highlights[0]);
+      setSelectedHighlightId(highlights[0].id);
     }
-  }, [isMobile, selectedHighlight]);
+  }, [isMobile, selectedHighlight, setSelectedHighlightId]);
 
   // Group highlights by topic or session
   const groupedHighlights = useMemo((): HighlightGroupData[] => {
@@ -136,7 +147,7 @@ const HighlightsPage = () => {
   }, [groupBy]);
 
   const handleSelectHighlight = (highlight: Highlight) => {
-    setSelectedHighlight(highlight);
+    setSelectedHighlightId(highlight.id);
     if (isMobile) {
       setDrawerOpen(true);
     }
@@ -215,7 +226,7 @@ const HighlightsPage = () => {
               <div className="fixed right-6 bottom-5 w-[376px] h-[calc(100vh-160px)]">
                 <HighlightDetailPanel 
                   highlight={selectedHighlight} 
-                  onClose={() => setSelectedHighlight(null)}
+                  onClose={() => setSelectedHighlightId(null)}
                   showCloseButton
                 />
               </div>
