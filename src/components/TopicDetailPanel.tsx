@@ -227,10 +227,10 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
     );
   }
 
-  return (
-    <div className="flex h-full">
-      {/* Left side - Tabs and Content */}
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+    return (
+      <div className="flex h-full min-w-0 overflow-hidden">
+        {/* Left side - Tabs and Content */}
+        <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
         {/* Topic Header with Tabs */}
         <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-start">
           {/* Tabs */}
@@ -253,7 +253,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex min-h-0 flex-1 overflow-hidden">
           {/* Sessions Sidebar (only in sessions tab on XL screens) */}
           {activeTopicTab === 'sessions' && isXlScreen && (
             <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
@@ -796,7 +796,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
           {/* Right Column - Session Chat (when in Sessions tab) */}
           {activeTopicTab === 'sessions' && (
-            <div className="w-72 xl:w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
+            <div className="w-72 xl:w-80 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
               <div className="flex items-center justify-between border-b border-border p-3">
                 <div className="flex items-center gap-3">
                   <h2 className="text-sm font-semibold text-foreground">Session Chat</h2>
@@ -810,7 +810,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
                 </div>
               </div>
-              <div className="flex-1 overflow-auto p-3 space-y-3">
+              <div className="min-h-0 flex-1 overflow-auto p-3 space-y-3">
                 {/* User message */}
                 <div className="flex justify-end">
                   <div className="rounded-2xl bg-primary px-3 py-2 text-sm text-primary-foreground max-w-[85%]">
@@ -861,7 +861,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
       {/* Right Column - Topic Chat (extends full height alongside tabs) */}
       {activeTopicTab !== 'settings' && activeTopicTab !== 'sessions' && (
-        <div className="w-80 xl:w-96 shrink-0 flex flex-col border-l border-border bg-muted/30">
+        <div className="w-80 xl:w-96 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Topic Chat</h2>
             <div className="flex items-center gap-2">
@@ -869,7 +869,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
             </div>
           </div>
-          <div className="flex-1 overflow-auto p-4 space-y-4">
+          <div className="min-h-0 flex-1 overflow-auto p-4 space-y-4">
             {/* User message */}
             <div className="flex justify-end">
               <div className="rounded-2xl bg-primary px-4 py-3 text-sm text-primary-foreground max-w-[85%]">
