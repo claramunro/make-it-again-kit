@@ -286,8 +286,10 @@ const TopicDetail = () => {
   const activeSessionTab = topicSessionSubTab;
   const setActiveSessionTab = setTopicSessionSubTab;
   
-  // Use persisted session ID, fallback to URL param or first session
-  const selectedSessionId = topicSelectedSessionId || initialSessionId;
+  // Use persisted session ID, but validate it exists in mockSessions; fallback to first session
+  const storedOrInitialSessionId = topicSelectedSessionId || initialSessionId;
+  const validSessionId = mockSessions.find(s => s.id === storedOrInitialSessionId)?.id || mockSessions[0]?.id || '';
+  const selectedSessionId = validSessionId;
   const setSelectedSessionId = setTopicSelectedSessionId;
   
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
