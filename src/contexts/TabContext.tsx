@@ -1,34 +1,68 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings' | 'chat';
 type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings' | 'chat';
 type TopicDetailSessionTab = 'details' | 'highlights' | 'transcript' | 'chat';
 type HighlightsGroupBy = 'sessions' | 'topics';
 
+type NavSection = 'sessions' | 'topics' | 'highlights';
+
+type SectionPathState = {
+  sessions: string;
+  topics: string;
+  highlights: string;
+};
+
 interface TabContextType {
   // Session detail tabs (standalone page and SessionDetailPanel)
   sessionDetailTab: SessionTab;
   setSessionDetailTab: (tab: SessionTab) => void;
-  
+
   // Topic detail tabs (TopicDetailPanel and TopicDetail page)
   topicDetailTab: TopicTab;
   setTopicDetailTab: (tab: TopicTab) => void;
-  
+
   // Session sub-tab within Topic's Sessions tab
   topicSessionSubTab: TopicDetailSessionTab;
   setTopicSessionSubTab: (tab: TopicDetailSessionTab) => void;
-  
+
   // Highlights page groupBy
   highlightsGroupBy: HighlightsGroupBy;
   setHighlightsGroupBy: (groupBy: HighlightsGroupBy) => void;
+
+  // "Return me to where I was" navigation targets for left-nav
+  getNavPath: (section: NavSection) => string;
 }
 
 const TabContext = createContext<TabContextType | undefined>(undefined);
 
+const SECTION_PATHS_STORAGE_KEY = 'nav-last-paths';
+
+function loadSavedSectionPaths(): SectionPathState {
+  if (typeof window === 'undefined') return { sessions: '/', topics: '/topics', highlights: '/highlights' };
+
+  try {
+    const raw = localStorage.getItem(SECTION_PATHS_STORAGE_KEY);
+    if (!raw) return { sessions: '/', topics: '/topics', highlights: '/highlights' };
+    const parsed = JSON.parse(raw) as Partial<SectionPathState>;
+    return {
+      sessions: typeof parsed.sessions === 'string' ? parsed.sessions : '/',
+      topics: typeof parsed.topics === 'string' ? parsed.topics : '/topics',
+      highlights: typeof parsed.highlights === 'string' ? parsed.highlights : '/highlights',
+    };
+  } catch {
+    return { sessions: '/', topics: '/topics', highlights: '/highlights' };
+  }
+}
+
 export function TabProvider({ children }: { children: ReactNode }) {
+  const location = useLocation();
+
   const [sessionDetailTab, setSessionDetailTab] = useState<SessionTab>('details');
   const [topicDetailTab, setTopicDetailTab] = useState<TopicTab>('overview');
   const [topicSessionSubTab, setTopicSessionSubTab] = useState<TopicDetailSessionTab>('details');
+
   const [highlightsGroupBy, setHighlightsGroupBy] = useState<HighlightsGroupBy>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('highlights-group-by');
@@ -37,10 +71,61 @@ export function TabProvider({ children }: { children: ReactNode }) {
     return 'sessions';
   });
 
+  const [sectionPaths, setSectionPaths] = useState<SectionPathState>(() => loadSavedSectionPaths());
+
+  // Track the last "meaningful" route within each nav section so clicking the left-nav returns you there.
+  useEffect(() => {
+    const path = location.pathname;
+
+    setSectionPaths((prev) => {
+      let next = prev;
+
+      // Sessions section
+      if (path === '/' || path.startsWith('/session/')) {
+        // Prefer persisting detail pages; but if user is on '/', keep '/' as a safe fallback.
+        next = {
+          ...next,
+          sessions: path.startsWith('/session/') ? path : next.sessions || '/',
+        };
+      }
+
+      // Topics section
+      if (path === '/topics' || path.startsWith('/topic/')) {
+        next = {
+          ...next,
+          topics: path.startsWith('/topic/') ? path : next.topics || '/topics',
+        };
+      }
+
+      // Highlights section
+      if (path === '/highlights') {
+        next = { ...next, highlights: '/highlights' };
+      }
+
+      if (next !== prev && typeof window !== 'undefined') {
+        try {
+          localStorage.setItem(SECTION_PATHS_STORAGE_KEY, JSON.stringify(next));
+        } catch {
+          // ignore
+        }
+      }
+
+      return next;
+    });
+  }, [location.pathname]);
+
   const handleSetHighlightsGroupBy = (groupBy: HighlightsGroupBy) => {
     setHighlightsGroupBy(groupBy);
     localStorage.setItem('highlights-group-by', groupBy);
   };
+
+  const getNavPath = useMemo(() => {
+    return (section: NavSection) => {
+      if (section === 'sessions') return sectionPaths.sessions || '/';
+      if (section === 'topics') return sectionPaths.topics || '/topics';
+      return sectionPaths.highlights || '/highlights';
+    };
+  }, [sectionPaths]);
 
   return (
     <TabContext.Provider value={{
@@ -52,6 +137,7 @@ export function TabProvider({ children }: { children: ReactNode }) {
       setTopicSessionSubTab,
       highlightsGroupBy,
       setHighlightsGroupBy: handleSetHighlightsGroupBy,
+      getNavPath,
     }}>
       {children}
     </TabContext.Provider>
@@ -65,3 +151,4 @@ export function useTabContext() {
   }
   return context;
 }
+

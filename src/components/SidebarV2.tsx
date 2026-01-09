@@ -7,6 +7,7 @@ import { StartSessionDialog } from './StartSessionDialog';
 import { SearchDialog } from './SearchDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
+import { useTabContext } from '@/contexts/TabContext';
 import hedyLogo from '@/assets/hedy-logo.svg';
 import hedyLogoDark from '@/assets/hedy-logo-dark-new.svg';
 import hedyGlassesLogo from '@/assets/hedy-glasses-logo.svg';
@@ -16,13 +17,13 @@ import glassesIcon from '@/assets/glasses-icon.svg';
 interface NavItem {
   icon: React.ReactNode;
   label: string;
-  path: string;
+  section: 'sessions' | 'topics' | 'highlights';
 }
 
 const mainNavItems: NavItem[] = [
-  { icon: <FileText className="h-5 w-5" />, label: 'Sessions', path: '/' },
-  { icon: <FolderOpen className="h-5 w-5" />, label: 'Topics', path: '/topics' },
-  { icon: <Sparkles className="h-5 w-5" />, label: 'Highlights', path: '/highlights' },
+  { icon: <FileText className="h-5 w-5" />, label: 'Sessions', section: 'sessions' },
+  { icon: <FolderOpen className="h-5 w-5" />, label: 'Topics', section: 'topics' },
+  { icon: <Sparkles className="h-5 w-5" />, label: 'Highlights', section: 'highlights' },
 ];
 
 // Sidebar is always collapsed now - keeping hook for compatibility
@@ -32,6 +33,7 @@ export function useSidebarCollapsed() {
 
 export function SidebarV2() {
   const location = useLocation();
+  const { getNavPath } = useTabContext();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -44,7 +46,7 @@ export function SidebarV2() {
       setIsDark(document.documentElement.classList.contains('dark'));
     };
     checkDarkMode();
-    
+
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
@@ -54,14 +56,14 @@ export function SidebarV2() {
     setSettingsOpen(true);
   };
 
-  const isActive = (path: string) => {
-    if (path === '/') {
+  const isActive = (section: NavItem['section']) => {
+    if (section === 'sessions') {
       return location.pathname === '/' || location.pathname.startsWith('/session');
     }
-    if (path === '/topics') {
+    if (section === 'topics') {
       return location.pathname === '/topics' || location.pathname.startsWith('/topic/');
     }
-    return location.pathname === path;
+    return location.pathname === '/highlights';
   };
 
   // Don't render sidebar on mobile
@@ -83,10 +85,10 @@ export function SidebarV2() {
             {mainNavItems.map((item) => (
               <li key={item.label}>
                 <Link
-                  to={item.path}
+                  to={getNavPath(item.section)}
                   className={cn(
                     'flex w-full flex-col items-center justify-center rounded-lg px-2 py-3 gap-1 transition-smooth',
-                    isActive(item.path)
+                    isActive(item.section)
                       ? 'bg-card text-sidebar-accent-foreground border border-border'
                       : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
                   )}

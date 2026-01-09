@@ -5,9 +5,11 @@ import { cn } from '@/lib/utils';
 import { StartSessionDialog } from './StartSessionDialog';
 import { SearchDialog } from './SearchDialog';
 import glassesIcon from '@/assets/glasses-icon.svg';
+import { useTabContext } from '@/contexts/TabContext';
 
 export function MobileBottomNav() {
   const location = useLocation();
+  const { getNavPath } = useTabContext();
   const [startSessionOpen, setStartSessionOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -27,7 +29,7 @@ export function MobileBottomNav() {
         </button>
 
         <Link
-          to="/"
+          to={getNavPath('sessions')}
           className={cn(
             'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             (location.pathname === '/' || isSessionRoute)
@@ -39,7 +41,7 @@ export function MobileBottomNav() {
         </Link>
 
         <Link
-          to="/topics"
+          to={getNavPath('topics')}
           className={cn(
             'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             (location.pathname === '/topics' || isTopicRoute)
@@ -51,7 +53,7 @@ export function MobileBottomNav() {
         </Link>
 
         <Link
-          to="/highlights"
+          to={getNavPath('highlights')}
           className={cn(
             'flex h-10 w-10 items-center justify-center rounded-xl transition-smooth',
             location.pathname === '/highlights'
