@@ -2,11 +2,18 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, Copy, RefreshCw, ChevronRight, ChevronDown, Send, Sparkles,
-  Lightbulb, FileText, Share, Bookmark as BookmarkIcon, Clock, Trash2, 
+  Lightbulb, FileText, Share, Bookmark, Clock, Trash2, 
   Quote, BarChart3, Pencil, Download, Star, X, Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { topics } from '@/data/topics';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
@@ -257,29 +264,85 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                 </div>
               )}
 
-              {activeSessionTab === 'highlights' && selectedSessionBookmark && (
-                <div className="rounded-xl border border-border bg-card p-6">
-                  <div className="mb-4 flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{selectedSessionBookmark.date}</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">{selectedSessionBookmark.time}</span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          {selectedSessionBookmark.duration}
-                        </span>
+              {activeSessionTab === 'highlights' && (
+                <div className="space-y-4">
+                  {/* Highlight Selector Dropdown */}
+                  <Select
+                    value={selectedBookmarkId}
+                    onValueChange={(value) => setSelectedBookmarkId(value)}
+                  >
+                    <SelectTrigger className="w-full bg-card">
+                      <div className="flex items-center gap-2">
+                        <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                        <SelectValue placeholder="Select a highlight" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="z-50 bg-card">
+                      {mockSessionBookmarks.map((bookmark) => (
+                        <SelectItem key={bookmark.id} value={bookmark.id}>
+                          <span className="line-clamp-1">{bookmark.title}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Highlight Detail Card */}
+                  {selectedSessionBookmark && (
+                    <div className="rounded-xl border border-border bg-card p-6">
+                      <div className="mb-4 flex items-start justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{selectedSessionBookmark.date}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">{selectedSessionBookmark.time}</span>
+                            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                              <Clock className="h-3 w-3" />
+                              {selectedSessionBookmark.duration}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button variant="ghost" size="sm" className="gap-2">
+                            <Share className="h-4 w-4" />
+                            Share
+                          </Button>
+                          <Button variant="ghost" size="sm" className="gap-2">
+                            <Trash2 className="h-4 w-4" />
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="mb-2 flex items-center gap-2">
+                          <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground">
+                          {selectedSessionBookmark.mainIdea}
+                        </p>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <div className="mb-2 flex items-center gap-2">
+                          <Quote className="h-4 w-4 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-muted-foreground italic">
+                          {selectedSessionBookmark.originalContext}
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <div className="mb-2 flex items-center gap-2">
+                          <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                          <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground">
+                          {selectedSessionBookmark.analysis}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="mb-4">
-                    <div className="mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-muted-foreground" />
-                      <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
-                    </div>
-                    <p className="text-sm leading-relaxed text-foreground">
-                      {selectedSessionBookmark.mainIdea}
-                    </p>
-                  </div>
+                  )}
                 </div>
               )}
 
