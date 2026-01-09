@@ -13,6 +13,7 @@ import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { wallpaperBadgeColors } from '@/components/SessionBadge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import { useTopics } from '@/contexts/TopicContext';
 import { useTabContext } from '@/contexts/TabContext';
 import { highlights, Highlight } from '@/data/highlights';
@@ -251,6 +252,7 @@ const TopicDetail = () => {
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const { topics, updateTopicWallpaper, updateTopic, getTopicById } = useTopics();
   const { 
     topicDetailTab, 
@@ -271,6 +273,14 @@ const TopicDetail = () => {
   
   const topic = getTopicById(id || '');
   
+  // When screen expands to XL, navigate back to topics master-detail view
+  useEffect(() => {
+    if (isXlScreen && id) {
+      localStorage.setItem('topics-master-selected-id', id);
+      navigate('/topics', { replace: true });
+    }
+  }, [isXlScreen, id, navigate]);
+
   // Use URL param on initial load, then use context
   const [initializedFromUrl, setInitializedFromUrl] = useState(false);
   
