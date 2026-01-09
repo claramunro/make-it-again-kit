@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
 import { SessionList } from '@/components/SessionList';
@@ -7,11 +7,17 @@ import { SessionDetailPanel } from '@/components/SessionDetailPanel';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
 import { sortSessions } from '@/utils/sessionSorting';
 
+const SELECTED_SESSION_KEY = 'sessions-master-selected-id';
+
 const SessionsMasterDetail = () => {
   const { sessionGroups } = useSessions();
-  const [selectedSessionId, setSelectedSessionId] = useState<string>(
-    sessionGroups[0]?.sessions[0]?.id || ''
-  );
+  const [selectedSessionId, setSelectedSessionIdState] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(SELECTED_SESSION_KEY);
+      if (saved) return saved;
+    }
+    return sessionGroups[0]?.sessions[0]?.id || '';
+  });
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
@@ -27,6 +33,26 @@ const SessionsMasterDetail = () => {
     sessionGroups.flatMap(group => group.sessions.map(s => s.id)),
     [sessionGroups]
   );
+
+  const setSelectedSessionId = (id: string) => {
+    setSelectedSessionIdState(id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SELECTED_SESSION_KEY, id);
+    }
+  };
+
+  // If sessions load/change and the previously selected session no longer exists, fall back safely.
+  useEffect(() => {
+    if (selectionMode) return;
+
+    const isValid = selectedSessionId && allSessionIds.includes(selectedSessionId);
+    if (!isValid) {
+      const fallback = allSessionIds[0] || '';
+      if (fallback && fallback !== selectedSessionId) {
+        setSelectedSessionId(fallback);
+      }
+    }
+  }, [allSessionIds, selectedSessionId, selectionMode]);
 
   const handleToggleSelectionMode = useCallback(() => {
     setSelectionMode(prev => !prev);
