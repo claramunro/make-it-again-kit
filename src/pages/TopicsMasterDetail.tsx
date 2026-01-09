@@ -25,7 +25,7 @@ const TopicsMasterDetail = () => {
           {/* Content: List + Detail side by side */}
           <div className="flex flex-1 overflow-hidden">
             {/* Left: Topics List */}
-            <div className="w-80 shrink-0 overflow-auto border-r border-border p-4">
+            <div className="w-72 xl:w-80 shrink-0 overflow-auto border-r border-border p-4">
               <TopicsListSelectable 
                 selectedTopicId={selectedTopicId}
                 onSelectTopic={setSelectedTopicId}
