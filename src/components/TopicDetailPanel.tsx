@@ -150,7 +150,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Topic Chat alongside main content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left/Center area - scrollable */}
         <div className="flex min-w-0 flex-1 overflow-hidden">
@@ -476,13 +476,13 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             </div>
           )}
         </div>
-      </div>
+        </div>
 
         {/* Right Column - Topic Chat (priority for screen real-estate) */}
-        {activeTopicTab !== 'edit' && (
+        {activeTopicTab !== 'edit' && activeTopicTab !== 'sessions' && (
           <div className="w-80 xl:w-96 shrink-0 flex flex-col border-l border-border bg-muted/30">
             <div className="flex items-center justify-between border-b border-border p-4">
-              <h2 className="text-sm font-semibold text-foreground">Chat</h2>
+              <h2 className="text-sm font-semibold text-foreground">Topic Chat</h2>
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
                 <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
@@ -530,6 +530,43 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   More
                   <ChevronRight className="h-3 w-3" />
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Right Column - Session Chat (when in Sessions tab) */}
+        {activeTopicTab === 'sessions' && (
+          <div className="w-72 xl:w-80 shrink-0 flex flex-col border-l border-border bg-muted/30 max-h-[400px]">
+            <div className="flex items-center justify-between border-b border-border p-3">
+              <h2 className="text-sm font-semibold text-foreground">Session Chat</h2>
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto p-3 space-y-3">
+              {/* User message */}
+              <div className="flex justify-end">
+                <div className="rounded-2xl bg-primary px-3 py-2 text-sm text-primary-foreground max-w-[85%]">
+                  What was discussed in this session?
+                </div>
+              </div>
+              {/* AI response */}
+              <div className="rounded-2xl bg-muted px-3 py-2 text-sm text-foreground">
+                <p>This session covered UI refinements and merge preparation for the Hedy app redesign.</p>
+              </div>
+            </div>
+            <div className="border-t border-border p-3">
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                <input
+                  type="text"
+                  placeholder="Ask about this session..."
+                  className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                />
+                <Button variant="action" size="icon" className="h-8 w-8 rounded-full">
+                  <Send className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
