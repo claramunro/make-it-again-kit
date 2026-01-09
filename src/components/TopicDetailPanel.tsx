@@ -94,6 +94,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
     topicSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite || false }), {})
   );
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
+  const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
   
   const selectedSession = topicSessions.find(s => s.id === selectedSessionId);
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
@@ -101,6 +102,14 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const topicHighlights = useMemo(() => {
     return highlights.filter(h => h.topicId === topicId || h.topicName === topic?.name);
   }, [topicId, topic?.name]);
+
+  // Set first highlight as selected when highlights load
+  const selectedHighlight = useMemo(() => {
+    if (selectedHighlightId) {
+      return topicHighlights.find(h => h.id === selectedHighlightId) || topicHighlights[0];
+    }
+    return topicHighlights[0] || null;
+  }, [selectedHighlightId, topicHighlights]);
   
   const toggleSessionFavorite = (sessionId: string) => {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
@@ -363,30 +372,106 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             </div>
           )}
 
-          {/* Highlights Tab */}
+          {/* Highlights Tab - Two Column Layout */}
           {activeTopicTab === 'highlights' && (
-            <div className="space-y-4">
-              {topicHighlights.length > 0 ? (
-                topicHighlights.map((highlight) => (
-                  <div key={highlight.id} className="rounded-xl border border-border bg-card p-4">
-                    <div className="flex items-start gap-3">
-                      <Sparkles className="mt-0.5 h-4 w-4 text-primary" />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{highlight.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{highlight.sessionTitle}</p>
+            <div className="flex flex-1 overflow-hidden">
+              {/* Left: Highlights List */}
+              <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
+                <div className="space-y-2">
+                  {topicHighlights.length > 0 ? (
+                    topicHighlights.map((highlight) => (
+                      <button
+                        key={highlight.id}
+                        onClick={() => setSelectedHighlightId(highlight.id)}
+                        className={cn(
+                          "w-full rounded-lg p-3 text-left transition-smooth",
+                          selectedHighlight?.id === highlight.id
+                            ? "bg-primary/10 border border-primary/30"
+                            : "bg-muted hover:bg-muted/80"
+                        )}
+                      >
+                        <div className="flex items-start gap-2">
+                          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-sm font-medium text-foreground line-clamp-2">
+                              {highlight.title}
+                            </span>
+                            <p className="text-xs text-muted-foreground mt-1 truncate">
+                              {highlight.sessionTitle}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground text-sm">
+                      No highlights in this topic yet
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Highlight Details */}
+              <div className="flex-1 overflow-auto p-6">
+                {selectedHighlight ? (
+                  <div className="rounded-xl border border-border bg-card p-6">
+                    <div className="mb-6 flex items-start justify-between">
+                      <div>
+                        <h2 className="text-lg font-semibold text-foreground mb-1">{selectedHighlight.title}</h2>
+                        <p className="text-sm text-muted-foreground">{selectedHighlight.sessionTitle}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" className="gap-2">
+                          <Share className="h-4 w-4" />
+                          Share
+                        </Button>
+                        <Button variant="ghost" size="sm" className="gap-2">
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </Button>
                       </div>
                     </div>
+                    
+                    <div className="mb-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {selectedHighlight.description || 'No main idea available.'}
+                      </p>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <div className="mb-2 flex items-center gap-2">
+                        <Quote className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-muted-foreground italic">
+                        {selectedHighlight.originalContext || 'No original context available.'}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                        <h3 className="text-sm font-semibold text-foreground">Analysis</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {selectedHighlight.analysis || 'No analysis available.'}
+                      </p>
+                    </div>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  No highlights in this topic yet
-                </div>
-              )}
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground">
+                    Select a highlight to view details
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
-        </div>
+      </div>
 
         {/* Right Column - Chat (not on edit tab) */}
         {activeTopicTab !== 'edit' && (
