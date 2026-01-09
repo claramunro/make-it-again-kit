@@ -14,6 +14,7 @@ import { wallpaperBadgeColors } from '@/components/SessionBadge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { useTopics } from '@/contexts/TopicContext';
+import { useTabContext } from '@/contexts/TabContext';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 import {
@@ -251,19 +252,29 @@ const TopicDetail = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
   const { topics, updateTopicWallpaper, updateTopic, getTopicById } = useTopics();
+  const { topicDetailTab, setTopicDetailTab, topicSessionSubTab, setTopicSessionSubTab } = useTabContext();
   
   // Read initial state from URL params
   const initialSessionId = searchParams.get('session') || mockSessions[0].id;
-  const initialTab = searchParams.get('tab') as TopicTab | null;
+  const initialTab = searchParams.get('tab') as 'overview' | 'sessions' | 'highlights' | 'settings' | null;
   
   const topic = getTopicById(id || '');
   
-  const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>(
-    initialTab === 'sessions' ? 'sessions' : 
-    initialTab === 'settings' ? 'settings' : 
-    initialTab === 'highlights' ? 'highlights' : 'overview'
-  );
-  const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
+  // Use URL param on initial load, then use context
+  const [initializedFromUrl, setInitializedFromUrl] = useState(false);
+  
+  useEffect(() => {
+    if (initialTab && !initializedFromUrl) {
+      setTopicDetailTab(initialTab);
+      setInitializedFromUrl(true);
+    }
+  }, [initialTab, initializedFromUrl, setTopicDetailTab]);
+  
+  const activeTopicTab = topicDetailTab;
+  const setActiveTopicTab = setTopicDetailTab;
+  const activeSessionTab = topicSessionSubTab;
+  const setActiveSessionTab = setTopicSessionSubTab;
+  
   const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     mockSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite }), {})
