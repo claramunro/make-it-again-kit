@@ -1,7 +1,6 @@
-import { Lightbulb, Quote, BarChart3, ChevronRight, X } from 'lucide-react';
+import { Lightbulb, Quote, BarChart3, ChevronRight } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 
 interface HighlightDetailPanelProps {
   highlight: Highlight;
@@ -9,7 +8,7 @@ interface HighlightDetailPanelProps {
   showCloseButton?: boolean;
 }
 
-export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: HighlightDetailPanelProps) {
+export function HighlightDetailPanel({ highlight }: HighlightDetailPanelProps) {
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card overflow-hidden h-full max-h-full">
       {/* Header with session link - inside the card */}
@@ -20,11 +19,6 @@ export function HighlightDetailPanel({ highlight, onClose, showCloseButton }: Hi
           >
             Session <ChevronRight className="h-4 w-4" />
           </Link>
-          {showCloseButton && (
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7">
-              <X className="h-4 w-4" />
-            </Button>
-          )}
         </div>
 
         {/* Content */}
