@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { TopicsHeader, TopicsList, TopicSortOption } from '@/components/TopicsList';
@@ -11,14 +12,27 @@ import { Button } from '@/components/ui/button';
 import TopicsMasterDetail from './TopicsMasterDetail';
 import { ProBadge } from '@/components/ProBadge';
 
+const SELECTED_TOPIC_KEY = 'topics-master-selected-id';
+
 const Topics = () => {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isXlScreen = useIsXlScreen();
   const { topics } = useTopics();
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
 
+  // On smaller screens, redirect to the last selected topic's detail view.
+  // Must be called before early return to respect Rules of Hooks.
+  useEffect(() => {
+    if (isXlScreen) return;
+
+    const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_TOPIC_KEY) : null;
+    if (saved) {
+      navigate(`/topic/${saved}`, { replace: true });
+    }
+  }, [isXlScreen, navigate]);
+
   // Use master-detail layout only when there's enough horizontal space
-  // (prevents the right-side chat column from overflowing at mid widths)
   if (isXlScreen) {
     return <TopicsMasterDetail />;
   }
