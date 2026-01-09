@@ -12,6 +12,7 @@ import { HighlightGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { wallpaperBadgeColors } from '@/components/SessionBadge';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { useTopics } from '@/contexts/TopicContext';
 import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
@@ -121,8 +122,7 @@ const mockSessions = [
   },
 ];
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings';
-type MobileTopicTab = 'overview' | 'sessions' | 'chat' | 'highlights' | 'settings';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings' | 'chat';
 type SessionTab = 'details' | 'highlights' | 'transcript';
 
 // Wallpaper presets with gradient configurations
@@ -249,6 +249,7 @@ const TopicDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isMobile = useIsMobile();
+  const isLargeScreen = useIsLargeScreen();
   const { topics, updateTopicWallpaper, updateTopic, getTopicById } = useTopics();
   
   // Read initial state from URL params
@@ -262,7 +263,6 @@ const TopicDetail = () => {
     initialTab === 'settings' ? 'settings' : 
     initialTab === 'highlights' ? 'highlights' : 'overview'
   );
-  const [mobileActiveTab, setMobileActiveTab] = useState<MobileTopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
@@ -662,13 +662,13 @@ const TopicDetail = () => {
 
           {/* Tab Bar - Full Width, 5 tabs */}
           <div className="flex border-t border-border overflow-x-auto">
-            {(['overview', 'sessions', 'chat', 'highlights', 'appearance'] as MobileTopicTab[]).map(tab => (
+            {(['overview', 'sessions', 'chat', 'highlights', 'settings'] as TopicTab[]).map(tab => (
               <button
                 key={tab}
-                onClick={() => setMobileActiveTab(tab)}
+                onClick={() => setActiveTopicTab(tab)}
                 className={cn(
                   'flex-1 min-w-0 py-3 text-xs font-medium transition-smooth border-b-2 whitespace-nowrap px-2',
-                  mobileActiveTab === tab
+                  activeTopicTab === tab
                     ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground'
                 )}
@@ -682,7 +682,7 @@ const TopicDetail = () => {
         {/* Content - Single Column */}
         <main className="flex-1 overflow-auto p-4">
           {/* Overview Tab */}
-          {mobileActiveTab === 'overview' && (
+          {activeTopicTab === 'overview' && (
             <div className="space-y-4">
               <div className="rounded-xl border border-border bg-card p-4">
                 <h2 className="mb-3 text-base font-semibold text-foreground">Topic Overview</h2>
@@ -709,7 +709,7 @@ const TopicDetail = () => {
           )}
 
           {/* Sessions Tab */}
-          {mobileActiveTab === 'sessions' && (
+          {activeTopicTab === 'sessions' && (
             <div className="space-y-3">
               {mockSessions.map((session) => (
                 <button
@@ -753,7 +753,7 @@ const TopicDetail = () => {
           )}
 
           {/* Chat Tab */}
-          {mobileActiveTab === 'chat' && (
+          {activeTopicTab === 'chat' && (
             <div className="flex flex-col h-[calc(100vh-220px)]">
               <div className="flex-1 overflow-auto space-y-4 mb-4">
                 {/* User Message */}
@@ -794,7 +794,7 @@ const TopicDetail = () => {
           )}
 
           {/* Highlights Tab */}
-          {mobileActiveTab === 'highlights' && (
+          {activeTopicTab === 'highlights' && (
             <div className="space-y-3">
               {topicHighlights.length > 0 ? (
                 topicHighlights.map((highlight) => (
@@ -817,7 +817,7 @@ const TopicDetail = () => {
           )}
 
           {/* Edit Tab */}
-          {mobileActiveTab === 'settings' && (
+          {activeTopicTab === 'settings' && (
             <div className="space-y-6">
               {/* Topic Name */}
               <div className="space-y-2">
@@ -982,7 +982,10 @@ const TopicDetail = () => {
                   {/* Tabs row */}
                   <div className="mt-3 pl-32">
                     <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                      {(['overview', 'sessions', 'highlights', 'settings'] as const).map((tab) => (
+                      {(isLargeScreen 
+                        ? ['overview', 'sessions', 'highlights', 'settings'] as const
+                        : ['overview', 'sessions', 'highlights', 'settings', 'chat'] as const
+                      ).map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setActiveTopicTab(tab)}
@@ -1519,8 +1522,73 @@ const TopicDetail = () => {
                 </div>
               </div>
               
-              {/* Right: Chat Panel */}
-              <ChatPanel />
+              {/* Right: Chat Panel (only on large screens) */}
+              {isLargeScreen && <ChatPanel />}
+            </div>
+          )}
+
+          {/* Chat Tab - Only on tablet (non-large screens) */}
+          {activeTopicTab === 'chat' && !isLargeScreen && (
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="max-w-2xl mx-auto flex flex-col h-full">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-lg font-semibold text-foreground">Chat</h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                    <Share className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                  </div>
+                </div>
+                <div className="flex-1 overflow-auto space-y-4 mb-4">
+                  {/* User message */}
+                  <div className="flex justify-end">
+                    <div className="rounded-2xl rounded-tr-md bg-primary px-4 py-3 text-sm text-primary-foreground max-w-[85%]">
+                      Can you summarize the key points from this topic?
+                    </div>
+                  </div>
+                  {/* AI response */}
+                  <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3 text-sm text-foreground">
+                    <p className="mb-3 leading-relaxed">
+                      Here are the key points from this topic:
+                    </p>
+                    <ul className="space-y-2">
+                      <li>• UI refinements are nearing completion</li>
+                      <li>• The main branch merge is ready</li>
+                      <li>• Mobile responsiveness improvements discussed</li>
+                      <li>• New font selection in progress</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                    <textarea
+                      value={chatMessage}
+                      onChange={(e) => setChatMessage(e.target.value)}
+                      placeholder="How can I help?"
+                      rows={1}
+                      className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[28px] max-h-[72px]"
+                    />
+                    <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                      Summarize key points
+                      <Sparkles className="h-3 w-3" />
+                    </button>
+                    <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                      What are the action items?
+                      <Sparkles className="h-3 w-3" />
+                    </button>
+                    <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                      More
+                      <ChevronRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
           
@@ -1600,8 +1668,8 @@ const TopicDetail = () => {
                 )}
               </div>
               
-              {/* Right: Chat Panel */}
-              <ChatPanel />
+              {/* Right: Chat Panel (only on large screens) */}
+              {isLargeScreen && <ChatPanel />}
             </div>
           )}
           
