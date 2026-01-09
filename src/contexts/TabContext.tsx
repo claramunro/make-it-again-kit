@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings' | 'chat';
 type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings' | 'chat';
@@ -83,6 +84,7 @@ function loadSavedSectionPaths(): SectionPathState {
 
 export function TabProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const isXlScreen = useIsXlScreen();
 
   const [sessionDetailTab, setSessionDetailTab] = useState<SessionTab>('details');
   const [topicDetailTab, setTopicDetailTab] = useState<TopicTab>('overview');
@@ -240,11 +242,13 @@ export function TabProvider({ children }: { children: ReactNode }) {
 
   const getNavPath = useMemo(() => {
     return (section: NavSection) => {
-      if (section === 'sessions') return sectionPaths.sessions || '/';
-      if (section === 'topics') return sectionPaths.topics || '/topics';
+      // On XL screens, always navigate to the entry routes that render the master-detail layouts.
+      // On smaller screens, restore the last visited detail page for that section.
+      if (section === 'sessions') return isXlScreen ? '/' : (sectionPaths.sessions || '/');
+      if (section === 'topics') return isXlScreen ? '/topics' : (sectionPaths.topics || '/topics');
       return sectionPaths.highlights || '/highlights';
     };
-  }, [sectionPaths]);
+  }, [isXlScreen, sectionPaths]);
 
   return (
     <TabContext.Provider value={{
