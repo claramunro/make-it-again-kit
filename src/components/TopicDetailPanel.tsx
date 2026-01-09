@@ -28,7 +28,7 @@ import { useTopics } from '@/contexts/TopicContext';
 import { useTabContext } from '@/contexts/TabContext';
 import { cn } from '@/lib/utils';
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings' | 'chat';
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'chat';
 
 const topicIcons = [

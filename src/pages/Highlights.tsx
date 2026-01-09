@@ -10,6 +10,7 @@ import { highlights, Highlight } from '@/data/highlights';
 import { topics } from '@/data/topics';
 import { sessionGroups as sessionGroupsData } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTabContext } from '@/contexts/TabContext';
 import { cn } from '@/lib/utils';
 import { WallpaperType } from '@/types/session';
 
@@ -42,10 +43,7 @@ interface HighlightGroupData {
 
 const HighlightsPage = () => {
   const isMobile = useIsMobile();
-  const [groupBy, setGroupBy] = useState<GroupBy>(() => {
-    const saved = localStorage.getItem(HIGHLIGHTS_GROUP_BY_KEY);
-    return (saved === 'sessions' || saved === 'topics') ? saved : 'sessions';
-  });
+  const { highlightsGroupBy: groupBy, setHighlightsGroupBy: setGroupBy } = useTabContext();
   const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -163,10 +161,7 @@ const HighlightsPage = () => {
           <div className="mb-6">
             <div className="inline-flex rounded-lg bg-muted p-1">
               <button
-                onClick={() => {
-                  setGroupBy('sessions');
-                  localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'sessions');
-                }}
+                onClick={() => setGroupBy('sessions')}
                 className={cn(
                   'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
                   groupBy === 'sessions'
@@ -177,10 +172,7 @@ const HighlightsPage = () => {
                 Sessions
               </button>
               <button
-                onClick={() => {
-                  setGroupBy('topics');
-                  localStorage.setItem(HIGHLIGHTS_GROUP_BY_KEY, 'topics');
-                }}
+                onClick={() => setGroupBy('topics')}
                 className={cn(
                   'rounded-md px-4 py-2 text-sm font-medium transition-smooth',
                   groupBy === 'topics'

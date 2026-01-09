@@ -27,10 +27,12 @@ import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useTabContext } from '@/contexts/TabContext';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 import { SessionBadge, wallpaperBadgeColors } from '@/components/SessionBadge';
 import { TopicBadgeInfo } from '@/types/session';
+
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings' | 'chat';
 
 const sessionTypes = [
@@ -98,7 +100,7 @@ const SessionDetail = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
   const { collapsed } = useSidebarCollapsed();
-  const [activeTab, setActiveTab] = useState<SessionTab>('details');
+  const { sessionDetailTab: activeTab, setSessionDetailTab: setActiveTab } = useTabContext();
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
