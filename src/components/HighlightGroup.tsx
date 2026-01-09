@@ -67,23 +67,24 @@ export function HighlightGroup({
         {sessionId ? (
           <Link 
             to={`/session/${sessionId}`}
-            className="flex items-center gap-3 flex-1"
+            className="flex items-center gap-3 flex-1 min-w-0"
           >
-            {icon && <span className="text-xl">{icon}</span>}
-            {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground" />}
-            <div className="flex flex-col items-start">
-              <span className="font-medium text-foreground">{title}</span>
-              {sessionMeta && (
-                <span className="text-xs text-muted-foreground">
-                  {sessionMeta.time}  ·  {sessionMeta.duration}
-                </span>
-              )}
+            {icon && <span className="text-xl shrink-0">{icon}</span>}
+            {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground shrink-0" />}
+            <div className="flex flex-col items-start min-w-0">
+              <span className="font-medium text-foreground truncate w-full">{title}</span>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                {sessionMeta && (
+                  <span>{sessionMeta.time} · {sessionMeta.duration}</span>
+                )}
+                <span>{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              </div>
             </div>
           </Link>
         ) : isTopicCard ? (
           <Link 
             to={topicId ? `/topic/${topicId}` : '#'}
-            className="flex items-center gap-3 flex-1"
+            className="flex items-center gap-3 flex-1 min-w-0"
           >
             {/* Topic icon in square container */}
             {icon && (
@@ -102,43 +103,40 @@ export function HighlightGroup({
               </div>
             )}
             <div className="flex flex-col items-start min-w-0">
-              <span className="font-medium text-foreground">{title}</span>
-              {description && (
-                <span className="text-sm text-muted-foreground truncate max-w-[300px]">
-                  {description}
-                </span>
-              )}
+              <span className="font-medium text-foreground truncate w-full">{title}</span>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-muted-foreground">
+                {description && (
+                  <span className="truncate max-w-[200px]">{description}</span>
+                )}
+                <span className="text-xs">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              </div>
             </div>
           </Link>
         ) : (
-          <div className="flex items-center gap-3 flex-1">
-            {icon && <span className="text-xl">{icon}</span>}
-            {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground" />}
-            <div className="flex flex-col items-start">
-              <span className="font-medium text-foreground">{title}</span>
-              {sessionMeta && (
-                <span className="text-xs text-muted-foreground">
-                  {sessionMeta.time}  ·  {sessionMeta.duration}
-                </span>
-              )}
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            {icon && <span className="text-xl shrink-0">{icon}</span>}
+            {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground shrink-0" />}
+            <div className="flex flex-col items-start min-w-0">
+              <span className="font-medium text-foreground truncate w-full">{title}</span>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                {sessionMeta && (
+                  <span>{sessionMeta.time} · {sessionMeta.duration}</span>
+                )}
+                <span>{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              </div>
             </div>
           </div>
         )}
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            {totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}
-          </span>
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1 hover:bg-muted rounded transition-smooth"
-          >
-            {isExpanded ? (
-              <ChevronUp className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="h-5 w-5 text-muted-foreground" />
-            )}
-          </button>
-        </div>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="p-1 hover:bg-muted rounded transition-smooth shrink-0 ml-2"
+        >
+          {isExpanded ? (
+            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+          )}
+        </button>
       </div>
 
       {/* Group Content */}
