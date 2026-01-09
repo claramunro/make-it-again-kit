@@ -55,8 +55,6 @@ export function HighlightItem({ highlight, isSelected, onSelect }: HighlightItem
         </button>
       </div>
 
-      {/* Arrow */}
-      <ChevronRight className="h-4 w-4 text-muted-foreground" />
     </div>
   );
 }
