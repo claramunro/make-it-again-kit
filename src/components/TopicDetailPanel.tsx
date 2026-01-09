@@ -1,14 +1,20 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, Copy, RefreshCw, ChevronRight, ChevronDown, Send, Sparkles,
   Lightbulb, FileText, Share, Bookmark, Clock, Trash2, 
-  Quote, BarChart3, Pencil, Download, Star, X, Upload, MessageSquare
+  Quote, BarChart3, Pencil, Download, Star, X, Upload, MessageSquare,
+  FolderOpen, FolderPlus, Umbrella, UsersRound, Calendar, MessageCircle,
+  Monitor, UserRound, LayoutGrid, Landmark, Wrench, Utensils, Search,
+  MusicIcon, Heart, Settings, Camera, Smartphone, Check, Lock
 } from 'lucide-react';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -16,12 +22,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { topics } from '@/data/topics';
+import { topics, Topic } from '@/data/topics';
 import { highlights, Highlight } from '@/data/highlights';
+import { useTopics } from '@/contexts/TopicContext';
 import { cn } from '@/lib/utils';
 
-type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
+type TopicTab = 'overview' | 'sessions' | 'highlights' | 'settings';
 type SessionTab = 'details' | 'highlights' | 'transcript' | 'chat';
+
+const topicIcons = [
+  { icon: FolderOpen, name: 'folder' },
+  { icon: FolderPlus, name: 'folder-plus' },
+  { icon: LayoutGrid, name: 'grid' },
+  { icon: Umbrella, name: 'umbrella' },
+  { icon: UsersRound, name: 'users' },
+  { icon: Calendar, name: 'calendar' },
+  { icon: Lightbulb, name: 'lightbulb' },
+  { icon: MessageCircle, name: 'message' },
+  { icon: Monitor, name: 'monitor' },
+  { icon: UserRound, name: 'user' },
+  { icon: Landmark, name: 'home' },
+  { icon: LayoutGrid, name: 'table' },
+  { icon: Wrench, name: 'tools' },
+  { icon: Utensils, name: 'utensils' },
+  { icon: Search, name: 'search' },
+  { icon: MusicIcon, name: 'music' },
+  { icon: Sparkles, name: 'sparkles' },
+  { icon: Heart, name: 'heart' },
+  { icon: Star, name: 'star-icon' },
+  { icon: Settings, name: 'settings' },
+  { icon: Camera, name: 'camera' },
+  { icon: Smartphone, name: 'phone' },
+];
+
+const topicEmojis = ['🎨', '📦', '🏋️', '☕', '🐶', '📅', '💡', '🎯', '🚀', '✨', '🎵', '❤️', '⭐', '🔧', '📱', '💻'];
+
+const wallpaperPresets = [
+  { id: 'mint', bannerColor: '#A8E6CF' },
+  { id: 'peach', bannerColor: '#FFCBA4' },
+  { id: 'coral', bannerColor: '#FF8A80' },
+  { id: 'lavender', bannerColor: '#E1BEE7' },
+  { id: 'yellow', bannerColor: '#FFF59D' },
+  { id: 'teal', bannerColor: '#80CBC4' },
+  { id: 'rose', bannerColor: '#F8BBD9' },
+  { id: 'blue', bannerColor: '#90CAF9' },
+  { id: 'sage', bannerColor: '#C5E1A5' },
+  { id: 'mauve', bannerColor: '#D1A3D1' },
+];
 
 const mockSessions = [
   {
@@ -87,6 +134,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const navigate = useNavigate();
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
+  const { updateTopic, updateTopicWallpaper } = useTopics();
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   
@@ -99,6 +147,26 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   );
   const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
   const [selectedHighlightId, setSelectedHighlightId] = useState<string | null>(null);
+  
+  // Settings tab state
+  const [topicName, setTopicName] = useState(topic?.name || '');
+  const [topicDescription, setTopicDescription] = useState(topic?.description || '');
+  const [selectedWallpaper, setSelectedWallpaper] = useState<Topic['wallpaper']>(topic?.wallpaper || 'mint');
+  const [iconType, setIconType] = useState<'icons' | 'emoji'>('emoji');
+  const [selectedEmoji, setSelectedEmoji] = useState(topic?.icon || '🎨');
+  const [selectedIconIndex, setSelectedIconIndex] = useState(0);
+  const [aiContext, setAiContext] = useState('');
+  
+  // Sync settings state when topic changes
+  useEffect(() => {
+    if (topic) {
+      setTopicName(topic.name);
+      setTopicDescription(topic.description || '');
+      setSelectedWallpaper(topic.wallpaper || 'mint');
+      setSelectedEmoji(topic.icon || '🎨');
+      setIconType(topicEmojis.includes(topic.icon || '') ? 'emoji' : 'icons');
+    }
+  }, [topic?.id]);
   
   const selectedSession = topicSessions.find(s => s.id === selectedSessionId);
   const selectedSessionBookmark = mockSessionBookmarks.find(b => b.id === selectedBookmarkId);
@@ -119,6 +187,38 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));
   };
   
+  const handleNameBlur = () => {
+    if (topicId && topicName && topicName !== topic?.name) {
+      updateTopic(topicId, { name: topicName });
+    }
+  };
+  
+  const handleDescriptionBlur = () => {
+    if (topicId && topicDescription !== topic?.description) {
+      updateTopic(topicId, { description: topicDescription });
+    }
+  };
+  
+  const handleWallpaperChange = (wallpaper: Topic['wallpaper']) => {
+    setSelectedWallpaper(wallpaper);
+    if (topicId && wallpaper) {
+      updateTopicWallpaper(topicId, wallpaper);
+    }
+  };
+  
+  const handleIconSelect = (iconName: string) => {
+    if (topicId && !topic?.sharedBy) {
+      updateTopic(topicId, { icon: iconName });
+    }
+  };
+  
+  const handleEmojiSelect = (emoji: string) => {
+    setSelectedEmoji(emoji);
+    if (topicId && !topic?.sharedBy) {
+      updateTopic(topicId, { icon: emoji });
+    }
+  };
+  
   if (!topic) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -135,7 +235,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-center">
           {/* Tabs */}
           <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-            {(['overview', 'sessions', 'highlights', 'edit'] as const).map(tab => (
+            {(['overview', 'sessions', 'highlights', 'settings'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTopicTab(tab)}
@@ -504,6 +604,195 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               </div>
             </div>
           )}
+
+          {/* Settings Tab */}
+          {activeTopicTab === 'settings' && (
+            <div className="max-w-4xl mx-auto space-y-6">
+              {/* View-only warning */}
+              {topic.sharedBy && (
+                <div className="rounded-lg bg-amber-100 px-4 py-3 text-sm text-amber-800 flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  This topic is shared view-only. Ask the owner to make changes.
+                </div>
+              )}
+              
+              {/* Basic Information */}
+              <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <h3 className="font-semibold">Basic information</h3>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="topicName" className="text-xs text-muted-foreground">Topic Name</Label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                      <FolderOpen className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <Input
+                      id="topicName"
+                      value={topicName}
+                      onChange={(e) => setTopicName(e.target.value)}
+                      onBlur={handleNameBlur}
+                      className="pl-10"
+                      disabled={!!topic.sharedBy}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Textarea
+                    placeholder="Topic Description"
+                    value={topicDescription}
+                    onChange={(e) => setTopicDescription(e.target.value)}
+                    onBlur={handleDescriptionBlur}
+                    className="min-h-[80px]"
+                    disabled={!!topic.sharedBy}
+                  />
+                </div>
+              </div>
+              
+              {/* Appearance */}
+              <div className="rounded-xl border border-border bg-card p-6 space-y-6">
+                <h3 className="font-semibold">Appearance</h3>
+                
+                {/* Color Selection */}
+                <div className="space-y-3">
+                  <Label className="text-sm">Color</Label>
+                  <div className="flex flex-wrap gap-3">
+                    {wallpaperPresets.map((preset) => (
+                      <button
+                        key={preset.id}
+                        onClick={() => handleWallpaperChange(preset.id as Topic['wallpaper'])}
+                        disabled={!!topic.sharedBy}
+                        className={cn(
+                          'relative h-16 w-16 rounded-xl overflow-hidden transition-all',
+                          selectedWallpaper === preset.id && 'ring-2 ring-offset-2 ring-primary'
+                        )}
+                      >
+                        <div 
+                          className="absolute inset-0" 
+                          style={{ backgroundColor: preset.bannerColor }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Icon Selection */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm">Icon</Label>
+                    <div className="flex rounded-lg border border-border overflow-hidden">
+                      <button
+                        onClick={() => setIconType('icons')}
+                        className={cn(
+                          'flex items-center gap-1.5 px-3 py-1.5 text-sm',
+                          iconType === 'icons' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
+                        )}
+                      >
+                        {iconType === 'icons' && <Check className="h-3 w-3" />}
+                        Icons
+                      </button>
+                      <button
+                        onClick={() => setIconType('emoji')}
+                        className={cn(
+                          'flex items-center gap-1.5 px-3 py-1.5 text-sm',
+                          iconType === 'emoji' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground'
+                        )}
+                      >
+                        😀 Emoji
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {iconType === 'icons' ? (
+                    <div className="flex flex-wrap gap-2">
+                      {topicIcons.map((item, i) => {
+                        const Icon = item.icon;
+                        const isSelected = topic?.icon === item.name || (!topicEmojis.includes(topic?.icon || '') && selectedIconIndex === i);
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              setSelectedIconIndex(i);
+                              handleIconSelect(item.name);
+                            }}
+                            disabled={!!topic.sharedBy}
+                            className={cn(
+                              'flex h-10 w-10 items-center justify-center rounded-lg border transition-all',
+                              isSelected 
+                                ? 'border-primary bg-primary/10 text-primary' 
+                                : 'border-border bg-background text-muted-foreground hover:border-primary/50'
+                            )}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {topicEmojis.map((emoji, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleEmojiSelect(emoji)}
+                          disabled={!!topic.sharedBy}
+                          className={cn(
+                            'flex h-10 w-10 items-center justify-center rounded-lg border transition-all text-xl',
+                            selectedEmoji === emoji 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-border bg-background hover:border-primary/50'
+                          )}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* AI Context */}
+              <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+                <div className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  <h3 className="font-semibold">AI context & instructions</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Provide context to help Hedy understand this topic.
+                </p>
+                <div className="relative">
+                  <Textarea
+                    value={aiContext}
+                    onChange={(e) => setAiContext(e.target.value)}
+                    placeholder="Add context for AI..."
+                    className="min-h-[120px]"
+                    disabled={!!topic.sharedBy}
+                    maxLength={20000}
+                  />
+                  <span className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+                    {aiContext.length}/20000
+                  </span>
+                </div>
+              </div>
+
+              {/* Danger Zone - Only show if user is owner */}
+              {!topic.sharedBy && (
+                <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 space-y-3">
+                  <h3 className="font-semibold text-destructive">Danger zone</h3>
+                  <p className="text-sm text-destructive/80">
+                    Delete this topic and remove it from all sessions.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={() => console.log('Delete topic:', topic.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete Topic
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
           {/* Right Column - Session Chat (when in Sessions tab) */}
@@ -572,7 +861,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
       </div>
 
       {/* Right Column - Topic Chat (extends full height alongside tabs) */}
-      {activeTopicTab !== 'edit' && activeTopicTab !== 'sessions' && (
+      {activeTopicTab !== 'settings' && activeTopicTab !== 'sessions' && (
         <div className="w-80 xl:w-96 shrink-0 flex flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Topic Chat</h2>
