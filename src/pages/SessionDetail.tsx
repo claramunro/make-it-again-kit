@@ -261,40 +261,65 @@ const SessionDetail = () => {
 
           {/* Highlights Tab */}
           {activeTab === 'highlights' && (
-            <div className="space-y-3">
-              {mockBookmarks.map((bookmark) => (
-                <div
-                  key={bookmark.id}
-                  className={cn(
-                    "rounded-xl border border-border bg-card p-4 transition-smooth",
-                    selectedBookmark.id === bookmark.id && "border-primary"
-                  )}
-                  onClick={() => setSelectedBookmark(bookmark)}
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <Bookmark className="mt-0.5 h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium text-foreground">{bookmark.title}</span>
+            <div className="space-y-4">
+              {/* Highlight Selector Dropdown */}
+              <Select
+                value={selectedBookmark.id}
+                onValueChange={(value) => {
+                  const bookmark = mockBookmarks.find(b => b.id === value);
+                  if (bookmark) setSelectedBookmark(bookmark);
+                }}
+              >
+                <SelectTrigger className="w-full bg-card">
+                  <div className="flex items-center gap-2">
+                    <Bookmark className="h-4 w-4 shrink-0 fill-yellow-400 text-yellow-400" />
+                    <SelectValue placeholder="Select a highlight" />
                   </div>
-                  {selectedBookmark.id === bookmark.id && (
-                    <div className="space-y-3 pt-2 border-t border-border">
-                      <div>
-                        <div className="mb-1 flex items-center gap-2">
-                          <Lightbulb className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-xs font-semibold text-foreground">Main Idea</span>
-                        </div>
-                        <p className="text-xs leading-relaxed text-foreground">{bookmark.mainIdea}</p>
+                </SelectTrigger>
+                <SelectContent className="z-50 bg-card">
+                  {mockBookmarks.map((bookmark) => (
+                    <SelectItem key={bookmark.id} value={bookmark.id}>
+                      <span className="line-clamp-1">{bookmark.title}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Selected Highlight Details */}
+              <div className="rounded-xl border border-primary bg-card p-4">
+                <div className="flex items-start gap-3 mb-4">
+                  <Bookmark className="mt-0.5 h-5 w-5 shrink-0 fill-yellow-400 text-yellow-400" />
+                  <span className="text-base font-semibold text-foreground">{selectedBookmark.title}</span>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-semibold text-foreground">Main Idea</span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-foreground">{selectedBookmark.mainIdea}</p>
+                  </div>
+                  
+                  <div>
+                    <div className="mb-2 flex items-center gap-2">
+                      <Quote className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm font-semibold text-foreground">Original Context</span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-muted-foreground italic">{selectedBookmark.originalContext}</p>
+                  </div>
+                  
+                  {selectedBookmark.analysis && (
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm font-semibold text-foreground">Analysis</span>
                       </div>
-                      <div>
-                        <div className="mb-1 flex items-center gap-2">
-                          <Quote className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-xs font-semibold text-foreground">Original Context</span>
-                        </div>
-                        <p className="text-xs leading-relaxed text-muted-foreground italic">{bookmark.originalContext}</p>
-                      </div>
+                      <p className="text-sm leading-relaxed text-foreground">{selectedBookmark.analysis}</p>
                     </div>
                   )}
                 </div>
-              ))}
+              </div>
             </div>
           )}
 
