@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 import { useSessions } from '@/contexts/SessionContext';
+import { useTabContext } from '@/contexts/TabContext';
 import {
   Select,
   SelectContent,
@@ -64,9 +65,9 @@ interface SessionDetailPanelProps {
 export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
   const navigate = useNavigate();
   const { getSessionById, assignTopicToSession } = useSessions();
+  const { sessionDetailTab: activeTab, setSessionDetailTab: setActiveTab } = useTabContext();
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
-  const [activeTab, setActiveTab] = useState<SessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
