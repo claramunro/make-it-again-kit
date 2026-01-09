@@ -1,31 +1,20 @@
 import { useState } from 'react';
-import { FileText, FileVideo, ChevronRight, Star, FolderOpen, ChevronDown } from 'lucide-react';
+import { FileText, FileVideo, Star, FolderOpen, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Session, TopicBadgeInfo } from '@/types/session';
-import { SessionBadge } from './SessionBadge';
+import { wallpaperBadgeColors } from './SessionBadge';
 import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 
 // Max characters for title display (balanced 2-line wrap)
 const MAX_TITLE_LENGTH = 85;
-
-// Wallpaper to badge color mapping for select items
-const wallpaperBadgeColors: Record<string, { bg: string; text: string; border: string }> = {
-  sand: { bg: 'hsl(45, 40%, 94%)', text: 'hsl(35, 50%, 35%)', border: 'hsl(45, 35%, 85%)' },
-  peach: { bg: 'hsl(20, 60%, 94%)', text: 'hsl(15, 55%, 40%)', border: 'hsl(20, 50%, 85%)' },
-  mint: { bg: 'hsl(150, 35%, 93%)', text: 'hsl(155, 40%, 32%)', border: 'hsl(150, 30%, 82%)' },
-  lavender: { bg: 'hsl(270, 35%, 95%)', text: 'hsl(275, 40%, 45%)', border: 'hsl(270, 30%, 88%)' },
-  ocean: { bg: 'hsl(200, 50%, 94%)', text: 'hsl(205, 55%, 38%)', border: 'hsl(200, 45%, 85%)' },
-  sunset: { bg: 'hsl(30, 55%, 94%)', text: 'hsl(25, 60%, 40%)', border: 'hsl(30, 50%, 85%)' },
-};
 
 interface SessionCardProps {
   session: Session;
@@ -54,6 +43,7 @@ export function SessionCard({
 }: SessionCardProps) {
   const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(session.isFavorite || false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -76,7 +66,7 @@ export function SessionCard({
     onCheckChange?.(session.id, checked);
   };
 
-  const handleBadgeClick = (e: React.MouseEvent) => {
+  const handleBadgeLabelClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -86,10 +76,12 @@ export function SessionCard({
       if (topicId) {
         navigate(`/topic/${topicId}`);
       }
-    } else {
-      // Open topic selection dialog
-      onSelectTopic?.(session.id);
     }
+  };
+
+  const handleTopicSelect = (topicId: string) => {
+    onAssignTopic?.(session.id, topicId);
+    setDropdownOpen(false);
   };
 
   const sessionUrl = `/session/${session.id}`;
@@ -101,6 +93,12 @@ export function SessionCard({
   const displayTitle = session.title.length > MAX_TITLE_LENGTH 
     ? session.title.slice(0, MAX_TITLE_LENGTH).trim()
     : session.title;
+
+  // Get colors for the current topic badge
+  const getTopicColors = (wallpaper?: string) => {
+    if (!wallpaper) return wallpaperBadgeColors.mint;
+    return wallpaperBadgeColors[wallpaper as keyof typeof wallpaperBadgeColors] || wallpaperBadgeColors.mint;
+  };
 
   const cardContent = (
     <>
@@ -130,30 +128,83 @@ export function SessionCard({
         {!selectionMode && (
           <div onClick={(e) => e.stopPropagation()} className="mb-1">
             {effectiveTopicBadge ? (
-              <div 
-                className="cursor-pointer hover:opacity-80 transition-opacity inline-block"
-                onClick={handleBadgeClick}
-              >
-                <SessionBadge type={session.badge} topicBadge={effectiveTopicBadge} />
+              // Split button: label navigates, chevron opens dropdown
+              <div className="inline-flex items-center">
+                {/* Label part - navigates to topic */}
+                <button
+                  onClick={handleBadgeLabelClick}
+                  className="inline-flex items-center gap-1 rounded-l-full px-2 py-0.5 text-[11px] font-medium whitespace-nowrap hover:opacity-80 transition-opacity"
+                  style={{
+                    backgroundColor: getTopicColors(effectiveTopicBadge.wallpaper).bg,
+                    color: getTopicColors(effectiveTopicBadge.wallpaper).text,
+                    borderWidth: '1px',
+                    borderColor: getTopicColors(effectiveTopicBadge.wallpaper).border,
+                    borderRight: 'none',
+                  }}
+                >
+                  <span className="text-xs">{effectiveTopicBadge.icon}</span>
+                  <span>{effectiveTopicBadge.label}</span>
+                </button>
+                
+                {/* Chevron part - opens dropdown */}
+                <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="inline-flex items-center justify-center rounded-r-full px-1.5 py-0.5 hover:opacity-80 transition-opacity"
+                      style={{
+                        backgroundColor: getTopicColors(effectiveTopicBadge.wallpaper).bg,
+                        color: getTopicColors(effectiveTopicBadge.wallpaper).text,
+                        borderWidth: '1px',
+                        borderColor: getTopicColors(effectiveTopicBadge.wallpaper).border,
+                        borderLeft: `1px solid ${getTopicColors(effectiveTopicBadge.wallpaper).border}`,
+                      }}
+                    >
+                      <ChevronDown className="h-3 w-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="z-50 bg-popover min-w-[180px]">
+                    {topics.map((topic) => {
+                      const colors = getTopicColors(topic.wallpaper);
+                      return (
+                        <DropdownMenuItem 
+                          key={topic.id} 
+                          onClick={() => handleTopicSelect(topic.id)}
+                          className="cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
+                              style={{ backgroundColor: colors.bg }}
+                            >
+                              {topic.icon}
+                            </span>
+                            <span>{topic.name}</span>
+                          </div>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
-              <Select
-                onValueChange={(value) => {
-                  onAssignTopic?.(session.id, value);
-                }}
-              >
-                <SelectTrigger className="h-auto border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-[hsl(0,0%,96%)] hover:bg-[hsl(0,0%,92%)] text-[hsl(0,0%,55%)] border-[hsl(0,0%,88%)] transition-colors focus:ring-0 focus:ring-offset-0 w-auto gap-1.5">
-                  <FolderOpen className="h-3.5 w-3.5" />
-                  <span>Select topic</span>
-                  <ChevronDown className="h-3 w-3 opacity-50" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
+              // No topic assigned - show "Select topic" dropdown
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-[hsl(0,0%,96%)] hover:bg-[hsl(0,0%,92%)] text-[hsl(0,0%,55%)] border border-[hsl(0,0%,88%)] transition-colors">
+                    <FolderOpen className="h-3.5 w-3.5" />
+                    <span>Select topic</span>
+                    <ChevronDown className="h-3 w-3 opacity-50" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="z-50 bg-popover min-w-[180px]">
                   {topics.map((topic) => {
-                    const colors = topic.wallpaper 
-                      ? wallpaperBadgeColors[topic.wallpaper] 
-                      : wallpaperBadgeColors.mint;
+                    const colors = getTopicColors(topic.wallpaper);
                     return (
-                      <SelectItem key={topic.id} value={topic.id}>
+                      <DropdownMenuItem 
+                        key={topic.id} 
+                        onClick={() => handleTopicSelect(topic.id)}
+                        className="cursor-pointer"
+                      >
                         <div className="flex items-center gap-2">
                           <span
                             className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
@@ -163,11 +214,11 @@ export function SessionCard({
                           </span>
                           <span>{topic.name}</span>
                         </div>
-                      </SelectItem>
+                      </DropdownMenuItem>
                     );
                   })}
-                </SelectContent>
-              </Select>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
         )}
