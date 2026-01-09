@@ -152,8 +152,10 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const topic = topics.find(t => t.id === topicId);
   const topicSessions = topic?.sessions || [];
   
-  // Use persisted session ID, fallback to first session
-  const selectedSessionId = topicSelectedSessionId || topicSessions[0]?.id || '';
+  // Use persisted session ID, but validate it exists; fallback to first session
+  const storedSessionId = topicSelectedSessionId;
+  const validSessionId = topicSessions.find(s => s.id === storedSessionId)?.id || topicSessions[0]?.id || '';
+  const selectedSessionId = validSessionId;
   const setSelectedSessionId = setTopicSelectedSessionId;
   
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
