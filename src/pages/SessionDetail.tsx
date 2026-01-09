@@ -102,8 +102,8 @@ const SessionDetail = () => {
   const isLargeScreen = useIsLargeScreen();
   const isXlScreen = useIsXlScreen();
   const { collapsed } = useSidebarCollapsed();
-  const { 
-    sessionDetailTab: activeTab, 
+  const {
+    sessionDetailTab: activeTab,
     setSessionDetailTab: setActiveTab,
     sessionHighlightId,
     setSessionHighlightId,
@@ -111,8 +111,9 @@ const SessionDetail = () => {
 
   // When screen expands to XL, navigate back to sessions master-detail view
   useEffect(() => {
+    console.log('[SessionDetail] isXlScreen:', isXlScreen, 'id:', id);
     if (isXlScreen && id) {
-      // Store the current session ID so it stays selected in master-detail
+      console.log('[SessionDetail] persisting selection + navigating back to /');
       localStorage.setItem('sessions-master-selected-id', id);
       navigate('/', { replace: true });
     }
