@@ -261,6 +261,8 @@ const TopicDetail = () => {
     setTopicHighlightId,
     topicSessionHighlightId,
     setTopicSessionHighlightId,
+    topicSelectedSessionId,
+    setTopicSelectedSessionId,
   } = useTabContext();
   
   // Read initial state from URL params
@@ -284,7 +286,10 @@ const TopicDetail = () => {
   const activeSessionTab = topicSessionSubTab;
   const setActiveSessionTab = setTopicSessionSubTab;
   
-  const [selectedSessionId, setSelectedSessionId] = useState(initialSessionId);
+  // Use persisted session ID, fallback to URL param or first session
+  const selectedSessionId = topicSelectedSessionId || initialSessionId;
+  const setSelectedSessionId = setTopicSelectedSessionId;
+  
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     mockSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite }), {})
   );
