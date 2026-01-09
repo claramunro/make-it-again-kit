@@ -73,12 +73,10 @@ export function HighlightGroup({
             {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground shrink-0" />}
             <div className="flex flex-col items-start min-w-0">
               <span className="font-medium text-foreground truncate w-full">{title}</span>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-                {sessionMeta && (
-                  <span>{sessionMeta.time} · {sessionMeta.duration}</span>
-                )}
-                <span>{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
-              </div>
+              {sessionMeta && (
+                <span className="text-xs text-muted-foreground">{sessionMeta.time} · {sessionMeta.duration}</span>
+              )}
+              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </Link>
         ) : isTopicCard ? (
@@ -104,12 +102,10 @@ export function HighlightGroup({
             )}
             <div className="flex flex-col items-start min-w-0">
               <span className="font-medium text-foreground truncate w-full">{title}</span>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-muted-foreground">
-                {description && (
-                  <span className="truncate max-w-[200px]">{description}</span>
-                )}
-                <span className="text-xs">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
-              </div>
+              {description && (
+                <span className="text-sm text-muted-foreground truncate max-w-[300px]">{description}</span>
+              )}
+              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </Link>
         ) : (
@@ -118,12 +114,10 @@ export function HighlightGroup({
             {SessionIcon && <SessionIcon className="h-5 w-5 text-muted-foreground shrink-0" />}
             <div className="flex flex-col items-start min-w-0">
               <span className="font-medium text-foreground truncate w-full">{title}</span>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-                {sessionMeta && (
-                  <span>{sessionMeta.time} · {sessionMeta.duration}</span>
-                )}
-                <span>{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
-              </div>
+              {sessionMeta && (
+                <span className="text-xs text-muted-foreground">{sessionMeta.time} · {sessionMeta.duration}</span>
+              )}
+              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </div>
         )}
