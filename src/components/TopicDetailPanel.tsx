@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, Copy, RefreshCw, ChevronRight, ChevronDown, Send, Sparkles,
   Lightbulb, FileText, Share, Bookmark, Clock, Trash2, 
-  Quote, BarChart3, Pencil, Download, Star, X, Upload
+  Quote, BarChart3, Pencil, Download, Star, X, Upload, MessageSquare
 } from 'lucide-react';
+import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -19,7 +21,7 @@ import { highlights, Highlight } from '@/data/highlights';
 import { cn } from '@/lib/utils';
 
 type TopicTab = 'overview' | 'sessions' | 'highlights' | 'edit';
-type SessionTab = 'details' | 'highlights' | 'transcript';
+type SessionTab = 'details' | 'highlights' | 'transcript' | 'chat';
 
 const mockSessions = [
   {
@@ -83,6 +85,8 @@ interface TopicDetailPanelProps {
 
 export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
   const navigate = useNavigate();
+  const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const [activeTopicTab, setActiveTopicTab] = useState<TopicTab>('overview');
   const [activeSessionTab, setActiveSessionTab] = useState<SessionTab>('details');
   
@@ -244,7 +248,10 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             <div className="space-y-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                {(isLargeScreen && !isXlScreen 
+                  ? ['details', 'highlights', 'transcript', 'chat'] as const
+                  : ['details', 'highlights', 'transcript'] as const
+                ).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveSessionTab(tab)}
@@ -369,6 +376,63 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   </div>
                 </div>
               )}
+
+              {/* Chat Tab - for large screens without sidebar */}
+              {activeSessionTab === 'chat' && isLargeScreen && !isXlScreen && (
+                <div className="flex flex-col h-[calc(100vh-300px)] rounded-xl border border-border bg-card overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-border p-4">
+                    <h2 className="text-sm font-semibold text-foreground">Chat</h2>
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                      <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                    </div>
+                  </div>
+                  <div className="flex-1 overflow-auto p-4 space-y-4">
+                    {/* User message */}
+                    <div className="flex justify-end">
+                      <div className="rounded-2xl bg-primary px-4 py-3 text-sm text-primary-foreground max-w-[85%]">
+                        Can you summarize the key points from this topic?
+                      </div>
+                    </div>
+                    {/* AI response */}
+                    <div className="rounded-2xl bg-muted px-4 py-3 text-sm text-foreground">
+                      <p className="mb-2">Here are the key points from this topic:</p>
+                      <ul className="list-disc list-inside space-y-1 text-sm">
+                        <li>UI refinements are nearing completion</li>
+                        <li>The main branch merge is ready</li>
+                        <li>Mobile responsiveness improvements discussed</li>
+                        <li>New font selection in progress</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="border-t border-border p-4 space-y-3">
+                    <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                      <input
+                        type="text"
+                        placeholder="How can I help?"
+                        className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none"
+                      />
+                      <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                        Summarize key points
+                        <Sparkles className="h-3 w-3" />
+                      </button>
+                      <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                        What are the action items?
+                        <Sparkles className="h-3 w-3" />
+                      </button>
+                      <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                        More
+                        <ChevronRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -473,8 +537,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
         </div>
       </div>
 
-        {/* Right Column - Chat (not on edit tab) */}
-        {activeTopicTab !== 'edit' && (
+        {/* Right Column - Chat (not on edit tab, only on XL screens) */}
+        {activeTopicTab !== 'edit' && isXlScreen && (
           <div className="w-80 shrink-0 flex flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Chat</h2>
