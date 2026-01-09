@@ -253,8 +253,8 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
               )}
 
               {/* Highlight Detail Card */}
-              <div className="rounded-xl border border-border bg-card p-6">
-                <div className="mb-6 flex items-start justify-between">
+              <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium text-foreground">{selectedBookmark.date}</p>
                     <div className="mt-1 flex items-center gap-2">
@@ -265,19 +265,19 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" className="gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8 px-2 sm:px-3">
                       <Upload className="h-4 w-4" />
-                      Share
+                      <span className="hidden sm:inline">Share</span>
                     </Button>
-                    <Button variant="ghost" size="sm" className="gap-2">
+                    <Button variant="ghost" size="sm" className="gap-1.5 h-8 px-2 sm:px-3">
                       <Trash2 className="h-4 w-4" />
-                      Delete
+                      <span className="hidden sm:inline">Delete</span>
                     </Button>
                   </div>
                 </div>
 
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <div className="mb-2 flex items-center gap-2">
                     <Lightbulb className="h-4 w-4 text-muted-foreground" />
                     <h3 className="text-sm font-semibold text-foreground">Main Idea</h3>
@@ -287,7 +287,7 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
                   </p>
                 </div>
 
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <div className="mb-2 flex items-center gap-2">
                     <Quote className="h-4 w-4 text-muted-foreground" />
                     <h3 className="text-sm font-semibold text-foreground">Original Context</h3>
