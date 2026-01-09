@@ -154,56 +154,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
         {/* Main Content Area */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Left/Center area - scrollable */}
-          <div className="flex min-w-0 flex-1 overflow-hidden">
-          {/* Sessions Sidebar (only in sessions tab) */}
-          {activeTopicTab === 'sessions' && (
-            <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
-            <div className="space-y-2">
-              {topicSessions.map((session) => (
-                <button
-                  key={session.id}
-                  onClick={() => setSelectedSessionId(session.id)}
-                  className={cn(
-                    "w-full rounded-lg p-3 text-left transition-smooth",
-                    selectedSessionId === session.id
-                      ? "bg-primary/10 border border-primary/30"
-                      : "bg-muted hover:bg-muted/80"
-                  )}
-                >
-                  <div className="flex items-start gap-2">
-                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                    <div className="flex-1 min-w-0">
-                      <span className="text-sm font-medium text-foreground line-clamp-2">
-                        {session.title}
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {session.date} • {session.duration}
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSessionFavorite(session.id);
-                      }}
-                      className="p-1 rounded hover:bg-muted"
-                    >
-                      <Star className={cn(
-                        'h-4 w-4',
-                        sessionFavorites[session.id]
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-muted-foreground'
-                      )} />
-                    </button>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Center Column - Content based on tab */}
-        <div className="min-w-0 flex-1 overflow-auto p-6">
+          {/* Center Column - Content based on tab */}
+          <div className="min-w-0 flex-1 overflow-auto p-6">
           {/* Overview Tab */}
           {activeTopicTab === 'overview' && (
             <div className="space-y-6">
@@ -246,26 +198,52 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           )}
 
           {/* Sessions Tab */}
-          {activeTopicTab === 'sessions' && selectedSession && (
+          {activeTopicTab === 'sessions' && (
             <div className="space-y-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                {(['details', 'highlights', 'transcript'] as const).map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveSessionTab(tab)}
-                    className={cn(
-                      'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
-                      activeSessionTab === tab
-                        ? 'bg-card text-foreground shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
+              {/* Session Dropdown Selector */}
+              <Select
+                value={selectedSessionId}
+                onValueChange={(value) => setSelectedSessionId(value)}
+              >
+                <SelectTrigger className="w-full bg-card">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <SelectValue placeholder="Select a session" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="z-50 bg-card">
+                  {topicSessions.map((session) => (
+                    <SelectItem key={session.id} value={session.id}>
+                      <div className="flex items-center gap-2">
+                        <span className="line-clamp-1">{session.title}</span>
+                        <span className="text-xs text-muted-foreground">• {session.date}</span>
+                      </div>
+                    </SelectItem>
                   ))}
-                </div>
-              </div>
+                </SelectContent>
+              </Select>
+
+              {/* Session Sub-tabs */}
+              {selectedSession && (
+                <>
+                  <div className="flex items-center gap-4">
+                    <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                    {(['details', 'highlights', 'transcript'] as const).map(tab => (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveSessionTab(tab)}
+                        className={cn(
+                          'rounded-md px-4 py-1.5 text-sm font-medium transition-smooth',
+                          activeSessionTab === tab
+                            ? 'bg-card text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                          )}
+                        >
+                          {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
               {activeSessionTab === 'details' && selectedSession && (
                 <div className="rounded-xl border border-border bg-card p-6">
@@ -375,7 +353,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                   </div>
                 </div>
               )}
-
+                </>
+              )}
             </div>
           )}
 
@@ -477,7 +456,6 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
               </div>
             </div>
           )}
-        </div>
         </div>
 
           {/* Right Column - Session Chat (when in Sessions tab) */}
