@@ -27,6 +27,7 @@ import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import { useTabContext } from '@/contexts/TabContext';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
@@ -99,6 +100,7 @@ const SessionDetail = () => {
   const { id } = useParams();
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const { collapsed } = useSidebarCollapsed();
   const { 
     sessionDetailTab: activeTab, 
@@ -106,6 +108,15 @@ const SessionDetail = () => {
     sessionHighlightId,
     setSessionHighlightId,
   } = useTabContext();
+
+  // When screen expands to XL, navigate back to sessions master-detail view
+  useEffect(() => {
+    if (isXlScreen && id) {
+      // Store the current session ID so it stays selected in master-detail
+      localStorage.setItem('sessions-master-selected-id', id);
+      navigate('/', { replace: true });
+    }
+  }, [isXlScreen, id, navigate]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
