@@ -11,9 +11,8 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { topics, Topic } from '@/data/topics';
+import { topics } from '@/data/topics';
 import { useSessions } from '@/contexts/SessionContext';
-import { SessionBadge, wallpaperBadgeColors } from '@/components/SessionBadge';
 import {
   Select,
   SelectContent,
@@ -120,70 +119,8 @@ export function SessionDetailPanel({ sessionId }: SessionDetailPanelProps) {
           ))}
         </div>
 
-        {/* Right side: Topic selector + Menu - pushed to far right */}
+        {/* Right side: Menu only */}
         <div className="ml-auto flex items-center gap-2">
-          {selectedTopicData ? (
-            <Select value={assignedTopicId || ''} onValueChange={handleAssignTopic}>
-              <SelectTrigger className="h-auto border-0 bg-transparent p-0 focus:ring-0 focus:ring-offset-0 w-auto [&>svg:last-child]:hidden">
-                <SessionBadge 
-                  topicBadge={{
-                    icon: selectedTopicData.icon,
-                    label: selectedTopicData.name,
-                    wallpaper: selectedTopicData.wallpaper
-                  }}
-                  showChevron
-                />
-              </SelectTrigger>
-              <SelectContent className="z-50 bg-popover">
-                {topics.map((topic) => {
-                  const colors = topic.wallpaper 
-                    ? wallpaperBadgeColors[topic.wallpaper] 
-                    : wallpaperBadgeColors.mint;
-                  return (
-                    <SelectItem key={topic.id} value={topic.id}>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
-                          style={{ backgroundColor: colors?.bg }}
-                        >
-                          {topic.icon}
-                        </span>
-                        <span>{topic.name}</span>
-                      </div>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          ) : (
-            <Select onValueChange={handleAssignTopic}>
-              <SelectTrigger className="h-auto border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap bg-[hsl(0,0%,96%)] hover:bg-[hsl(0,0%,92%)] text-[hsl(0,0%,55%)] border-[hsl(0,0%,88%)] transition-colors focus:ring-0 focus:ring-offset-0 w-auto gap-1.5">
-                <FolderOpen className="h-3.5 w-3.5" />
-                <span>Select topic</span>
-                <ChevronDown className="h-3 w-3 opacity-50" />
-              </SelectTrigger>
-              <SelectContent className="z-50 bg-popover">
-                {topics.map((topic) => {
-                  const colors = topic.wallpaper 
-                    ? wallpaperBadgeColors[topic.wallpaper] 
-                    : wallpaperBadgeColors.mint;
-                  return (
-                    <SelectItem key={topic.id} value={topic.id}>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
-                          style={{ backgroundColor: colors?.bg }}
-                        >
-                          {topic.icon}
-                        </span>
-                        <span>{topic.name}</span>
-                      </div>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          )}
           <button className="flex items-center justify-center h-7 w-7 text-muted-foreground hover:text-foreground transition-colors">
             <MoreVertical className="h-4 w-4" />
           </button>
