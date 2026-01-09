@@ -232,7 +232,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
       {/* Left side - Tabs and Content */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Topic Header with Tabs */}
-        <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-center">
+        <div className="shrink-0 border-b border-border bg-background px-4 py-2 flex justify-start">
           {/* Tabs */}
           <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
             {(['overview', 'sessions', 'highlights', 'settings'] as const).map(tab => (
