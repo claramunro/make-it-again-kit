@@ -145,12 +145,17 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
     setTopicHighlightId,
     topicSessionHighlightId,
     setTopicSessionHighlightId,
+    topicSelectedSessionId,
+    setTopicSelectedSessionId,
   } = useTabContext();
   
   const topic = topics.find(t => t.id === topicId);
   const topicSessions = topic?.sessions || [];
   
-  const [selectedSessionId, setSelectedSessionId] = useState(topicSessions[0]?.id || '');
+  // Use persisted session ID, fallback to first session
+  const selectedSessionId = topicSelectedSessionId || topicSessions[0]?.id || '';
+  const setSelectedSessionId = setTopicSelectedSessionId;
+  
   const [sessionFavorites, setSessionFavorites] = useState<Record<string, boolean>>(
     topicSessions.reduce((acc, s) => ({ ...acc, [s.id]: s.isFavorite || false }), {})
   );

@@ -47,6 +47,10 @@ interface TabContextType {
   topicSessionHighlightId: string | null;
   setTopicSessionHighlightId: (id: string | null) => void;
 
+  // Topic Detail page -> Sessions tab -> Selected session ID
+  topicSelectedSessionId: string | null;
+  setTopicSelectedSessionId: (id: string | null) => void;
+
   // "Return me to where I was" navigation targets for left-nav
   getNavPath: (section: NavSection) => string;
 }
@@ -58,6 +62,7 @@ const SELECTED_HIGHLIGHT_KEY = 'highlights-selected-id';
 const SESSION_HIGHLIGHT_KEY = 'session-highlight-id';
 const TOPIC_HIGHLIGHT_KEY = 'topic-highlight-id';
 const TOPIC_SESSION_HIGHLIGHT_KEY = 'topic-session-highlight-id';
+const TOPIC_SELECTED_SESSION_KEY = 'topic-selected-session-id';
 
 function loadSavedSectionPaths(): SectionPathState {
   if (typeof window === 'undefined') return { sessions: '/', topics: '/topics', highlights: '/highlights' };
@@ -166,6 +171,25 @@ export function TabProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Topic Detail -> Sessions tab -> Selected session ID
+  const [topicSelectedSessionId, setTopicSelectedSessionIdState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(TOPIC_SELECTED_SESSION_KEY) || null;
+    }
+    return null;
+  });
+
+  const setTopicSelectedSessionId = (id: string | null) => {
+    setTopicSelectedSessionIdState(id);
+    if (typeof window !== 'undefined') {
+      if (id) {
+        localStorage.setItem(TOPIC_SELECTED_SESSION_KEY, id);
+      } else {
+        localStorage.removeItem(TOPIC_SELECTED_SESSION_KEY);
+      }
+    }
+  };
+
   const [sectionPaths, setSectionPaths] = useState<SectionPathState>(() => loadSavedSectionPaths());
 
   // Track the last "meaningful" route within each nav section so clicking the left-nav returns you there.
@@ -240,6 +264,8 @@ export function TabProvider({ children }: { children: ReactNode }) {
       setTopicHighlightId,
       topicSessionHighlightId,
       setTopicSessionHighlightId,
+      topicSelectedSessionId,
+      setTopicSelectedSessionId,
       getNavPath,
     }}>
       {children}
