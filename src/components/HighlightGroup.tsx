@@ -76,7 +76,7 @@ export function HighlightGroup({
               {sessionMeta && (
                 <span className="text-xs text-muted-foreground">{sessionMeta.time} · {sessionMeta.duration}</span>
               )}
-              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              <span className="text-xs text-muted-foreground xl:hidden">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </Link>
         ) : isTopicCard ? (
@@ -105,7 +105,7 @@ export function HighlightGroup({
               {description && (
                 <span className="text-sm text-muted-foreground truncate max-w-[300px]">{description}</span>
               )}
-              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              <span className="text-xs text-muted-foreground xl:hidden">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </Link>
         ) : (
@@ -117,20 +117,25 @@ export function HighlightGroup({
               {sessionMeta && (
                 <span className="text-xs text-muted-foreground">{sessionMeta.time} · {sessionMeta.duration}</span>
               )}
-              <span className="text-xs text-muted-foreground">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
+              <span className="text-xs text-muted-foreground xl:hidden">{totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}</span>
             </div>
           </div>
         )}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="p-1 hover:bg-muted rounded transition-smooth shrink-0 ml-2"
-        >
-          {isExpanded ? (
-            <ChevronUp className="h-5 w-5 text-muted-foreground" />
-          ) : (
-            <ChevronDown className="h-5 w-5 text-muted-foreground" />
-          )}
-        </button>
+        <div className="flex items-center gap-3 shrink-0 ml-2">
+          <span className="text-sm text-muted-foreground hidden xl:inline">
+            {totalHighlights} highlight{totalHighlights !== 1 ? 's' : ''}
+          </span>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1 hover:bg-muted rounded transition-smooth"
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Group Content */}
