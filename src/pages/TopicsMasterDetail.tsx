@@ -1,14 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { TopicsHeader, TopicsListSelectable, TopicSortOption } from '@/components/TopicsList';
 import { topics } from '@/data/topics';
 import { TopicDetailPanel } from '@/components/TopicDetailPanel';
 
+const SELECTED_TOPIC_KEY = 'topics-master-selected-id';
+
 const TopicsMasterDetail = () => {
-  const [selectedTopicId, setSelectedTopicId] = useState<string>(
-    topics[0]?.id || ''
-  );
+  const [selectedTopicId, setSelectedTopicIdState] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(SELECTED_TOPIC_KEY);
+      // Validate it exists in topics
+      if (saved && topics.some(t => t.id === saved)) {
+        return saved;
+      }
+    }
+    return topics[0]?.id || '';
+  });
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
+
+  const setSelectedTopicId = (id: string) => {
+    setSelectedTopicIdState(id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(SELECTED_TOPIC_KEY, id);
+    }
+  };
 
   return (
     <div className="flex h-screen bg-card overflow-hidden">
