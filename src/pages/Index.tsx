@@ -7,13 +7,13 @@ import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { SessionSelectionBar } from '@/components/SessionSelectionBar';
 import { useSessions } from '@/contexts/SessionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useIsLargeScreen } from '@/hooks/use-large-screen';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import SessionsMasterDetail from './SessionsMasterDetail';
 import { sortSessions } from '@/utils/sessionSorting';
 
 const Index = () => {
   const isMobile = useIsMobile();
-  const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const { sessionGroups } = useSessions();
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -29,7 +29,7 @@ const Index = () => {
   const allSessionIds = sessionGroups.flatMap(group => group.sessions.map(s => s.id));
 
   // Use master-detail layout on large screens
-  if (isLargeScreen) {
+  if (isXlScreen) {
     return <SessionsMasterDetail />;
   }
 
