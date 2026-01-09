@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
@@ -32,15 +32,20 @@ const Index = () => {
 
   const allSessionIds = sessionGroups.flatMap(group => group.sessions.map(s => s.id));
 
-  // On smaller screens, redirect to the last selected session's detail view.
-  // Must be called before early return to respect Rules of Hooks.
-  useEffect(() => {
-    if (isXlScreen || selectionMode) return;
+  // Track previous XL state to detect screen size transitions
+  const wasXlScreen = useRef(isXlScreen);
 
-    const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_SESSION_KEY) : null;
-    if (saved) {
-      navigate(`/session/${saved}`, { replace: true });
+  // Redirect to detail page only when transitioning FROM XL to smaller screen
+  useEffect(() => {
+    if (selectionMode) return;
+    
+    if (wasXlScreen.current && !isXlScreen) {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_SESSION_KEY) : null;
+      if (saved) {
+        navigate(`/session/${saved}`, { replace: true });
+      }
     }
+    wasXlScreen.current = isXlScreen;
   }, [isXlScreen, navigate, selectionMode]);
 
   // Use master-detail layout on XL screens

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
@@ -20,16 +20,19 @@ const Topics = () => {
   const isXlScreen = useIsXlScreen();
   const { topics } = useTopics();
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
+  
+  // Track previous XL state to detect screen size transitions
+  const wasXlScreen = useRef(isXlScreen);
 
-  // On smaller screens, redirect to the last selected topic's detail view.
-  // Must be called before early return to respect Rules of Hooks.
+  // Redirect to detail page only when transitioning FROM XL to smaller screen
   useEffect(() => {
-    if (isXlScreen) return;
-
-    const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_TOPIC_KEY) : null;
-    if (saved) {
-      navigate(`/topic/${saved}`, { replace: true });
+    if (wasXlScreen.current && !isXlScreen) {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_TOPIC_KEY) : null;
+      if (saved) {
+        navigate(`/topic/${saved}`, { replace: true });
+      }
     }
+    wasXlScreen.current = isXlScreen;
   }, [isXlScreen, navigate]);
 
   // Use master-detail layout only when there's enough horizontal space
