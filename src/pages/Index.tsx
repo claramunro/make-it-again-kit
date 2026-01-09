@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SidebarV2 } from '@/components/SidebarV2';
 import { MobileHeader } from '@/components/Header';
 import { SessionsHeader, SessionSortOption } from '@/components/SessionsHeader';
@@ -11,7 +12,10 @@ import { useIsXlScreen } from '@/hooks/use-xl-screen';
 import SessionsMasterDetail from './SessionsMasterDetail';
 import { sortSessions } from '@/utils/sessionSorting';
 
+const SELECTED_SESSION_KEY = 'sessions-master-selected-id';
+
 const Index = () => {
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const isXlScreen = useIsXlScreen();
   const { sessionGroups } = useSessions();
@@ -28,11 +32,21 @@ const Index = () => {
 
   const allSessionIds = sessionGroups.flatMap(group => group.sessions.map(s => s.id));
 
-  // Use master-detail layout on large screens
+  // Use master-detail layout on XL screens
   if (isXlScreen) {
     return <SessionsMasterDetail />;
   }
 
+  // On smaller screens, default to the last selected session's detail view.
+  // This handles the "shrink from XL" case reliably because SessionsMasterDetail unmounts immediately.
+  useEffect(() => {
+    if (selectionMode) return;
+
+    const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_SESSION_KEY) : null;
+    if (saved) {
+      navigate(`/session/${saved}`, { replace: true });
+    }
+  }, [navigate, selectionMode]);
   const handleToggleSelectionMode = () => {
     setSelectionMode(prev => !prev);
     setSelectedIds(new Set());

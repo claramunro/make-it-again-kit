@@ -111,9 +111,7 @@ const SessionDetail = () => {
 
   // When screen expands to XL, navigate back to sessions master-detail view
   useEffect(() => {
-    console.log('[SessionDetail] isXlScreen:', isXlScreen, 'id:', id);
     if (isXlScreen && id) {
-      console.log('[SessionDetail] persisting selection + navigating back to /');
       localStorage.setItem('sessions-master-selected-id', id);
       navigate('/', { replace: true });
     }
