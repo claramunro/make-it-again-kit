@@ -100,7 +100,12 @@ const SessionDetail = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
   const { collapsed } = useSidebarCollapsed();
-  const { sessionDetailTab: activeTab, setSessionDetailTab: setActiveTab } = useTabContext();
+  const { 
+    sessionDetailTab: activeTab, 
+    setSessionDetailTab: setActiveTab,
+    sessionHighlightId,
+    setSessionHighlightId,
+  } = useTabContext();
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
@@ -109,7 +114,13 @@ const SessionDetail = () => {
   const [selectedSessionType, setSelectedSessionType] = useState('coaching');
   const [viewOriginal, setViewOriginal] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
-  const [selectedBookmark, setSelectedBookmark] = useState(mockBookmarks[0]);
+  
+  // Derive selectedBookmark from persisted ID
+  const selectedBookmark = sessionHighlightId 
+    ? mockBookmarks.find(b => b.id === sessionHighlightId) || mockBookmarks[0]
+    : mockBookmarks[0];
+  const setSelectedBookmark = (bookmark: typeof mockBookmarks[0]) => setSessionHighlightId(bookmark.id);
+  
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [topicContextEnabled, setTopicContextEnabled] = useState(true);
   const [summaryMenuOpen, setSummaryMenuOpen] = useState(false);

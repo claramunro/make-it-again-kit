@@ -252,7 +252,16 @@ const TopicDetail = () => {
   const isMobile = useIsMobile();
   const isLargeScreen = useIsLargeScreen();
   const { topics, updateTopicWallpaper, updateTopic, getTopicById } = useTopics();
-  const { topicDetailTab, setTopicDetailTab, topicSessionSubTab, setTopicSessionSubTab } = useTabContext();
+  const { 
+    topicDetailTab, 
+    setTopicDetailTab, 
+    topicSessionSubTab, 
+    setTopicSessionSubTab,
+    topicHighlightId,
+    setTopicHighlightId,
+    topicSessionHighlightId,
+    setTopicSessionHighlightId,
+  } = useTabContext();
   
   // Read initial state from URL params
   const initialSessionId = searchParams.get('session') || mockSessions[0].id;
@@ -292,11 +301,19 @@ const TopicDetail = () => {
   const [selectedWallpaper, setSelectedWallpaper] = useState(topic?.wallpaper || 'mint');
   const [blurAmount, setBlurAmount] = useState([50]);
   const [overlayOpacity, setOverlayOpacity] = useState([60]);
-  const [selectedBookmarkId, setSelectedBookmarkId] = useState(mockSessionBookmarks[0].id);
+  
+  // Derive selectedBookmarkId from persisted context (Topic -> Sessions -> Session -> Highlights)
+  const selectedBookmarkId = topicSessionHighlightId || mockSessionBookmarks[0].id;
+  const setSelectedBookmarkId = setTopicSessionHighlightId;
+  
   const [viewOriginal, setViewOriginal] = useState(false);
   const [highlightDropdownOpen, setHighlightDropdownOpen] = useState(false);
   const [promptsModalOpen, setPromptsModalOpen] = useState(false);
-  const [selectedHighlight, setSelectedHighlight] = useState<Highlight | null>(null);
+  
+  // Derive selectedHighlight from persisted context (Topic -> Highlights tab)
+  const selectedHighlightIdLocal = topicHighlightId;
+  const setSelectedHighlightLocal = setTopicHighlightId;
+  
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [mobileSelectedSession, setMobileSelectedSession] = useState<typeof mockSessions[0] | null>(null);
   const [showCopiedTooltip, setShowCopiedTooltip] = useState(false);
@@ -385,6 +402,16 @@ const TopicDetail = () => {
       ...group,
     }));
   }, [topicHighlights]);
+
+  // Derive selectedHighlight from persisted ID
+  const selectedHighlight = useMemo(() => {
+    if (selectedHighlightIdLocal) {
+      return topicHighlights.find(h => h.id === selectedHighlightIdLocal) || topicHighlights[0];
+    }
+    return topicHighlights[0] || null;
+  }, [selectedHighlightIdLocal, topicHighlights]);
+
+  const setSelectedHighlight = (h: Highlight | null) => setSelectedHighlightLocal(h?.id || null);
   
   const toggleSessionFavorite = (sessionId: string) => {
     setSessionFavorites(prev => ({ ...prev, [sessionId]: !prev[sessionId] }));

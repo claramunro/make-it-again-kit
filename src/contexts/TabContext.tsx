@@ -31,9 +31,21 @@ interface TabContextType {
   highlightsGroupBy: HighlightsGroupBy;
   setHighlightsGroupBy: (groupBy: HighlightsGroupBy) => void;
 
-  // Selected highlight ID persistence
+  // Selected highlight ID persistence (Highlights page)
   selectedHighlightId: string | null;
   setSelectedHighlightId: (id: string | null) => void;
+
+  // Session Detail page -> Highlights tab selected highlight
+  sessionHighlightId: string | null;
+  setSessionHighlightId: (id: string | null) => void;
+
+  // Topic Detail page -> Highlights tab selected highlight
+  topicHighlightId: string | null;
+  setTopicHighlightId: (id: string | null) => void;
+
+  // Topic Detail page -> Sessions tab -> Session -> Highlights sub-tab
+  topicSessionHighlightId: string | null;
+  setTopicSessionHighlightId: (id: string | null) => void;
 
   // "Return me to where I was" navigation targets for left-nav
   getNavPath: (section: NavSection) => string;
@@ -43,6 +55,9 @@ const TabContext = createContext<TabContextType | undefined>(undefined);
 
 const SECTION_PATHS_STORAGE_KEY = 'nav-last-paths';
 const SELECTED_HIGHLIGHT_KEY = 'highlights-selected-id';
+const SESSION_HIGHLIGHT_KEY = 'session-highlight-id';
+const TOPIC_HIGHLIGHT_KEY = 'topic-highlight-id';
+const TOPIC_SESSION_HIGHLIGHT_KEY = 'topic-session-highlight-id';
 
 function loadSavedSectionPaths(): SectionPathState {
   if (typeof window === 'undefined') return { sessions: '/', topics: '/topics', highlights: '/highlights' };
@@ -90,6 +105,63 @@ export function TabProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(SELECTED_HIGHLIGHT_KEY, id);
       } else {
         localStorage.removeItem(SELECTED_HIGHLIGHT_KEY);
+      }
+    }
+  };
+
+  // Session Detail -> Highlights tab
+  const [sessionHighlightId, setSessionHighlightIdState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(SESSION_HIGHLIGHT_KEY) || null;
+    }
+    return null;
+  });
+
+  const setSessionHighlightId = (id: string | null) => {
+    setSessionHighlightIdState(id);
+    if (typeof window !== 'undefined') {
+      if (id) {
+        localStorage.setItem(SESSION_HIGHLIGHT_KEY, id);
+      } else {
+        localStorage.removeItem(SESSION_HIGHLIGHT_KEY);
+      }
+    }
+  };
+
+  // Topic Detail -> Highlights tab
+  const [topicHighlightId, setTopicHighlightIdState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(TOPIC_HIGHLIGHT_KEY) || null;
+    }
+    return null;
+  });
+
+  const setTopicHighlightId = (id: string | null) => {
+    setTopicHighlightIdState(id);
+    if (typeof window !== 'undefined') {
+      if (id) {
+        localStorage.setItem(TOPIC_HIGHLIGHT_KEY, id);
+      } else {
+        localStorage.removeItem(TOPIC_HIGHLIGHT_KEY);
+      }
+    }
+  };
+
+  // Topic Detail -> Sessions tab -> Session -> Highlights sub-tab
+  const [topicSessionHighlightId, setTopicSessionHighlightIdState] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(TOPIC_SESSION_HIGHLIGHT_KEY) || null;
+    }
+    return null;
+  });
+
+  const setTopicSessionHighlightId = (id: string | null) => {
+    setTopicSessionHighlightIdState(id);
+    if (typeof window !== 'undefined') {
+      if (id) {
+        localStorage.setItem(TOPIC_SESSION_HIGHLIGHT_KEY, id);
+      } else {
+        localStorage.removeItem(TOPIC_SESSION_HIGHLIGHT_KEY);
       }
     }
   };
@@ -162,6 +234,12 @@ export function TabProvider({ children }: { children: ReactNode }) {
       setHighlightsGroupBy: handleSetHighlightsGroupBy,
       selectedHighlightId,
       setSelectedHighlightId,
+      sessionHighlightId,
+      setSessionHighlightId,
+      topicHighlightId,
+      setTopicHighlightId,
+      topicSessionHighlightId,
+      setTopicSessionHighlightId,
       getNavPath,
     }}>
       {children}
