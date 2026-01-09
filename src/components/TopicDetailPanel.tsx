@@ -346,36 +346,36 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
           {/* Sessions Tab */}
           {activeTopicTab === 'sessions' && (
             <div className="space-y-6">
-              {/* Session Dropdown Selector (only on non-XL screens) */}
-              {!isXlScreen && (
-                <Select
-                  value={selectedSessionId}
-                  onValueChange={(value) => setSelectedSessionId(value)}
-                >
-                  <SelectTrigger className="w-full bg-card">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <SelectValue placeholder="Select a session" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent className="z-50 bg-card">
-                    {topicSessions.map((session) => (
-                      <SelectItem key={session.id} value={session.id}>
-                        <div className="flex items-center gap-2">
-                          <span className="line-clamp-1">{session.title}</span>
-                          <span className="text-xs text-muted-foreground">• {session.date}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              {/* Session Dropdown + Sub-tabs Row */}
+              <div className="flex items-center gap-4">
+                {/* Session Dropdown Selector (only on non-XL screens) */}
+                {!isXlScreen && (
+                  <Select
+                    value={selectedSessionId}
+                    onValueChange={(value) => setSelectedSessionId(value)}
+                  >
+                    <SelectTrigger className="w-[280px] bg-card">
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <SelectValue placeholder="Select a session" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="z-50 bg-card">
+                      {topicSessions.map((session) => (
+                        <SelectItem key={session.id} value={session.id}>
+                          <div className="flex items-center gap-2">
+                            <span className="line-clamp-1">{session.title}</span>
+                            <span className="text-xs text-muted-foreground">• {session.date}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
-              {/* Session Sub-tabs */}
-              {selectedSession && (
-                <>
-                  <div className="flex items-center gap-4">
-                    <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                {/* Session Sub-tabs */}
+                {selectedSession && (
+                  <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
                     {(['details', 'highlights', 'transcript'] as const).map(tab => (
                       <button
                         key={tab}
@@ -385,13 +385,14 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                           activeSessionTab === tab
                             ? 'bg-card text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
-                          )}
-                        >
-                          {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                        </button>
-                      ))}
-                    </div>
+                        )}
+                      >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      </button>
+                    ))}
                   </div>
+                )}
+              </div>
 
               {activeSessionTab === 'details' && selectedSession && (
                 <div className="rounded-xl border border-border bg-card p-6">
@@ -500,8 +501,6 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
                     </div>
                   </div>
                 </div>
-              )}
-                </>
               )}
             </div>
           )}
