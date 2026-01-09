@@ -26,12 +26,12 @@ import {
 import { SidebarV2, useSidebarCollapsed } from '@/components/SidebarV2';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsLargeScreen } from '@/hooks/use-large-screen';
 import { cn } from '@/lib/utils';
 import { topics } from '@/data/topics';
 import { SessionBadge, wallpaperBadgeColors } from '@/components/SessionBadge';
 import { TopicBadgeInfo } from '@/types/session';
-type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings';
-type MobileSessionTab = 'details' | 'highlights' | 'chat' | 'transcript' | 'settings';
+type SessionTab = 'details' | 'highlights' | 'transcript' | 'settings' | 'chat';
 
 const sessionTypes = [
   { id: 'business', label: 'Business Meetings', icon: '📁' },
@@ -96,9 +96,9 @@ const SessionDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isMobile = useIsMobile();
+  const isLargeScreen = useIsLargeScreen();
   const { collapsed } = useSidebarCollapsed();
   const [activeTab, setActiveTab] = useState<SessionTab>('details');
-  const [mobileActiveTab, setMobileActiveTab] = useState<MobileSessionTab>('details');
   const [isPlaying, setIsPlaying] = useState(false);
   const [topicDropdownOpen, setTopicDropdownOpen] = useState(false);
   const [sessionTypeDropdownOpen, setSessionTypeDropdownOpen] = useState(false);
@@ -176,13 +176,13 @@ const SessionDetail = () => {
 
           {/* Tab Bar - Full Width */}
           <div className="flex border-t border-border">
-            {(['details', 'highlights', 'chat', 'transcript', 'settings'] as MobileSessionTab[]).map(tab => (
+            {(['details', 'highlights', 'chat', 'transcript', 'settings'] as SessionTab[]).map(tab => (
               <button
                 key={tab}
-                onClick={() => setMobileActiveTab(tab)}
+                onClick={() => setActiveTab(tab)}
                 className={cn(
                   'flex-1 py-3 text-sm font-medium transition-smooth border-b-2',
-                  mobileActiveTab === tab
+                  activeTab === tab
                     ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
                 )}
@@ -196,7 +196,7 @@ const SessionDetail = () => {
         {/* Content - Single Column */}
         <main className="flex-1 overflow-auto p-4">
           {/* Details Tab */}
-          {mobileActiveTab === 'details' && (
+          {activeTab === 'details' && (
             <div className="space-y-4">
               <div className="rounded-xl border border-border bg-card p-4">
                 <h2 className="mb-3 text-base font-semibold text-foreground">Summary</h2>
@@ -260,7 +260,7 @@ const SessionDetail = () => {
           )}
 
           {/* Highlights Tab */}
-          {mobileActiveTab === 'highlights' && (
+          {activeTab === 'highlights' && (
             <div className="space-y-3">
               {mockBookmarks.map((bookmark) => (
                 <div
@@ -299,7 +299,7 @@ const SessionDetail = () => {
           )}
 
           {/* Chat Tab */}
-          {mobileActiveTab === 'chat' && (
+          {activeTab === 'chat' && (
             <div className="flex flex-col h-[calc(100vh-220px)]">
               <div className="flex-1 overflow-auto space-y-4 mb-4">
                 {/* User Message */}
@@ -341,7 +341,7 @@ const SessionDetail = () => {
           )}
 
           {/* Transcript Tab */}
-          {mobileActiveTab === 'transcript' && (
+          {activeTab === 'transcript' && (
             <div>
               <div className="mb-4 flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3">
                 <div className="flex items-center gap-2 text-sm text-primary">
@@ -372,7 +372,7 @@ const SessionDetail = () => {
           )}
 
           {/* Settings Tab */}
-          {mobileActiveTab === 'settings' && (
+          {activeTab === 'settings' && (
             <div className="space-y-4">
               {/* Session Details Section */}
               <div className="rounded-xl border border-border bg-card p-4">
@@ -629,7 +629,10 @@ const SessionDetail = () => {
             {/* Second Row: Tabs */}
             <div className="flex items-center">
               <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                {(['details', 'highlights', 'transcript', 'settings'] as const).map(tab => (
+                {(isLargeScreen 
+                  ? ['details', 'highlights', 'transcript', 'settings'] as const
+                  : ['details', 'highlights', 'transcript', 'settings', 'chat'] as const
+                ).map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -1032,123 +1035,199 @@ const SessionDetail = () => {
                   </div>
                 </div>
               )}
-            </div>
 
-            {/* Right Column - Chat */}
-            <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
-              <div className="border-b border-border px-4 py-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-semibold text-foreground">Chat</h2>
-                    <Switch
-                      id="topic-context"
-                      checked={topicContextEnabled}
-                      onCheckedChange={setTopicContextEnabled}
-                      className={cn(
-                        "scale-75",
-                        // When enabled, override the checked-track color with the topic badge border color (more saturated)
-                        selectedTopicData?.wallpaper && "data-[state=checked]:!bg-[var(--topic-color)]"
-                      )}
-                      style={selectedTopicData?.wallpaper ? ({
-                        "--topic-color": wallpaperBadgeColors[selectedTopicData.wallpaper].border,
-                      } as React.CSSProperties) : undefined}
-                    />
-                    <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
-                      Topic context
-                    </Label>
+              {/* Chat Tab - Only on tablet (non-large screens) */}
+              {activeTab === 'chat' && !isLargeScreen && (
+                <div className="flex flex-col h-full max-w-2xl mx-auto">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-lg font-semibold text-foreground">Chat</h2>
+                      <div className="flex items-center gap-2">
+                        <Switch 
+                          id="topic-context-tab" 
+                          checked={topicContextEnabled}
+                          onCheckedChange={setTopicContextEnabled}
+                          className="scale-75" 
+                        />
+                        <label htmlFor="topic-context-tab" className="text-xs text-muted-foreground">Topic context</label>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                      <Upload className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
-                      <FileText className="h-4 w-4" />
-                    </button>
-                    <div className="relative" data-dropdown>
-                      <button
-                        onClick={() => setShareMenuOpen(!shareMenuOpen)}
-                        className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
-                      >
-                        <Upload className="h-4 w-4" />
+                  <div className="flex-1 overflow-auto space-y-4 mb-4">
+                    {/* User message */}
+                    <div className="flex justify-end">
+                      <div className="rounded-2xl rounded-tr-md bg-primary px-4 py-3 text-sm text-primary-foreground max-w-[85%]">
+                        How engaged are they in this opportunity?
+                      </div>
+                    </div>
+                    {/* AI response */}
+                    <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3 text-sm text-foreground">
+                      <p className="mb-3 leading-relaxed">
+                        The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland. He is highly engaged in this opportunity, demonstrating strong commitment through long-term holds, creative financing, and legal experimentation around profession-based housing.
+                      </p>
+                      <ul className="space-y-2">
+                        <li>• He actively pursues projects that combine affordability with profitability.</li>
+                        <li>• His willingness to cap investor returns shows prioritization of mission over yield.</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                      <textarea
+                        value={chatMessage}
+                        onChange={(e) => setChatMessage(e.target.value)}
+                        placeholder="How can I help?"
+                        rows={1}
+                        className="flex-1 bg-transparent px-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[28px] max-h-[72px]"
+                      />
+                      <Button variant="action" size="icon" className="h-9 w-9 rounded-full">
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                        Summarize key points
+                        <Sparkles className="h-3 w-3" />
                       </button>
-                    {shareMenuOpen && (
-                      <div className="absolute right-0 top-full z-50 mt-1 w-44 rounded-lg border border-border bg-card py-1 shadow-lg">
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <FileText className="h-4 w-4 text-muted-foreground" />
-                          Share as Text
-                        </button>
-                        <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
-                          <FileText className="h-4 w-4 text-muted-foreground" />
-                          Share as Markdown
-                        </button>
-                        </div>
-                      )}
+                      <button className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-smooth">
+                        What are the action items?
+                        <Sparkles className="h-3 w-3" />
+                      </button>
+                      <button className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-smooth">
+                        More
+                        <ChevronRight className="h-3 w-3" />
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
+            </div>
 
-              {/* Chat Messages Area - scrollable */}
-              <div className="flex-1 overflow-auto p-4 space-y-4">
-                {/* User Message */}
-                <div className="flex justify-end">
-                  <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3">
-                    <p className="text-sm text-primary-foreground">How engaged are they in this opportunity?</p>
+            {/* Right Column - Chat (only on large screens) */}
+            {isLargeScreen && (
+              <div className="w-80 shrink-0 flex flex-col border-l border-border bg-card">
+                <div className="border-b border-border px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-semibold text-foreground">Chat</h2>
+                      <Switch
+                        id="topic-context"
+                        checked={topicContextEnabled}
+                        onCheckedChange={setTopicContextEnabled}
+                        className={cn(
+                          "scale-75",
+                          // When enabled, override the checked-track color with the topic badge border color (more saturated)
+                          selectedTopicData?.wallpaper && "data-[state=checked]:!bg-[var(--topic-color)]"
+                        )}
+                        style={selectedTopicData?.wallpaper ? ({
+                          "--topic-color": wallpaperBadgeColors[selectedTopicData.wallpaper].border,
+                        } as React.CSSProperties) : undefined}
+                      />
+                      <Label htmlFor="topic-context" className="text-xs text-muted-foreground cursor-pointer">
+                        Topic context
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground">
+                        <FileText className="h-4 w-4" />
+                      </button>
+                      <div className="relative" data-dropdown>
+                        <button
+                          onClick={() => setShareMenuOpen(!shareMenuOpen)}
+                          className="rounded-lg p-2 text-muted-foreground transition-smooth hover:bg-muted hover:text-foreground"
+                        >
+                          <Upload className="h-4 w-4" />
+                        </button>
+                      {shareMenuOpen && (
+                        <div className="absolute right-0 top-full z-50 mt-1 w-44 rounded-lg border border-border bg-card py-1 shadow-lg">
+                          <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            Share as Text
+                          </button>
+                          <button className="flex w-full items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted">
+                            <FileText className="h-4 w-4 text-muted-foreground" />
+                            Share as Markdown
+                          </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* AI Response */}
-                <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3">
-                  <p className="mb-3 text-sm leading-relaxed text-foreground">
-                    The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland. He is highly engaged in this opportunity, demonstrating strong commitment through long-term holds, creative financing, and legal experimentation around profession-based housing.
-                  </p>
-                  <ul className="space-y-2 text-sm text-foreground">
-                    <li>• He actively pursues projects that combine affordability with profitability, using market-rate units to internally subsidize social impact units without legal encumbrances.</li>
-                    <li>• His willingness to cap investor returns (4% vs. 8%) and forgo refinancing shows prioritization of mission over maximum yield.</li>
-                  </ul>
-                </div>
-              </div>
+                {/* Chat Messages Area - scrollable */}
+                <div className="flex-1 overflow-auto p-4 space-y-4">
+                  {/* User Message */}
+                  <div className="flex justify-end">
+                    <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-primary px-4 py-3">
+                      <p className="text-sm text-primary-foreground">How engaged are they in this opportunity?</p>
+                    </div>
+                  </div>
 
-              {/* Chat Input - always visible at bottom */}
-              <div className="shrink-0 border-t border-border p-4 space-y-3">
-                <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2 min-h-[44px]">
-                  <textarea
-                    value={chatMessage}
-                    onChange={(e) => setChatMessage(e.target.value)}
-                    placeholder="How can I help?"
-                    rows={1}
-                    className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[28px] max-h-[72px] overflow-y-auto leading-7"
-                    style={{ height: '28px' }}
-                    onInput={(e) => {
-                      const target = e.target as HTMLTextAreaElement;
-                      target.style.height = 'auto';
-                      target.style.height = Math.min(target.scrollHeight, 72) + 'px';
-                    }}
-                  />
-                  <Button variant="action" size="icon" className="h-9 w-9 rounded-full shrink-0">
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  {/* AI Response */}
+                  <div className="rounded-2xl rounded-tl-md bg-muted px-4 py-3">
+                    <p className="mb-3 text-sm leading-relaxed text-foreground">
+                      The discussion centered on Kevin Cavanaugh's innovative development model and his deep engagement with socially driven real estate projects in Portland. He is highly engaged in this opportunity, demonstrating strong commitment through long-term holds, creative financing, and legal experimentation around profession-based housing.
+                    </p>
+                    <ul className="space-y-2 text-sm text-foreground">
+                      <li>• He actively pursues projects that combine affordability with profitability, using market-rate units to internally subsidize social impact units without legal encumbrances.</li>
+                      <li>• His willingness to cap investor returns (4% vs. 8%) and forgo refinancing shows prioritization of mission over maximum yield.</li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
-                    Summarize key points
-                    <Sparkles className="h-3 w-3" />
-                  </button>
-                  <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
-                    What are the action items?
-                    <Sparkles className="h-3 w-3" />
-                  </button>
-                  <button className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs text-primary hover:bg-primary/10 transition-smooth">
-                    More
-                    <ChevronRight className="h-3 w-3" />
-                  </button>
+
+                {/* Chat Input - always visible at bottom */}
+                <div className="shrink-0 border-t border-border p-4 space-y-3">
+                  <div className="flex items-center gap-2 rounded-xl border border-border bg-background p-2 min-h-[44px]">
+                    <textarea
+                      value={chatMessage}
+                      onChange={(e) => setChatMessage(e.target.value)}
+                      placeholder="How can I help?"
+                      rows={1}
+                      className="flex-1 bg-transparent pl-1 pr-2 text-sm placeholder:text-muted-foreground focus:outline-none resize-none min-h-[28px] max-h-[72px] overflow-y-auto leading-7"
+                      style={{ height: '28px' }}
+                      onInput={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        target.style.height = 'auto';
+                        target.style.height = Math.min(target.scrollHeight, 72) + 'px';
+                      }}
+                    />
+                    <Button variant="action" size="icon" className="h-9 w-9 rounded-full shrink-0">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
+                      Summarize key points
+                      <Sparkles className="h-3 w-3" />
+                    </button>
+                    <button className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-smooth">
+                      What are the action items?
+                      <Sparkles className="h-3 w-3" />
+                    </button>
+                    <button className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs text-primary hover:bg-primary/10 transition-smooth">
+                      More
+                      <ChevronRight className="h-3 w-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
         </main>
         
         {/* Audio Player - Fixed at bottom - Only show for audio sessions */}
         {hasAudio && (
-          <div className={cn("fixed bottom-0 right-80 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", collapsed ? "left-20" : "left-64")}>
+          <div className={cn(
+            "fixed bottom-0 z-20 border-t border-border bg-card px-4 py-3 transition-all duration-300", 
+            collapsed ? "left-20" : "left-64",
+            isLargeScreen ? "right-80" : "right-0"
+          )}>
             <div className="mx-auto flex max-w-4xl items-center gap-4">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
