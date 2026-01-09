@@ -32,21 +32,22 @@ const Index = () => {
 
   const allSessionIds = sessionGroups.flatMap(group => group.sessions.map(s => s.id));
 
-  // Use master-detail layout on XL screens
-  if (isXlScreen) {
-    return <SessionsMasterDetail />;
-  }
-
-  // On smaller screens, default to the last selected session's detail view.
-  // This handles the "shrink from XL" case reliably because SessionsMasterDetail unmounts immediately.
+  // On smaller screens, redirect to the last selected session's detail view.
+  // Must be called before early return to respect Rules of Hooks.
   useEffect(() => {
-    if (selectionMode) return;
+    if (isXlScreen || selectionMode) return;
 
     const saved = typeof window !== 'undefined' ? localStorage.getItem(SELECTED_SESSION_KEY) : null;
     if (saved) {
       navigate(`/session/${saved}`, { replace: true });
     }
-  }, [navigate, selectionMode]);
+  }, [isXlScreen, navigate, selectionMode]);
+
+  // Use master-detail layout on XL screens
+  if (isXlScreen) {
+    return <SessionsMasterDetail />;
+  }
+
   const handleToggleSelectionMode = () => {
     setSelectionMode(prev => !prev);
     setSelectedIds(new Set());
