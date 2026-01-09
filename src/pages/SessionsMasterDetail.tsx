@@ -60,7 +60,9 @@ const SessionsMasterDetail = () => {
 
   // When screen shrinks below XL, navigate to the selected session's detail page
   useEffect(() => {
+    console.log('[SessionsMasterDetail] isXlScreen:', isXlScreen, 'selectedSessionId:', selectedSessionId, 'selectionMode:', selectionMode);
     if (!isXlScreen && selectedSessionId && !selectionMode) {
+      console.log('[SessionsMasterDetail] navigating to', `/session/${selectedSessionId}`);
       navigate(`/session/${selectedSessionId}`, { replace: true });
     }
   }, [isXlScreen, selectedSessionId, selectionMode, navigate]);
