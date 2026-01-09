@@ -176,7 +176,7 @@ const SessionDetail = () => {
 
           {/* Tab Bar - Full Width */}
           <div className="flex border-t border-border">
-            {(['details', 'highlights', 'chat', 'transcript', 'settings'] as SessionTab[]).map(tab => (
+            {(['details', 'highlights', 'transcript', 'chat', 'settings'] as SessionTab[]).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -631,7 +631,7 @@ const SessionDetail = () => {
               <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
                 {(isLargeScreen 
                   ? ['details', 'highlights', 'transcript', 'settings'] as const
-                  : ['details', 'highlights', 'transcript', 'settings', 'chat'] as const
+                  : ['details', 'highlights', 'transcript', 'chat', 'settings'] as const
                 ).map(tab => (
                   <button
                     key={tab}

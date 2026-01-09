@@ -662,7 +662,7 @@ const TopicDetail = () => {
 
           {/* Tab Bar - Full Width, 5 tabs */}
           <div className="flex border-t border-border overflow-x-auto">
-            {(['overview', 'sessions', 'chat', 'highlights', 'settings'] as TopicTab[]).map(tab => (
+            {(['overview', 'sessions', 'highlights', 'chat', 'settings'] as TopicTab[]).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTopicTab(tab)}
@@ -984,7 +984,7 @@ const TopicDetail = () => {
                     <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
                       {(isLargeScreen 
                         ? ['overview', 'sessions', 'highlights', 'settings'] as const
-                        : ['overview', 'sessions', 'highlights', 'settings', 'chat'] as const
+                        : ['overview', 'sessions', 'highlights', 'chat', 'settings'] as const
                       ).map((tab) => (
                         <button
                           key={tab}
