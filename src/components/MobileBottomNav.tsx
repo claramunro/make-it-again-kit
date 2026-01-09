@@ -21,9 +21,9 @@ export function MobileBottomNav() {
         {/* Start Session - First item */}
         <button
           onClick={() => setStartSessionOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-xl text-primary transition-smooth"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-primary transition-smooth hover:opacity-90 active:scale-95"
         >
-          <img src={glassesIcon} alt="Start Session" className="h-6 w-6" />
+          <img src={glassesIcon} alt="Start Session" className="h-5 w-5 brightness-0 invert" />
         </button>
 
         <Link
