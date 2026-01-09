@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, LucideIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp, LucideIcon, Users } from 'lucide-react';
 import { Highlight } from '@/data/highlights';
 import { HighlightItem } from './HighlightItem';
 import { SessionSubGroup } from './SessionSubGroup';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { wallpaperBadgeColors } from './SessionBadge';
+import { WallpaperType } from '@/types/session';
 
 export interface SessionGroup {
   sessionId: string;
@@ -16,6 +18,10 @@ export interface SessionGroup {
 interface HighlightGroupProps {
   title: string;
   icon?: string;
+  description?: string;
+  wallpaper?: WallpaperType;
+  isShared?: boolean;
+  topicId?: string;
   SessionIcon?: LucideIcon;
   sessionMeta?: { time: string; duration: string };
   sessionId?: string;
@@ -29,6 +35,10 @@ interface HighlightGroupProps {
 export function HighlightGroup({ 
   title, 
   icon,
+  description,
+  wallpaper,
+  isShared,
+  topicId,
   SessionIcon,
   sessionMeta,
   sessionId,
@@ -43,6 +53,12 @@ export function HighlightGroup({
   const totalHighlights = sessionGroups 
     ? sessionGroups.reduce((sum, g) => sum + g.highlights.length, 0)
     : highlights.length;
+
+  // Get colors for topic icon background
+  const colors = wallpaper ? wallpaperBadgeColors[wallpaper] : wallpaperBadgeColors.mint;
+
+  // Determine if this is a topic card (has topicId or sessionGroups)
+  const isTopicCard = !!topicId || !!sessionGroups;
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">
@@ -60,6 +76,36 @@ export function HighlightGroup({
               {sessionMeta && (
                 <span className="text-xs text-muted-foreground">
                   {sessionMeta.time}  ·  {sessionMeta.duration}
+                </span>
+              )}
+            </div>
+          </Link>
+        ) : isTopicCard ? (
+          <Link 
+            to={topicId ? `/topic/${topicId}` : '#'}
+            className="flex items-center gap-3 flex-1"
+          >
+            {/* Topic icon in square container */}
+            {icon && (
+              <div 
+                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl"
+                style={{ backgroundColor: colors.bg }}
+              >
+                {icon}
+                {isShared && (
+                  <span 
+                    className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted border-2 border-card"
+                  >
+                    <Users className="h-3 w-3 text-muted-foreground" />
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="flex flex-col items-start min-w-0">
+              <span className="font-medium text-foreground">{title}</span>
+              {description && (
+                <span className="text-sm text-muted-foreground truncate max-w-[300px]">
+                  {description}
                 </span>
               )}
             </div>

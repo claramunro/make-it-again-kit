@@ -7,9 +7,11 @@ import { HighlightGroup, SessionGroup } from '@/components/HighlightGroup';
 import { HighlightDetailPanel } from '@/components/HighlightDetailPanel';
 import { HighlightDetailDrawer } from '@/components/HighlightDetailDrawer';
 import { highlights, Highlight } from '@/data/highlights';
+import { topics } from '@/data/topics';
 import { sessionGroups as sessionGroupsData } from '@/data/sessions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { WallpaperType } from '@/types/session';
 
 // Create a map of session metadata by title for quick lookup
 const sessionMetaMap = new Map<string, { time: string; duration: string }>();
@@ -19,6 +21,9 @@ sessionGroupsData.forEach(group => {
   });
 });
 
+// Create a map of topics for quick lookup
+const topicsMap = new Map(topics.map(t => [t.id, t]));
+
 type GroupBy = 'sessions' | 'topics';
 
 const HIGHLIGHTS_GROUP_BY_KEY = 'highlights-group-by';
@@ -27,6 +32,10 @@ interface HighlightGroupData {
   id: string;
   title: string;
   icon?: string;
+  description?: string;
+  wallpaper?: WallpaperType;
+  isShared?: boolean;
+  topicId?: string;
   highlights: Highlight[];
   sessionGroups?: SessionGroup[];
 }
@@ -73,6 +82,10 @@ const HighlightsPage = () => {
       const topicGroups: Record<string, {
         title: string;
         icon?: string;
+        description?: string;
+        wallpaper?: WallpaperType;
+        isShared?: boolean;
+        topicId?: string;
         sessions: Record<string, { sessionId: string; sessionTitle: string; highlights: Highlight[] }>;
       }> = {};
 
@@ -80,9 +93,20 @@ const HighlightsPage = () => {
         const topicKey = highlight.topicId || 'uncategorized';
         const topicTitle = highlight.topicName || 'Uncategorized';
         const topicIcon = highlight.topicIcon;
+        
+        // Get full topic data from topics
+        const topicData = topicKey !== 'uncategorized' ? topicsMap.get(topicKey) : null;
 
         if (!topicGroups[topicKey]) {
-          topicGroups[topicKey] = { title: topicTitle, icon: topicIcon, sessions: {} };
+          topicGroups[topicKey] = { 
+            title: topicTitle, 
+            icon: topicIcon,
+            description: topicData?.description,
+            wallpaper: topicData?.wallpaper,
+            isShared: !!topicData?.sharedBy,
+            topicId: topicKey !== 'uncategorized' ? topicKey : undefined,
+            sessions: {} 
+          };
         }
 
         const sessionKey = highlight.sessionId;
@@ -100,6 +124,10 @@ const HighlightsPage = () => {
         id: key,
         title: group.title,
         icon: group.icon,
+        description: group.description,
+        wallpaper: group.wallpaper,
+        isShared: group.isShared,
+        topicId: group.topicId,
         highlights: [], // Empty for topic view, we use sessionGroups instead
         sessionGroups: Object.values(group.sessions).map((session) => ({
           ...session,
@@ -174,6 +202,10 @@ const HighlightsPage = () => {
                   key={group.id}
                   title={group.title}
                   icon={group.icon}
+                  description={group.description}
+                  wallpaper={group.wallpaper}
+                  isShared={group.isShared}
+                  topicId={group.topicId}
                   SessionIcon={groupBy === 'sessions' ? FileVideo : undefined}
                   sessionMeta={groupBy === 'sessions' ? sessionMetaMap.get(group.title) : undefined}
                   sessionId={groupBy === 'sessions' ? group.id : undefined}
