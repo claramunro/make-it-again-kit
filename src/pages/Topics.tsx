@@ -5,20 +5,21 @@ import { TopicsHeader, TopicsList, TopicSortOption } from '@/components/TopicsLi
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { useTopics } from '@/contexts/TopicContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useIsLargeScreen } from '@/hooks/use-large-screen';
-import { ArrowDownUp, Plus, RefreshCw } from 'lucide-react';
+import { useIsXlScreen } from '@/hooks/use-xl-screen';
+import { Plus, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TopicsMasterDetail from './TopicsMasterDetail';
 import { ProBadge } from '@/components/ProBadge';
 
 const Topics = () => {
   const isMobile = useIsMobile();
-  const isLargeScreen = useIsLargeScreen();
+  const isXlScreen = useIsXlScreen();
   const { topics } = useTopics();
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
 
-  // Use master-detail layout on large screens
-  if (isLargeScreen) {
+  // Use master-detail layout only when there's enough horizontal space
+  // (prevents the right-side chat column from overflowing at mid widths)
+  if (isXlScreen) {
     return <TopicsMasterDetail />;
   }
 
