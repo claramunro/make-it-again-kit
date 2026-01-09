@@ -254,8 +254,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
         {/* Main Content Area */}
         <div className="flex min-h-0 flex-1 overflow-hidden">
-          {/* Sessions Sidebar (only in sessions tab on XL screens) */}
-          {activeTopicTab === 'sessions' && isXlScreen && (
+          {/* Sessions Sidebar (only in sessions tab on large screens) */}
+          {activeTopicTab === 'sessions' && isLargeScreen && (
             <div className="w-72 shrink-0 overflow-auto border-r border-border bg-card p-4">
               <div className="space-y-2">
                 {topicSessions.map((session) => (
@@ -348,8 +348,8 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
             <div className="space-y-6">
               {/* Session Dropdown + Sub-tabs Row */}
               <div className="flex items-center gap-4">
-                {/* Session Dropdown Selector (only on non-XL screens) */}
-                {!isXlScreen && (
+                {/* Session Dropdown Selector (only on non-large screens) */}
+                {!isLargeScreen && (
                   <Select
                     value={selectedSessionId}
                     onValueChange={(value) => setSelectedSessionId(value)}
@@ -796,7 +796,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
           {/* Right Column - Session Chat (when in Sessions tab) */}
           {activeTopicTab === 'sessions' && (
-            <div className="w-72 xl:w-80 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
+            <div className="w-72 lg:w-80 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
               <div className="flex items-center justify-between border-b border-border p-3">
                 <div className="flex items-center gap-3">
                   <h2 className="text-sm font-semibold text-foreground">Session Chat</h2>
@@ -861,7 +861,7 @@ export function TopicDetailPanel({ topicId }: TopicDetailPanelProps) {
 
       {/* Right Column - Topic Chat (extends full height alongside tabs) */}
       {activeTopicTab !== 'settings' && activeTopicTab !== 'sessions' && (
-        <div className="w-80 xl:w-96 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
+        <div className="w-80 lg:w-96 min-w-0 shrink flex min-h-0 flex-col border-l border-border bg-muted/30">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-semibold text-foreground">Topic Chat</h2>
             <div className="flex items-center gap-2">
