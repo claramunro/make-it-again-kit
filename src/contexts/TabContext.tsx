@@ -98,12 +98,7 @@ export function TabProvider({ children }: { children: ReactNode }) {
     return 'sessions';
   });
 
-  const [selectedHighlightId, setSelectedHighlightIdState] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(SELECTED_HIGHLIGHT_KEY) || null;
-    }
-    return null;
-  });
+  const [selectedHighlightId, setSelectedHighlightIdState] = useState<string | null>(null);
 
   const setSelectedHighlightId = (id: string | null) => {
     setSelectedHighlightIdState(id);
