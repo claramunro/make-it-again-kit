@@ -11,13 +11,7 @@ const SELECTED_SESSION_KEY = 'sessions-master-selected-id';
 
 const SessionsMasterDetail = () => {
   const { sessionGroups } = useSessions();
-  const [selectedSessionId, setSelectedSessionIdState] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(SELECTED_SESSION_KEY);
-      if (saved) return saved;
-    }
-    return sessionGroups[0]?.sessions[0]?.id || '';
-  });
+  const [selectedSessionId, setSelectedSessionIdState] = useState<string>('');
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SessionSortOption>('most-recent');
@@ -41,18 +35,24 @@ const SessionsMasterDetail = () => {
     }
   };
 
-  // If sessions load/change and the previously selected session no longer exists, fall back safely.
+  // If sessions load/change and the previously selected session no longer exists, clear selection.
   useEffect(() => {
-    if (selectionMode) return;
+    if (selectionMode || !selectedSessionId) return;
 
-    const isValid = selectedSessionId && allSessionIds.includes(selectedSessionId);
+    const isValid = allSessionIds.includes(selectedSessionId);
     if (!isValid) {
-      const fallback = allSessionIds[0] || '';
-      if (fallback && fallback !== selectedSessionId) {
-        setSelectedSessionId(fallback);
-      }
+      setSelectedSessionId('');
     }
   }, [allSessionIds, selectedSessionId, selectionMode]);
+
+  // Handle session selection - toggle off if clicking the same card
+  const handleSelectSession = (id: string) => {
+    if (id === selectedSessionId) {
+      setSelectedSessionId('');
+    } else {
+      setSelectedSessionId(id);
+    }
+  };
 
   const handleToggleSelectionMode = useCallback(() => {
     setSelectionMode(prev => !prev);
@@ -125,7 +125,7 @@ const SessionsMasterDetail = () => {
               <SessionList 
                 groups={sortedGroups} 
                 selectedSessionId={selectionMode ? null : selectedSessionId}
-                onSelectSession={selectionMode ? undefined : setSelectedSessionId}
+                onSelectSession={selectionMode ? undefined : handleSelectSession}
                 selectionMode={selectionMode}
                 selectedIds={selectedIds}
                 onCheckChange={handleCheckChange}
