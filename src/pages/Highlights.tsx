@@ -234,8 +234,8 @@ const HighlightsPage = () => {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground">
-                    Select a highlight to view details
+                  <div className="sticky top-0 h-[calc(100vh-220px)] rounded-lg border border-border bg-card flex items-center justify-center">
+                    <span className="text-muted-foreground">Select a highlight to view details</span>
                   </div>
                 )}
               </div>
