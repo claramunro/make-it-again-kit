@@ -196,8 +196,11 @@ const HighlightsPage = () => {
 
           {/* Content area with list and detail panel */}
           <div className="flex gap-6">
-            {/* Highlights List */}
-            <div className={cn("space-y-4 flex-1 min-w-0", !isMobile && selectedHighlight && "max-w-[calc(100%-400px)]")}>
+            {/* Highlights List - Fixed width */}
+            <div className={cn(
+              "space-y-4 min-w-0",
+              isMobile ? "flex-1" : "w-[calc(100%-400px)] shrink-0"
+            )}>
               {groupedHighlights.map((group, index) => (
                 <HighlightGroup
                   key={group.id}
@@ -219,14 +222,18 @@ const HighlightsPage = () => {
               ))}
             </div>
 
-            {/* Desktop Detail Panel - Fixed */}
-            {!isMobile && selectedHighlight && (
-              <div className="fixed right-6 bottom-5 w-[376px] h-[calc(100vh-160px)]">
-                <HighlightDetailPanel 
-                  highlight={selectedHighlight} 
-                  onClose={() => setSelectedHighlightId(null)}
-                  showCloseButton
-                />
+            {/* Desktop Detail Panel - Fixed width on right */}
+            {!isMobile && (
+              <div className="w-[376px] shrink-0">
+                {selectedHighlight ? (
+                  <div className="sticky top-0">
+                    <HighlightDetailPanel 
+                      highlight={selectedHighlight} 
+                      onClose={() => setSelectedHighlightId(null)}
+                      showCloseButton
+                    />
+                  </div>
+                ) : null}
               </div>
             )}
           </div>
