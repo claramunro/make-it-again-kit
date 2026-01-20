@@ -233,7 +233,11 @@ const HighlightsPage = () => {
                       showCloseButton
                     />
                   </div>
-                ) : null}
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground">
+                    Select a highlight to view details
+                  </div>
+                )}
               </div>
             )}
           </div>
