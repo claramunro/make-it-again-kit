@@ -58,12 +58,6 @@ const HighlightsPage = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Select the first highlight on page load (desktop only) if none persisted
-  useEffect(() => {
-    if (!isMobile && highlights.length > 0 && !selectedHighlight) {
-      setSelectedHighlightId(highlights[0].id);
-    }
-  }, [isMobile, selectedHighlight, setSelectedHighlightId]);
 
   // Group highlights by topic or session
   const groupedHighlights = useMemo((): HighlightGroupData[] => {
@@ -147,9 +141,13 @@ const HighlightsPage = () => {
   }, [groupBy]);
 
   const handleSelectHighlight = (highlight: Highlight) => {
-    setSelectedHighlightId(highlight.id);
-    if (isMobile) {
-      setDrawerOpen(true);
+    if (highlight.id === selectedHighlightId) {
+      setSelectedHighlightId(null);
+    } else {
+      setSelectedHighlightId(highlight.id);
+      if (isMobile) {
+        setDrawerOpen(true);
+      }
     }
   };
 

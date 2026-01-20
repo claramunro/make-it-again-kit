@@ -7,22 +7,14 @@ import { TopicDetailPanel } from '@/components/TopicDetailPanel';
 const SELECTED_TOPIC_KEY = 'topics-master-selected-id';
 
 const TopicsMasterDetail = () => {
-  const [selectedTopicId, setSelectedTopicIdState] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(SELECTED_TOPIC_KEY);
-      // Validate it exists in topics
-      if (saved && topics.some(t => t.id === saved)) {
-        return saved;
-      }
-    }
-    return topics[0]?.id || '';
-  });
+  const [selectedTopicId, setSelectedTopicIdState] = useState<string>('');
   const [sortBy, setSortBy] = useState<TopicSortOption>('last-activity');
 
-  const setSelectedTopicId = (id: string) => {
-    setSelectedTopicIdState(id);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(SELECTED_TOPIC_KEY, id);
+  const handleSelectTopic = (id: string) => {
+    if (id === selectedTopicId) {
+      setSelectedTopicIdState('');
+    } else {
+      setSelectedTopicIdState(id);
     }
   };
 
@@ -44,7 +36,7 @@ const TopicsMasterDetail = () => {
             <div className="w-72 xl:w-80 shrink-0 overflow-auto border-r border-border p-4">
               <TopicsListSelectable 
                 selectedTopicId={selectedTopicId}
-                onSelectTopic={setSelectedTopicId}
+                onSelectTopic={handleSelectTopic}
                 sortBy={sortBy}
                 onSortChange={setSortBy}
               />
